@@ -43,7 +43,7 @@
         .input-wrapper { position: relative; }
         .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 16px; transition: var(--transition-fast); }
         .input-field { width: 100%; padding: 14px 16px 14px 45px; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-size: 1rem; transition: var(--transition-fast); }
-        .input-field[readonly] { background: rgba(0,0,0,0.4); }
+        .input-field[readonly] { background: rgba(0,0,0,0.4); cursor: not-allowed; }
         .input-field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 126, 95, 0.4); }
         .input-field:focus ~ i { color: var(--accent1); transform: translateY(-50%) scale(1.1); }
         #togglePassword { right: 16px; left: auto; cursor: pointer; }
@@ -57,8 +57,7 @@
         .logout-btn { background: var(--glass); border: 1px solid var(--glass-border); color: var(--light-text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logout-btn:hover { background: var(--primary); color: #fff; transform: rotate(15deg); }
         .panel-main { flex-grow: 1; overflow-y: auto; padding: 20px 15px 0 0; width: 100%; position: relative; z-index: 2; }
-        .panel-section { background: rgba(255, 255, 255, 0.03); border-radius: 18px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--glass-border); opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        .panel-section.in-view { opacity: 1; transform: translateY(0); }
+        .panel-section { background: rgba(255, 255, 255, 0.03); border-radius: 18px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--glass-border); }
         .section-title { display: flex; align-items: center; gap: 15px; font-size: 1.3rem; font-weight: 600; color: var(--light-text); margin-bottom: 25px; }
         .section-title i { color: var(--primary); font-size: 1.5rem; }
         .panel-actions { flex-shrink: 0; width: 100%; padding: 20px 30px; background: rgba(15, 18, 26, 0.8); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-top: auto; padding-top: 20px; }
@@ -73,6 +72,8 @@
         .loader { margin: 0 auto; border: 6px solid rgba(255, 255, 255, 0.1); border-top: 6px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         .hidden { display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .qr-preview-container { margin-top: 15px; }
+        .qr-preview-image { max-width: 150px; border-radius: 10px; border: 1px solid var(--glass-border); display: none; }
     </style>
 </head>
 <body>
@@ -121,6 +122,7 @@
                     <div class="panel-section">
                         <div class="section-title"><i class="fas fa-qrcode"></i><span>Gift QR Code</span></div>
                         <div class="input-group"><label for="qrImageUrlInput">QR Code Image URL</label><div class="input-wrapper"><input type="url" id="qrImageUrlInput" class="input-field" placeholder="https://..." required><i class="fas fa-link"></i></div></div>
+                        <div class="qr-preview-container"><img id="qrPreviewImage" class="qr-preview-image" src="" alt="Pratinjau QR"></div>
                     </div>
                     <div class="panel-section" data-span="2">
                         <div class="section-title"><i class="fas fa-users"></i><span>Guest Login</span></div>
@@ -145,24 +147,25 @@
         const firebaseConfig = { apiKey: "GANTI_DENGAN_API_KEY_ANDA", authDomain: "mayfa-fa284.firebaseapp.com", databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const authContainer = document.getElementById('auth-container'), feedbackModal = document.getElementById('feedbackModal'), feedbackTitle = document.getElementById('feedbackTitle'), feedbackMessage = document.getElementById('feedbackMessage'), feedbackLoader = document.getElementById('feedbackLoader'), successIcon = document.getElementById('successIcon'), failureIcon = document.getElementById('failureIcon');
-        let currentAdminId = null; // Variabel untuk menyimpan ID admin yang sedang login
-        
+        const authContainer = document.getElementById('auth-container');
+        let currentAdminId = null; 
+
         function showFeedback(state, title, message = '') {
-            feedbackLoader.classList.add('hidden'); successIcon.classList.add('hidden'); failureIcon.classList.add('hidden');
+            const feedbackModal = document.getElementById('feedbackModal'), feedbackTitle = document.getElementById('feedbackTitle'), feedbackMessage = document.getElementById('feedbackMessage'), loader = document.getElementById('feedbackLoader'), successIcon = document.getElementById('successIcon'), failureIcon = document.getElementById('failureIcon');
+            loader.classList.add('hidden'); successIcon.classList.add('hidden'); failureIcon.classList.add('hidden');
             feedbackModal.style.display = 'flex';
             feedbackTitle.textContent = title; feedbackMessage.textContent = message;
             const feedbackContent = feedbackModal.querySelector('.feedback-content');
-            if (state === 'loading') { feedbackLoader.classList.remove('hidden'); feedbackContent.style.borderColor = 'var(--primary)'; }
+            if (state === 'loading') { loader.classList.remove('hidden'); feedbackContent.style.borderColor = 'var(--primary)'; }
             else if (state === 'success') { successIcon.classList.remove('hidden'); feedbackContent.style.borderColor = 'var(--success)'; }
             else if (state === 'failure') { failureIcon.classList.remove('hidden'); feedbackContent.style.borderColor = 'var(--error)'; }
         }
-        function hideFeedback() { feedbackModal.style.display = 'none'; }
+        function hideFeedback() { document.getElementById('feedbackModal').style.display = 'none'; }
         
         function adminLogin() {
             const user = document.getElementById('adminUser').value.trim();
             const pass = document.getElementById('adminPass').value;
-            if (!user || !pass) { return showFeedback('failure', 'Input Diperlukan', 'Masukkan username dan password.'); }
+            if (!user || !pass) { showFeedback('failure', 'Input Diperlukan', 'Masukkan username dan password.'); setTimeout(hideFeedback, 2000); return; }
             showFeedback('loading', 'Mengecek Kredensial...');
             database.ref('admins').orderByChild('username').equalTo(user).once('value').then((snapshot) => {
                 if (!snapshot.exists()) {
@@ -174,7 +177,7 @@
                 snapshot.forEach((childSnapshot) => {
                     if (childSnapshot.val().password === pass) {
                         isValidLogin = true;
-                        currentAdminId = childSnapshot.key; // Simpan ID unik admin
+                        currentAdminId = childSnapshot.key;
                     }
                 });
                 if (isValidLogin) {
@@ -195,17 +198,17 @@
         }
         
         function logout() {
-            currentAdminId = null; // Hapus ID admin saat logout
+            currentAdminId = null;
             authContainer.classList.remove('is-active');
             document.getElementById('editForm').reset();
             document.getElementById('adminUser').value = '';
             document.getElementById('adminPass').value = '';
+            updateQrPreview();
         }
         
         function loadDataToForm() {
             if (!currentAdminId) return;
             showFeedback('loading', 'Memuat Data...');
-            // Ganti path dari 'settings' ke path unik admin
             database.ref('birthday_pages/' + currentAdminId).once('value').then((snapshot) => {
                 const settings = snapshot.val() || {};
                 document.getElementById('birthdayNameInput').value = settings.birthdayName || '';
@@ -213,9 +216,9 @@
                 document.getElementById('qrImageUrlInput').value = settings.qrImageUrl || '';
                 document.getElementById('guestUserInput').value = settings.guestUser || '';
                 document.getElementById('guestPassInput').value = settings.guestPass || '';
-                // Tampilkan link unik
                 const shareLink = `${window.location.origin}/index.html?id=${currentAdminId}`;
                 document.getElementById('shareableLink').value = shareLink;
+                updateQrPreview();
                 hideFeedback();
             }).catch(error => {
                 showFeedback('failure', 'Gagal Memuat', error.message);
@@ -224,7 +227,11 @@
         }
         
         function saveData() {
-            if (!currentAdminId) return;
+            if (!currentAdminId) {
+                showFeedback('failure', 'Error', 'Admin ID tidak ditemukan. Silakan login ulang.');
+                setTimeout(hideFeedback, 2500);
+                return;
+            }
             showFeedback('loading', 'Menyimpan Perubahan...');
             const settings = {
                 birthdayName: document.getElementById('birthdayNameInput').value,
@@ -233,7 +240,6 @@
                 guestUser: document.getElementById('guestUserInput').value,
                 guestPass: document.getElementById('guestPassInput').value
             };
-            // Simpan ke path unik admin
             database.ref('birthday_pages/' + currentAdminId).set(settings).then(() => {
                 showFeedback('success', 'Berhasil Disimpan!');
                 setTimeout(hideFeedback, 2000);
@@ -243,12 +249,25 @@
             });
         }
 
+        function updateQrPreview() {
+            const qrInput = document.getElementById('qrImageUrlInput');
+            const qrImage = document.getElementById('qrPreviewImage');
+            const url = qrInput.value.trim();
+            if (url) {
+                qrImage.src = url;
+                qrImage.style.display = 'block';
+            } else {
+                qrImage.style.display = 'none';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('togglePassword').addEventListener('click', function() {
                 const passField = document.getElementById('adminPass');
                 passField.type = passField.type === 'password' ? 'text' : 'password';
                 this.classList.toggle('fa-eye-slash');
             });
+            document.getElementById('qrImageUrlInput').addEventListener('input', updateQrPreview);
         });
     </script>
 </body>
