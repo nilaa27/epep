@@ -109,18 +109,18 @@
         /* CSS untuk hujan konfeti */
         .falling-confetti { position: fixed; top: -20px; border-radius: 50%; pointer-events: none; z-index: 1500; }
         
-        /* CSS BARU UNTUK LEDAKAN KONFETI */
+        /* CSS untuk ledakan konfeti */
         .confetti-piece {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 10px;
-            height: 10px;
-            background-color: #ff0;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 3000;
-            opacity: 0;
+            position: fixed; top: 50%; left: 50%; width: 10px; height: 10px;
+            background-color: #ff0; border-radius: 50%; pointer-events: none;
+            z-index: 3000; opacity: 0;
+        }
+
+        /* CSS BARU: Untuk konfeti berkelanjutan */
+        .continuous-confetti {
+            position: fixed; bottom: -20px; width: 12px; height: 12px;
+            pointer-events: none; z-index: 2500;
+            border-radius: 0;
         }
     </style>
 </head>
@@ -187,6 +187,9 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         let pageData = {};
+        // VARIABEL BARU UNTUK MENYIMPAN INTERVAL
+        let continuousConfettiInterval;
+
         const loginContainer = document.getElementById("loginContainer"), birthdayPage = document.getElementById("birthdayPage"), errorPage = document.getElementById("errorPage"), giftModal = document.getElementById("giftModal"), giftBox = document.querySelector(".gift-box"), giftCard = document.getElementById("giftCard"), backgroundMusic = document.getElementById("background-music"), togglePassword = document.getElementById("togglePassword"), passwordInput = document.getElementById("password");
         
         document.addEventListener('DOMContentLoaded', () => {
@@ -275,6 +278,7 @@
             });
         }
         function openGift() { giftModal.style.display = "flex"; }
+        
         function openCard() {
             giftBox.style.display = "none";
             giftCard.style.display = "block";
@@ -282,12 +286,26 @@
             const qrImg = document.getElementById("qrCodeImg");
             qrImg.src = pageData.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`Selamat Ulang Tahun ${pageData.birthdayName}!`)}`;
             
-            // PANGGIL FUNGSI LEDAKAN KONFETI DI SINI
+            // Panggil ledakan awal
             createConfettiExplosion(150);
+            
+            // Panggil efek konfeti berkelanjutan setelah jeda singkat
+            setTimeout(() => {
+                startContinuousConfetti();
+            }, 500);
         }
+
+        // FUNGSI CLOSEGIFTMODAL DIPERBARUI
         function closeGiftModal() { 
             giftModal.style.display = "none"; 
-            setTimeout(() => { giftCard.style.display = "none"; giftBox.style.display = "block"; }, 500);
+            
+            // Hentikan interval konfeti berkelanjutan
+            clearInterval(continuousConfettiInterval);
+
+            setTimeout(() => { 
+                giftCard.style.display = "none"; 
+                giftBox.style.display = "block"; 
+            }, 500);
         }
         giftModal.addEventListener("click", e => { if (e.target === giftModal) closeGiftModal(); });
 
@@ -316,7 +334,6 @@
             }, 150);
         }
 
-        // --- FUNGSI BARU UNTUK LEDAKAN KONFETI ---
         function createConfettiExplosion(numberOfPieces) {
             const colors = ['#ff7e5f', '#feb47b', '#ffc371', '#ff5f6d', '#30cfd0', '#a1ffce', '#ffffff'];
             for (let i = 0; i < numberOfPieces; i++) {
@@ -324,20 +341,20 @@
                 confettiPiece.classList.add('confetti-piece');
                 
                 const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                const randomSize = Math.random() * 12 + 5; // ukuran 5px hingga 17px
+                const randomSize = Math.random() * 12 + 5;
                 
                 confettiPiece.style.backgroundColor = randomColor;
                 confettiPiece.style.width = `${randomSize}px`;
-                confettiPiece.style.height = `${randomSize * 0.6}px`; // Buat sedikit persegi panjang
+                confettiPiece.style.height = `${randomSize * 0.6}px`;
                 confettiPiece.style.transform = `translate(-50%, -50%)`;
 
                 document.body.appendChild(confettiPiece);
 
-                const angle = Math.random() * 360; // Arah ledakan acak
-                const distance = Math.random() * (window.innerWidth / 2.5) + 50; // Jarak ledakan
+                const angle = Math.random() * 360;
+                const distance = Math.random() * (window.innerWidth / 2.5) + 50;
                 
                 const x = Math.cos(angle * Math.PI / 180) * distance;
-                const y = Math.sin(angle * Math.PI / 180) * distance - (distance/2); // Sedikit ke atas
+                const y = Math.sin(angle * Math.PI / 180) * distance - (distance/2);
 
                 confettiPiece.animate([
                     { transform: 'translate(-50%, -50%) rotate(0deg)', opacity: 1 },
@@ -350,6 +367,37 @@
                     confettiPiece.remove();
                 };
             }
+        }
+
+        // --- FUNGSI BARU UNTUK KONFETI BERKELANJUTAN ---
+        function startContinuousConfetti() {
+            const colors = ['#ff7e5f', '#feb47b', '#ffc371', '#ff5f6d', '#30cfd0'];
+            
+            continuousConfettiInterval = setInterval(() => {
+                const confettiEl = document.createElement('div');
+                confettiEl.classList.add('continuous-confetti');
+
+                const xPos = Math.random() * 100; // posisi horizontal acak
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                confettiEl.style.left = xPos + 'vw';
+                confettiEl.style.backgroundColor = randomColor;
+
+                document.body.appendChild(confettiEl);
+
+                const animDuration = 2500 + Math.random() * 2000;
+                const swing = Math.random() * 80 - 40; // Goyangan ke kiri/kanan
+
+                confettiEl.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(-100vh) translateX(${swing}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: animDuration,
+                    easing: 'ease-out'
+                }).onfinish = () => {
+                    confettiEl.remove();
+                };
+            }, 200); // Membuat konfeti baru setiap 200ms
         }
     </script>
 </body>
