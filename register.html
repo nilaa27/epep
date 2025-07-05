@@ -3,274 +3,563 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Registration - Happy Birthday</title>
+    <title>Data Management - Super Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
     <style>
         :root {
-            --primary: #ff7e5f; --secondary: #feb47b; --accent1: #ffc371; --accent2: #ff5f6d;
-            --dark: #1a1a2e; --darker: #16213e; --glass: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15); --success: #30cfd0; --error: #f87171;
-            --light-text: rgba(255, 255, 255, 0.9); --transition-fast: all 0.3s ease;
+            /* Dark Neumorphic Palette */
+            --bg-color: #2c2f36;
+            --shadow-dark: #202227;
+            --shadow-light: #383c45;
+            --text-color: #d1d5db;
+            --text-light: #8a91a0;
+            --primary: #5a7dff;
+            --primary-dark: #4a6fe0;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --transition-smooth: all 0.3s ease-in-out;
+            --border-radius-main: 24px;
+            --border-radius-inner: 15px;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            background: var(--darker); min-height: 100vh; display: flex; justify-content: center;
-            align-items: center; color: #fff; position: relative; overflow: hidden; padding: 20px;
+            background-color: var(--bg-color);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
         }
-        body::before, body::after {
-            content: ''; position: absolute; top: 50%; left: 50%; width: 800px; height: 800px;
-            background-image: radial-gradient(circle, var(--primary) 0%, rgba(255,126,95,0) 60%);
-            border-radius: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s linear infinite;
-            filter: blur(100px); opacity: 0.4;
-        }
-        body::after {
-            background-image: radial-gradient(circle, var(--accent2) 0%, rgba(255,95,109,0) 60%);
-            animation-name: move-aurora-2; animation-delay: -10s;
-        }
-        @keyframes move-aurora { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); } 50% { transform: translate(-45%, -55%) rotate(180deg) scale(1.2); } 100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); } }
-        @keyframes move-aurora-2 { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1.1); } 50% { transform: translate(-55%, -45%) rotate(-180deg) scale(0.9); } 100% { transform: translate(-50%, -50%) rotate(-360deg) scale(1.1); } }
-        .container { width: 100%; max-width: 450px; z-index: 10; }
-        .box {
-            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; width: 100%;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            display: flex; flex-direction: column; position: relative; overflow: hidden;
-        }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header-icon {
-            width: 75px; height: 75px; background: linear-gradient(45deg, var(--accent2), var(--primary));
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;
-            border: 2px solid var(--glass-border); box-shadow: 0 8px 30px rgba(255, 95, 109, 0.4); animation: float 4s ease-in-out infinite;
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-        .header-icon i { font-size: 36px; color: #fff; text-shadow: 0 0 15px rgba(0,0,0,0.3); }
-        h1 {
-            font-size: 2rem; font-weight: 700; background: linear-gradient(45deg, var(--primary), var(--accent1));
-            -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 6px;
-        }
-        .header p { color: var(--light-text); font-size: 1rem; }
-        .input-group { margin-bottom: 20px; position: relative; }
-        .input-group label { display: block; color: var(--light-text); font-size: 0.9rem; font-weight: 500; margin-bottom: 4px; text-align: left; }
-        .input-wrapper { position: relative; }
-        .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 16px; transition: var(--transition-fast); }
-        .input-field {
-            width: 100%; padding: 14px 16px 14px 45px; background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-size: 1rem; transition: var(--transition-fast);
-        }
-        .input-field[readonly] { background: rgba(0,0,0,0.4); cursor: default; }
-        .input-field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 126, 95, 0.4); }
-        .input-field:focus + i { color: var(--accent1); }
+
+        /* --- UTILITIES --- */
+        .hidden { display: none !important; }
+        
         .btn {
-            width: 100%; padding: 15px; background: linear-gradient(90deg, var(--accent2) 0%, var(--primary) 100%);
-            border: none; border-radius: 12px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer;
-            transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius-inner);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            background: var(--bg-color);
+            box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
         }
-        .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(255, 95, 109, 0.35); }
-        .btn:disabled { cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
-        .btn i { transition: transform 0.3s ease; }
-        .btn:hover:not(:disabled) i { transform: rotate(15deg); }
-        .back-link { color: var(--light-text); text-decoration: none; font-weight: 500; transition: var(--transition-fast); text-align: center; display: block; margin-top: 20px; }
-        .back-link:hover { color: var(--primary); }
-        .feedback-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 3000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
-        .feedback-modal.visible { opacity: 1; }
-        .feedback-content { background: rgba(30, 40, 60, 0.95); border-radius: 20px; padding: 30px 40px; text-align: center; width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); transform: scale(0.95); transition: transform 0.3s ease; }
-        .feedback-modal.visible .feedback-content { transform: scale(1); }
-        #accountModal .feedback-content { border-top: 4px solid var(--success); }
-        #failureModal .feedback-content { border-top: 4px solid var(--error); }
-        #failureModal h2 { background: linear-gradient(45deg, var(--error), var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .feedback-content .icon-container { height: 60px; margin-bottom: 20px; }
-        .feedback-content .icon { font-size: 50px; animation: popIn 0.4s ease-out; }
-        @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .feedback-content .icon.failure { color: var(--error); animation: shake 0.5s ease-out; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); } 20%, 40%, 60%, 80% { transform: translateX(8px); } }
-        .feedback-content h2 { font-size: 1.8rem; margin-bottom: 10px; font-weight: 600; }
-        #accountModal h2 { background: linear-gradient(45deg, var(--success), #a1ffce); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .feedback-content p { font-size: 1rem; color: var(--light-text); }
-        .data-display { background: rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 20px; margin-top: 20px; margin-bottom: 25px; text-align: left; }
-        .data-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .data-item:last-child { margin-bottom: 0; }
-        .data-item span { color: var(--light-text); font-size: 1rem; }
-        .data-item strong { color: #fff; font-weight: 600; font-size: 1.1rem; }
-        .copy-icon { right: 16px; left: auto; cursor: pointer; color: var(--light-text); transition: all 0.2s ease; }
-        .copy-icon:hover { color: var(--primary); transform: translateY(-50%) scale(1.1); }
-        .feedback-actions { display: flex; gap: 15px; justify-content: center; margin-top: 10px; }
-        .feedback-btn { flex-grow: 1; padding: 12px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition-fast); }
-        .btn-back { background: var(--glass); border: 1px solid var(--glass-border); color: var(--light-text); }
-        .btn-back:hover { background: rgba(255, 255, 255, 0.1); }
-        .btn-signin { background: linear-gradient(to right, var(--success) 0%, #a1ffce 100%); border: none; color: var(--darker); }
-        .btn-signin:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(48, 207, 208, 0.4); }
-        /* Style baru untuk deskripsi link */
-        .link-description {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: left;
-            margin-bottom: 8px;
-            margin-top: -10px;
+        .btn:hover:not(:disabled) { transform: translateY(-2px); }
+        .btn:active:not(:disabled) {
+            transform: translateY(0px);
+            box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+        }
+        .btn:disabled { cursor: not-allowed; opacity: 0.7; }
+        .btn-primary { color: var(--primary); }
+        .btn-primary:hover:not(:disabled) { color: var(--primary-dark); }
+        .btn-danger { color: var(--danger); }
+        .btn-secondary { color: var(--text-light); }
+
+        .neumorphic-panel {
+            background: var(--bg-color);
+            border-radius: var(--border-radius-main);
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+            padding: 2.5rem;
+        }
+
+        .neumorphic-inset {
+            background: var(--bg-color);
+            border-radius: var(--border-radius-inner);
+            box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light);
+            border: none;
+        }
+        
+        /* --- PASSWORD MODAL --- */
+        .password-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 5000;
+        }
+        .password-box {
+            text-align: center;
+            width: 90%; max-width: 400px;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .password-box h2 { margin-bottom: 1rem; font-size: 1.5rem; }
+        .password-box p { margin-bottom: 2rem; color: var(--text-secondary); }
+        .password-box input {
+            width: 100%; padding: 14px;
+            color: var(--text-color); font-size: 1rem;
+            margin-bottom: 1.5rem; outline: none;
+        }
+        .password-box .btn { width: 100%; }
+
+        /* --- KONTEN UTAMA --- */
+        .container { width: 100%; max-width: 1200px; animation: fadeIn 0.5s ease forwards; }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { font-size: 2rem; font-weight: 700; }
+        .header p { color: var(--text-secondary); font-size: 1rem; }
+
+        .toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem;
+        }
+        .search-wrapper { position: relative; flex-grow: 1; min-width: 250px; }
+        .search-wrapper i {
+            position: absolute; left: 18px; top: 50%;
+            transform: translateY(-50%); color: var(--text-secondary);
+        }
+        #searchInput {
+            width: 100%; padding: 14px 15px 14px 50px;
+            color: var(--text-primary); font-size: 1rem;
+            transition: all var(--transition-smooth);
+        }
+        #searchInput:focus { outline: none; }
+        #searchInput:focus ~ i { color: var(--primary); }
+
+        #loader { display: flex; justify-content: center; padding: 4rem 0; }
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid var(--shadow-dark);
+            border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .user-card {
+            padding: 1.5rem; display: flex; flex-direction: column;
+            gap: 1rem; transition: all var(--transition-smooth);
+            border-radius: var(--border-radius-inner); /* Inner radius for cards */
+        }
+        .user-card:hover { transform: translateY(-5px); }
+        .user-card-header {
+            display: flex; align-items: center; gap: 1rem;
+            padding-bottom: 1rem; border-bottom: 1px solid var(--shadow-light);
+        }
+        .user-avatar {
+            width: 48px; height: 48px; border-radius: 50%;
+            color: var(--primary); font-weight: 700;
+            font-size: 1.5rem; flex-shrink: 0;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .user-info h3 { font-size: 1.1rem; font-weight: 600; }
+        .user-info p { font-size: 0.9rem; color: var(--text-secondary); overflow-wrap: break-word; }
+        .user-card-body { display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem; }
+        .user-card-body div { display: flex; justify-content: space-between; }
+        .user-card-body .label { color: var(--text-secondary); }
+        .user-card-body .value { font-weight: 500; }
+        .password-value { font-family: monospace; letter-spacing: 1px; }
+
+        .user-card-actions {
+            display: flex; gap: 0.75rem; margin-top: auto;
+            padding-top: 1rem; border-top: 1px solid var(--shadow-light);
+        }
+        .user-card-actions .btn { flex-grow: 1; padding: 8px 10px; font-size: 0.85rem; }
+        .btn-edit { color: var(--text-secondary); }
+        .btn-edit:hover { color: var(--text-color); }
+        
+        .no-data-message { text-align: center; padding: 3rem; color: var(--text-secondary); }
+
+        /* --- ADD/EDIT MODAL --- */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal.show { opacity: 1; visibility: visible; }
+        .modal-content { width: 90%; max-width: 500px; transform: scale(0.95); transition: transform 0.3s; }
+        .modal.show .modal-content { transform: scale(1); }
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem;
+        }
+        .modal-header h2 { font-size: 1.5rem; }
+        .close-button {
+            background: none; border: none; font-size: 1.8rem;
+            color: var(--text-secondary); cursor: pointer;
+            transition: color var(--transition-smooth);
+        }
+        .close-button:hover { color: var(--text-color); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input { width: 100%; padding: 14px; font-size: 1rem; color: var(--text-color); }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+        
+        /* --- BACK BUTTON STYLING --- */
+        .back-button-container { display: flex; justify-content: center; margin-top: 2rem; }
+        
+        /* --- Kustomisasi SweetAlert2 --- */
+        .swal2-popup {
+            background-color: var(--bg-color) !important;
+            border-radius: var(--border-radius-main) !important;
+            color: var(--text-color) !important;
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light) !important;
+        }
+        .swal2-title { color: var(--text-color) !important; }
+        .swal2-html-container { color: var(--text-secondary) !important; }
+        .swal2-confirm, .swal2-cancel {
+             box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light) !important;
+             border: none !important;
+        }
+        .swal2-confirm { background-color: var(--bg-color) !important; color: var(--primary) !important; }
+        .swal2-cancel { background-color: var(--bg-color) !important; color: var(--text-light) !important;}
+        .swal2-icon.swal2-success .swal2-success-ring { border-color: var(--success) !important; }
+        .swal2-icon.swal2-error { border-color: var(--danger) !important; }
+        .swal2-icon.swal2-warning { border-color: var(--warning) !important; color: var(--warning) !important; }
+
+        /* --- Responsive --- */
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .main-content-panel { padding: 1.5rem; }
+            .user-list { grid-template-columns: 1fr; }
+            .modal-content { padding: 1.5rem; }
+            .modal-footer { flex-direction: column; align-items: stretch; }
+            .modal-footer .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="box" id="registrationBox">
-            <div class="header">
-                <div class="header-icon"><i class="fas fa-user-shield"></i></div>
-                <h1>Create Admin Account</h1>
-                <p>Fill in the details to register a new admin.</p>
-            </div>
-            <form id="registerForm" onsubmit="event.preventDefault(); createAccount();">
-                <div class="input-group">
-                    <div class="input-wrapper">
-                        <input type="text" id="adminName" class="input-field" placeholder="Admin Name" required>
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <div class="input-wrapper">
-                        <input type="password" id="adminPass" class="input-field" placeholder="Password" required>
-                        <i class="fas fa-key"></i>
-                    </div>
-                </div>
-                <button type="submit" class="btn"><i class="fas fa-plus-circle"></i> Create Account</button>
+
+    <div class="password-modal" id="passwordModal">
+        <div class="password-box neumorphic-panel">
+            <h2><i class="fas fa-user-shield"></i> Akses Super Admin</h2>
+            <p>Masukkan password untuk melanjutkan ke panel manajemen.</p>
+            <form id="passwordForm">
+                <input type="password" id="superAdminPassword" class="neumorphic-inset" placeholder="••••••••" required autocomplete="current-password">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-arrow-right-to-bracket"></i> Masuk</button>
             </form>
-            <a href="admin.html" class="back-link">Go to Admin Panel</a>
-        </div>
-    </div>
-    
-    <div class="feedback-modal" id="accountModal">
-        <div class="feedback-content">
-            <h2><i class="fas fa-party-horn"></i> Account Created!</h2>
-            <div class="data-display">
-                <div class="data-item">
-                    <span>Username:</span>
-                    <strong id="displayUser"></strong>
-                </div>
-                <div class="data-item">
-                    <span>Password:</span>
-                     <strong id="displayPass"></strong>
-                </div>
-                <div class="input-group" style="margin-top: 25px; margin-bottom: 0;">
-                    <label for="shareLink">Your Unique Share Link</label>
-                    <p class="link-description">Bagikan link ini kepada tamu untuk melihat halaman ucapan.</p>
-                    <div class="input-wrapper">
-                        <input type="text" id="shareLink" class="input-field" style="padding-right: 45px; font-size: 0.9rem;" readonly>
-                        <i class="fas fa-copy copy-icon" onclick="copyShareLink(this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="feedback-actions">
-                <button class="feedback-btn btn-back" onclick="closeModal('accountModal')">Close</button>
-                <button class="feedback-btn btn-signin" onclick="goToAdmin()">Go to Admin</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="feedback-modal" id="failureModal">
-        <div class="feedback-content">
-            <div class="icon-container"><i class="fas fa-times-circle icon failure"></i></div>
-            <h2 id="failureTitle">Gagal Registrasi</h2>
-            <p id="failureMessage"></p>
         </div>
     </div>
 
+    <div class="container hidden" id="mainContent">
+        <div class="header">
+            <div class="header-title">
+                <h1>Manajemen Data Admin</h1>
+                <p>Tambah, edit, atau hapus akun admin.</p>
+            </div>
+        </div>
+
+        <div class="main-content-panel neumorphic-panel">
+            <div class="toolbar">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" class="neumorphic-inset" placeholder="Cari admin berdasarkan username...">
+                </div>
+                <button class="btn btn-primary" id="addAdminBtn"><i class="fas fa-plus"></i> Tambah Admin Baru</button>
+            </div>
+
+            <div id="loader">
+                <div class="spinner"></div>
+            </div>
+            
+            <div id="userListContainer" class="hidden">
+                 <div class="user-list" id="userList"></div>
+                 <div id="noDataMessage" class="no-data-message hidden">
+                    <h3>Tidak Ada Data</h3>
+                    <p>Belum ada admin yang terdaftar atau sesuai dengan pencarian Anda.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-button-container">
+            <a href="admin.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
+        </div>
+    </div>
+
+    <div class="modal" id="userModal">
+        <div class="modal-content neumorphic-panel">
+            <div class="modal-header">
+                <h2 id="modalTitle">Tambah Admin Baru</h2>
+                <button class="close-button" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="userForm">
+                <input type="hidden" id="adminId">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="neumorphic-inset" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="text" id="password" class="neumorphic-inset" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelModalBtn">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <script>
-        const firebaseConfig = { apiKey: "GANTI_DENGAN_API_KEY_ANDA", authDomain: "mayfa-fa284.firebaseapp.com", databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app" };
+        // NOTE: Replace "GANTI_DENGAN_API_KEY_ANDA" with your actual Firebase API Key
+        const firebaseConfig = { 
+            apiKey: "GANTI_DENGAN_API_KEY_ANDA", 
+            authDomain: "mayfa-fa284.firebaseapp.com", 
+            databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app" 
+        };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function createAccount() {
-            const adminName = document.getElementById('adminName').value.trim();
-            const adminPass = document.getElementById('adminPass').value;
-            const submitBtn = document.querySelector('#registerForm button');
-            if (!adminName || !adminPass) { return alert("Admin Name and Password are required."); }
+        const SUPER_ADMIN_PASSWORD = "Xlord01"; // Make sure to change this to a strong password!
+        let allAdmins = {}; 
 
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
-            submitBtn.disabled = true;
-
-            database.ref('admins').orderByChild('username').equalTo(adminName).once('value', snapshot => {
-                if (snapshot.exists()) {
-                    showFailureModal("Username sudah terdaftar", "Silakan pilih nama lain.");
-                    submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Create Account';
-                    submitBtn.disabled = false;
-                } else {
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-                    const newAdminRef = database.ref('admins').push();
-                    newAdminRef.set({ username: adminName, password: adminPass, createdAt: new Date().toISOString() })
-                    .then(() => {
-                        const newAdminId = newAdminRef.key;
-                        const defaultPageData = {
-                            birthdayName: "Your Name",
-                            birthDate: "2000-01-01",
-                            guestUser: "guest",
-                            guestPass: "123",
-                            qrImageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.google.com"
-                        };
-                        return database.ref('birthday_pages/' + newAdminId).set(defaultPageData);
-                    })
-                    .then(() => {
-                        showAccountModal(adminName, adminPass, newAdminRef.key);
-                    }).catch(error => {
-                        showFailureModal('Error Creating Account', error.message);
-                    }).finally(() => {
-                        submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Create Account';
-                        submitBtn.disabled = false;
-                    });
-                }
-            });
-        }
+        // DOM Elements
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordForm = document.getElementById('passwordForm');
+        const mainContent = document.getElementById('mainContent');
+        const loader = document.getElementById('loader');
+        const userListContainer = document.getElementById('userListContainer');
+        const userList = document.getElementById('userList');
+        const noDataMessage = document.getElementById('noDataMessage');
+        const searchInput = document.getElementById('searchInput');
         
-        function showAccountModal(user, pass, newId) {
-            document.getElementById('displayUser').textContent = user;
-            document.getElementById('displayPass').textContent = pass;
-            const shareLinkInput = document.getElementById('shareLink');
-            const fullLink = `${window.location.origin}/index.html?id=${newId}`;
-            shareLinkInput.value = fullLink;
-            const modal = document.getElementById('accountModal');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('visible'), 10);
-        }
-
-        function showFailureModal(title, message) {
-            document.getElementById('failureTitle').textContent = title;
-            document.getElementById('failureMessage').textContent = message;
-            const modal = document.getElementById('failureModal');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('visible'), 10);
-            setTimeout(() => closeModal('failureModal'), 3500);
-        }
+        const userModal = document.getElementById('userModal');
+        const userForm = document.getElementById('userForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const adminIdInput = document.getElementById('adminId');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
         
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('visible');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                if (modalId === 'accountModal') { document.getElementById('registerForm').reset(); }
-            }, 300);
-        }
+        const addAdminBtn = document.getElementById('addAdminBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
 
-        document.querySelectorAll('.feedback-modal').forEach(modal => {
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal) { closeModal(modal.id); }
-            });
+        document.addEventListener('DOMContentLoaded', () => {
+            passwordModal.classList.add('show');
+            document.getElementById('superAdminPassword').focus();
         });
 
-        function goToAdmin() { window.location.href = 'admin.html'; }
+        passwordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('superAdminPassword').value;
+            if (password === SUPER_ADMIN_PASSWORD) {
+                passwordModal.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                Swal.fire({
+                    icon: 'success', title: 'Akses Diberikan!',
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true,
+                });
+                loadAllUserData();
+            } else {
+                Swal.fire({ icon: 'error', title: 'Akses Ditolak!', text: 'Password salah.' });
+                document.getElementById('superAdminPassword').value = '';
+            }
+        });
         
-        function copyShareLink(copyIconElement) {
-            const linkInput = document.getElementById('shareLink');
-            navigator.clipboard.writeText(linkInput.value).then(() => {
-                copyIconElement.classList.remove('fa-copy');
-                copyIconElement.classList.add('fa-check');
-                setTimeout(() => {
-                    copyIconElement.classList.remove('fa-check');
-                    copyIconElement.classList.add('fa-copy');
-                }, 2000);
-            }).catch(err => {
-                alert('Gagal menyalin link!');
+        function loadAllUserData() {
+            loader.classList.remove('hidden');
+            userListContainer.classList.add('hidden');
+            
+            database.ref('admins').on('value', snapshot => {
+                allAdmins = snapshot.val() || {};
+                renderUsers(allAdmins);
+                loader.classList.add('hidden');
+                userListContainer.classList.remove('hidden');
+            }, error => {
+                console.error("Error fetching admin data: ", error);
+                Swal.fire({ icon: 'error', title: 'Gagal Memuat Data', text: 'Terjadi kesalahan saat memuat data dari Firebase.' });
+                loader.classList.add('hidden');
+            });
+        }
+        
+        function renderUsers(adminsObject) {
+            userList.innerHTML = '';
+            const adminIds = Object.keys(adminsObject);
+            
+            if (adminIds.length === 0) {
+                noDataMessage.classList.remove('hidden');
+                return;
+            }
+            
+            noDataMessage.classList.add('hidden');
+            
+            adminIds.forEach(id => {
+                const admin = adminsObject[id];
+                const date = admin.createdAt ? new Date(admin.createdAt) : new Date();
+                const formattedDate = date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+                const firstLetter = admin.username ? admin.username.charAt(0).toUpperCase() : '?';
+
+                const card = document.createElement('div');
+                card.className = 'user-card neumorphic-panel';
+                card.dataset.adminId = id;
+                card.innerHTML = `
+                    <div class="user-card-header">
+                        <div class="user-avatar neumorphic-inset">${firstLetter}</div>
+                        <div class="user-info">
+                            <h3>${admin.username || 'N/A'}</h3>
+                            <p>ID: ${id}</p>
+                        </div>
+                    </div>
+                    <div class="user-card-body">
+                        <div>
+                            <span class="label">Password:</span>
+                            <span class="value password-value">${admin.password || 'N/A'}</span>
+                        </div>
+                        <div>
+                            <span class="label">Dibuat:</span>
+                            <span class="value">${formattedDate}</span>
+                        </div>
+                    </div>
+                    <div class="user-card-actions">
+                        <button class="btn btn-edit" onclick="openEditModal('${id}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn btn-delete" onclick="deleteUser('${id}', '${admin.username}')"><i class="fas fa-trash"></i> Hapus</button>
+                    </div>
+                `;
+                userList.appendChild(card);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            if (!searchTerm) {
+                renderUsers(allAdmins);
+                return;
+            }
+            
+            const filteredAdmins = Object.keys(allAdmins)
+                .filter(key => allAdmins[key].username.toLowerCase().includes(searchTerm))
+                .reduce((obj, key) => {
+                    obj[key] = allAdmins[key];
+                    return obj;
+                }, {});
+                
+            renderUsers(filteredAdmins);
+        });
+        
+        function openModal(mode, adminId = null) {
+            userForm.reset();
+            if (mode === 'add') {
+                modalTitle.textContent = 'Tambah Admin Baru';
+                adminIdInput.value = '';
+            } else {
+                modalTitle.textContent = 'Edit Admin';
+                adminIdInput.value = adminId;
+                const admin = allAdmins[adminId];
+                usernameInput.value = admin.username;
+                passwordInput.value = admin.password;
+            }
+            userModal.classList.add('show');
+        }
+
+        function closeModal() {
+            userModal.classList.remove('show');
+        }
+        
+        window.openEditModal = (id) => {
+            openModal('edit', id);
+        }
+
+        addAdminBtn.addEventListener('click', () => openModal('add'));
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelModalBtn.addEventListener('click', closeModal);
+        userModal.addEventListener('click', (e) => {
+            if(e.target === userModal) closeModal();
+        });
+
+        userForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = adminIdInput.value;
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            if(!username || !password) {
+                Swal.fire({ icon: 'warning', title: 'Input Tidak Lengkap', text: 'Username dan Password wajib diisi.' });
+                return;
+            }
+
+            if (id) { // Edit mode
+                const updates = { username, password };
+                database.ref(`/admins/${id}`).update(updates)
+                    .then(() => {
+                        Swal.fire({ icon: 'success', title: 'Data berhasil diperbarui!', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                        closeModal();
+                    })
+                    .catch(err => Swal.fire({ icon: 'error', title: 'Gagal Memperbarui', text: err.message }));
+            } else { // Add mode
+                const newAdminRef = database.ref('/admins').push();
+                const newAdminId = newAdminRef.key;
+                const newAdminData = {
+                    username, password,
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Also create a corresponding birthday page
+                const defaultPageData = {
+                    birthdayName: username,
+                    birthDate: "2000-01-01",
+                    guestUser: "guest",
+                    guestPass: "123",
+                    qrImageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YourGiftLinkHere"
+                };
+
+                const updates = {};
+                updates[`/admins/${newAdminId}`] = newAdminData;
+                updates[`/birthday_pages/${newAdminId}`] = defaultPageData;
+                
+                database.ref().update(updates)
+                    .then(() => {
+                         Swal.fire({ icon: 'success', title: 'Admin baru berhasil ditambahkan!', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                         closeModal();
+                    })
+                    .catch(err => Swal.fire({ icon: 'error', title: 'Gagal Menambah', text: err.message }));
+            }
+        });
+        
+        window.deleteUser = (id, username) => {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                html: `Anda yakin ingin menghapus <b>"${username}"</b>?<br>Semua data terkait (termasuk halaman ulang tahun) akan ikut terhapus secara permanen.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const updates = {
+                        [`/admins/${id}`]: null,
+                        [`/birthday_pages/${id}`]: null
+                    };
+                    database.ref().update(updates)
+                        .then(() => {
+                            Swal.fire({ icon: 'success', title: 'Terhapus!', text: `Pengguna "${username}" telah dihapus.` });
+                        })
+                        .catch((error) => {
+                            Swal.fire({ icon: 'error', title: 'Gagal Menghapus', text: error.message });
+                        });
+                }
             });
         }
     </script>
