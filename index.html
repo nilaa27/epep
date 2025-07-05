@@ -36,11 +36,7 @@
         @keyframes move-aurora { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); } 50% { transform: translate(-45%, -55%) rotate(180deg) scale(1.2); } 100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); } }
         @keyframes move-aurora-2 { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1.1); } 50% { transform: translate(-55%, -45%) rotate(-180deg) scale(0.9); } 100% { transform: translate(-50%, -50%) rotate(-360deg) scale(1.1); } }
         
-        /* Styling untuk Error Page */
-        .error-page {
-            display: none; text-align: center; color: var(--light-text);
-            animation: fadeIn 0.5s ease-out; z-index: 20;
-        }
+        .error-page { display: none; text-align: center; color: var(--light-text); animation: fadeIn 0.5s ease-out; z-index: 20; }
         .error-page .error-icon { font-size: 5rem; color: var(--primary); margin-bottom: 20px; text-shadow: 0 0 20px var(--primary); }
         .error-page h1 { font-size: 2.2rem; color: #fff; margin-bottom: 10px; }
         .error-page p { font-size: 1.1rem; }
@@ -48,72 +44,68 @@
 
         .login-container { width: 100%; max-width: 400px; perspective: 1000px; }
         .login-box {
-            background: rgba(72, 61, 113, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             border-radius: 24px; padding: 40px; text-align: center;
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease, box-shadow 0.3s ease;
             transform-style: preserve-3d; position: relative; overflow: hidden;
         }
-        .login-box.hidden { transform: rotateY(90deg) scale(0.8); opacity: 0; display: none; }
         .login-header { margin-bottom: 35px; position: relative; }
         .login-icon {
-            width: 80px; height: 80px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; margin: 0 auto 25px; border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2); animation: float-cake 4s ease-in-out infinite; position: relative;
+            width: 80px; height: 80px; background: linear-gradient(45deg, var(--accent2), var(--primary));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;
+            border: 1px solid var(--glass-border); box-shadow: 0 8px 30px rgba(255, 95, 109, 0.4);
+            animation: float-cake 4s ease-in-out infinite; position: relative;
         }
         @keyframes float-cake { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .login-icon i { font-size: 38px; color: #ffd166; text-shadow: 0 0 15px rgba(255, 209, 102, 0.5); position: relative; z-index: 2; }
-        .candle { position: absolute; top: -10px; width: 8px; height: 15px; background: linear-gradient(to bottom, #fff, #ffd166); border-radius: 4px 4px 0 0; z-index: 1; }
-        .flame { position: absolute; top: -22px; width: 12px; height: 20px; background: linear-gradient(to bottom, #ffd166, #ff6b6b); border-radius: 50% 50% 20% 20%; animation: flicker 1.5s infinite alternate; box-shadow: 0 0 15px rgba(255, 107, 107, 0.6); }
-        @keyframes flicker { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.1); opacity: 1; } }
-        .login-box h1 { color: #fff; font-size: 34px; font-weight: 700; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); margin-bottom: 8px; }
-        .login-box p { color: rgba(255, 255, 255, 0.7); font-size: 16px; font-weight: 400; }
+        .login-icon i { font-size: 38px; color: #fff; text-shadow: 0 0 15px rgba(0,0,0,0.2); position: relative; z-index: 2; }
+        .login-box h1 {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            font-size: 34px; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 8px;
+        }
+        .login-box p { color: var(--light-text); font-size: 16px; font-weight: 400; }
         .input-group { position: relative; margin-bottom: 25px; }
-        .input-group .icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.6); transition: all 0.3s ease; font-size: 18px; }
-        .input-group input { width: 100%; padding: 16px 20px 16px 55px; background: #3E3465; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; font-size: 16px; transition: all 0.3s; border-radius: 12px; }
-        .input-group input:focus { outline: none; border-color: rgba(90, 200, 250, 0.5); background: #43396d; box-shadow: 0 0 0 3px rgba(90, 200, 250, 0.1); }
-        .input-group:focus-within .icon { color: #ffffff; }
+        .input-group .icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--primary); transition: all 0.3s ease; font-size: 18px; }
+        .input-group input { width: 100%; padding: 16px 20px 16px 55px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: #fff; font-size: 16px; transition: all 0.3s; border-radius: 12px; }
+        .input-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 126, 95, 0.4); }
+        .input-group:focus-within .icon { color: var(--secondary); }
         #togglePassword { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: rgba(255, 255, 255, 0.7); font-size: 18px; transition: all 0.3s ease; }
-        .login-btn { width: 100%; padding: 16px; background: linear-gradient(90deg, #377DFF 0%, #5AC8FA 100%); border: none; border-radius: 12px; color: #fff; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .login-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3); }
-        .admin-btn { width: 100%; padding: 16px; background: #3E3465; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: rgba(255, 255, 255, 0.8); font-size: 16px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .admin-btn:hover { background: #4a4075; color: #fff; }
-        .admin-btn i { transition: transform 0.4s ease; }
-        .admin-btn:hover i { transform: rotate(60deg); }
+        .login-btn { width: 100%; padding: 16px; background: linear-gradient(90deg, var(--accent2) 0%, var(--primary) 100%); border: none; border-radius: 12px; color: #fff; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .login-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(255, 95, 109, 0.4); }
+        
         .birthday-page-container { display: none; align-items: flex-start; padding-top: 8vh; padding-bottom: 8vh; width: 100%; max-width: 1000px; }
         .birthday-content { width: 100%; text-align: center; z-index: 10; }
         .main-title { font-family: 'Pacifico', cursive; font-size: clamp(3rem, 10vw, 6rem); line-height: 1.2; color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.5), 0 0 25px rgba(255,255,255,0.5); animation: fadeInDown 1s ease-out forwards; }
-        .main-title span { background: linear-gradient(45deg, #ffd166, #ff6b6b); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .main-title span { background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
-        .message-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2); padding: 30px; color: white; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); opacity: 0; filter: blur(5px); transform: perspective(800px) rotateY(var(--initial-rotation, -20deg)) scale(0.9); transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.8s ease-out, opacity 0.6s ease-out; }
+        .message-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2); padding: 30px; color: white; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); opacity: 0; filter: blur(5px); transform: perspective(800px) rotateY(var(--initial-rotation, -20deg)) scale(0.9); transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.8s ease-out, opacity 0.6s ease-out; }
         .message-card.is-visible { opacity: 1; filter: blur(0); transform: perspective(800px) rotateY(0) scale(1); }
-        .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: #ffd166; }
+        .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--secondary); }
         .card-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
         .card-text { font-size: 1rem; line-height: 1.6; font-weight: 300; }
-        #ageDisplay { font-size: 1.2rem; font-weight: 400; }
-        .gift-btn-modern { background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%); border: none; border-radius: 50px; padding: 15px 40px; font-size: 1.2rem; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4); margin-top: 20px; }
+        .gift-btn-modern { background: linear-gradient(135deg, var(--accent2) 0%, var(--primary) 100%); border: none; border-radius: 50px; padding: 15px 40px; font-size: 1.2rem; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4); margin-top: 20px; }
         .gift-btn-modern:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(255, 107, 107, 0.6); }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
-        .drifting-particle { position: fixed; top: -20px; border-radius: 50%; opacity: 0.8; pointer-events: none; z-index: 1; }
-        .balloon { position: absolute; bottom: -100px; z-index: 1; animation: floatBalloon linear forwards; transform: translateZ(0); filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); }
-        @keyframes floatBalloon { to { transform: translateY(-130vh) translateX(var(--x-drift, -3vw)) rotate(var(--rotation, -3deg)); opacity: 0; } }
-        .feedback-modal, .gift-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
-        .feedback-content { background: white; border-radius: 15px; padding: 30px 40px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; max-width: 350px; display: flex; flex-direction: column; align-items: center; }
+        
+        .feedback-modal, .gift-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
+        .feedback-content { background: rgba(30, 40, 60, 0.95); border-radius: 20px; padding: 40px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; align-items: center; }
+        #failureModal .feedback-content { border-top: 4px solid var(--error); }
         .feedback-content .icon-container { width: 60px; height: 60px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; }
         .feedback-content .icon { font-size: 60px; }
-        .feedback-content .icon.success { color: #28a745; }
-        .feedback-content .icon.failure { color: #dc3545; }
-        .feedback-content h2 { font-size: 24px; color: #333; margin-bottom: 10px; font-weight: 600; }
-        @keyframes popIn { from { transform: scale(0.7); opacity: 0; } 80% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
-        .feedback-content .icon { animation: popIn 0.5s ease-out forwards; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .loader { border: 6px solid #f3f3f3; border-top: 6px solid #2575fc; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        .feedback-content .icon.failure { color: var(--error); }
+        .feedback-content h2 { font-size: 24px; color: #fff; margin-bottom: 10px; font-weight: 600; }
+        .feedback-content p { color: var(--light-text); }
+        .loader { margin: 0 auto; border: 6px solid rgba(255, 255, 255, 0.1); border-top: 6px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         .hidden { display: none; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
         .gift-box { position: relative; width: 250px; height: 250px; cursor: pointer; animation: wobble-gift 2s ease-in-out infinite; }
         @keyframes wobble-gift { from { transform: rotate(-3deg) scale(1); } to { transform: rotate(3deg) scale(1.05); } }
-        .gift-card { display: none; background: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); width: 100%; max-width: 320px; z-index: 1001; animation: fadeInCard-anim 0.5s ease-out; color: #333; }
+        .gift-card { display: none; background: linear-gradient(135deg, #FFFDE7, #FFE2E6); color: #4A4A4A; border-radius: 15px; padding: 30px; text-align: center; width: 100%; max-width: 320px; z-index: 1001; position: relative; overflow: hidden; animation: fadeInCard-anim 0.5s ease-out forwards, subtle-glow 3s ease-in-out infinite alternate; }
+        .gift-card h2 { color: #333; }
         @keyframes fadeInCard-anim { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-        @media (max-width: 480px) { .login-box { padding: 30px 25px; } .login-box h1 { font-size: 28px; } .gift-card { padding: 20px; } }
+        @keyframes subtle-glow { from { box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 15px rgba(255, 239, 186, 0.4); } to { box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255, 239, 186, 0.8); } }
     </style>
 </head>
 <body>
@@ -122,13 +114,9 @@
     <div class="login-container" id="loginContainer">
         <div class="login-box" id="loginBox">
             <div class="login-header">
-                <div class="login-icon">
-                    <i class="fas fa-birthday-cake"></i>
-                    <div class="candle"></div>
-                    <div class="flame"></div>
-                </div>
+                <div class="login-icon"><i class="fas fa-birthday-cake"></i></div>
                 <h1>Hi, There ✨</h1>
-                <p>please login, to using web</p>
+                <p>Please login to continue</p>
             </div>
             <div class="input-group">
                 <i class="fas fa-user icon"></i>
@@ -139,9 +127,7 @@
                 <input type="password" id="password" placeholder="Password">
                 <i class="fas fa-eye" id="togglePassword"></i>
             </div>
-            <button class="login-btn" onclick="login()">
-                <i class="fas fa-right-to-bracket"></i> Login
-            </button>
+            <button class="login-btn" onclick="login()"><i class="fas fa-right-to-bracket"></i> Login</button>
         </div>
     </div>
     
@@ -172,60 +158,26 @@
             <p>"mungkin hadiahku ga seberapa semoga bermanfaat, dan selamat bertambah usia, dilancarkan disemua hal, dan menjadi pribadi yang lebih baik dari sebelum nya ✨"</p>
         </div>
     </div>
-
-    <div class="feedback-modal" id="successModal">
-        <div class="feedback-content"><div class="icon-container"><div class="loader"></div><i class="fas fa-check-circle icon success hidden"></i></div><h2>Login Berhasil!</h2><p>Memuat Laman...</p></div>
-    </div>
+    
     <div class="feedback-modal" id="failureModal">
-        <div class="feedback-content"><div class="icon-container"><div class="loader"></div><i class="fas fa-times-circle icon failure hidden"></i></div><h2 id="failure-title">Login Gagal!</h2><p id="failure-message">Coba cek lagi...</p></div>
+        <div class="feedback-content"><div class="icon-container"><i class="fas fa-times-circle icon failure"></i></div><h2 id="failure-title">Login Gagal!</h2><p id="failure-message">Coba cek lagi...</p></div>
     </div>
     
     <script>
-        // --- KONFIGURASI FIREBASE (TIDAK BERUBAH) ---
-        const firebaseConfig = {
-            apiKey: "GANTI_DENGAN_API_KEY_ANDA",
-            authDomain: "mayfa-fa284.firebaseapp.com",
-            databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "mayfa-fa284",
-            storageBucket: "mayfa-fa284.appspot.com",
-            messagingSenderId: "523290705179",
-            appId: "1:523290705179:web:b06ae4d8e6b08cf07b27be"
-        };
+        const firebaseConfig = { apiKey: "GANTI_DENGAN_API_KEY_ANDA", authDomain: "mayfa-fa284.firebaseapp.com", databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
-        // --- Variabel Global dan Elemen UI ---
         let pageData = {};
-        const loginContainer = document.getElementById("loginContainer"), 
-              loginBox = document.getElementById("loginBox"),
-              birthdayPage = document.getElementById("birthdayPage"),
-              errorPage = document.getElementById("errorPage"),
-              giftModal = document.getElementById("giftModal"),
-              giftBox = document.querySelector(".gift-box"),
-              giftCard = document.getElementById("giftCard"),
-              backgroundMusic = document.getElementById("background-music"),
-              togglePassword = document.getElementById("togglePassword"),
-              passwordInput = document.getElementById("password"),
-              successModal = document.getElementById("successModal"),
-              successLoader = successModal.querySelector(".loader"),
-              successIcon = successModal.querySelector(".icon.success"),
-              failureModal = document.getElementById("failureModal"),
-              failureLoader = failureModal.querySelector(".loader"),
-              failureIcon = failureModal.querySelector(".icon.failure"),
-              failureTitle = failureModal.querySelector("#failure-title"),
-              failureMessage = failureModal.querySelector("#failure-message");
-
-        // --- LOGIKA UTAMA DENGAN CUSTOM LINK (`?id=...`) ---
+        const loginContainer = document.getElementById("loginContainer"), birthdayPage = document.getElementById("birthdayPage"), errorPage = document.getElementById("errorPage"), giftModal = document.getElementById("giftModal"), giftBox = document.querySelector(".gift-box"), giftCard = document.getElementById("giftCard"), backgroundMusic = document.getElementById("background-music"), togglePassword = document.getElementById("togglePassword"), passwordInput = document.getElementById("password");
+        
         document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add("no-scroll");
             const urlParams = new URLSearchParams(window.location.search);
             const pageId = urlParams.get('id');
-
             if (!pageId) {
                 showErrorPage("Halaman Tidak Ditemukan", "Pastikan link yang Anda masukkan sudah benar dan lengkap.");
                 return;
             }
-
             database.ref('birthday_pages/' + pageId).on('value', (snapshot) => {
                 if (!snapshot.exists()) {
                     showErrorPage("Konten Tidak Tersedia", "Halaman ini ada, namun kontennya belum diatur oleh pemilik.");
@@ -235,31 +187,12 @@
                 loginContainer.style.display = 'block';
                 birthdayPage.style.display = 'none';
                 errorPage.style.display = 'none';
+                document.getElementById("birthdayName").textContent = pageData.birthdayName;
+                calculateAndDisplayAge(pageData.birthDate);
+                document.getElementById("giftCardName").textContent = pageData.birthdayName;
+                document.getElementById("qrCodeImg").src = pageData.qrImageUrl;
             }, (error) => {
                 showErrorPage("Gagal Terhubung", "Tidak dapat memuat data. Periksa koneksi internet Anda.");
-            });
-
-            // Animasi masuk untuk login box
-            loginBox.style.transform = 'scale(0.9) rotateY(30deg)';
-            loginBox.style.opacity = '0';
-            setTimeout(() => {
-                loginBox.style.transform = 'scale(1)';
-                loginBox.style.opacity = '1';
-            }, 100);
-            
-            // Inisialisasi partikel dan observer
-            setInterval(createDriftingParticle, 300);
-            const cards = document.querySelectorAll('.message-card');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('is-visible');
-                    else entry.target.classList.remove('is-visible');
-                });
-            }, { root: null, rootMargin: '0px', threshold: 0.25 });
-            cards.forEach((card, index) => {
-                card.style.setProperty('--initial-rotation', index % 2 === 0 ? '-20deg' : '20deg');
-                card.style.transitionDelay = `${index * 150}ms`;
-                observer.observe(card);
             });
         });
 
@@ -271,104 +204,34 @@
             errorPage.style.display = 'block';
         }
 
-        // --- FUNGSI LOGIN DENGAN DATA DINAMIS ---
         function login() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
-            
             if (username === pageData.guestUser && password === pageData.guestPass) {
-                loginBox.style.transform = 'translateY(-20px) rotateY(20deg)';
-                loginBox.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.3)';
-                successLoader.classList.remove("hidden");
-                successIcon.classList.add("hidden");
-                successModal.style.display = "flex";
-                setTimeout(() => {
-                    loginBox.style.transform = 'translateY(40px) rotateY(-90deg) scale(0.8)';
-                    loginBox.style.opacity = '0';
-                    setTimeout(() => {
-                        successLoader.classList.add("hidden");
-                        successIcon.classList.remove("hidden");
-                        setTimeout(() => {
-                            successModal.style.display = "none";
-                            loginBox.classList.add("hidden");
-                            setTimeout(() => {
-                                loginContainer.style.display = "none";
-                                birthdayPage.style.display = "flex";
-                                document.body.classList.remove("no-scroll");
-                                try { backgroundMusic.play().catch(e => {}); } catch (e) {}
-                                document.getElementById("birthdayName").textContent = pageData.birthdayName;
-                                calculateAndDisplayAge(pageData.birthDate);
-                                createBalloons(15);
-                            }, 500);
-                        }, 1000);
-                    }, 1500);
-                }, 300);
+                loginContainer.style.display = "none";
+                birthdayPage.style.display = "flex";
+                document.body.classList.remove("no-scroll");
+                try { backgroundMusic.play().catch(e => {}); } catch (e) {}
             } else {
-                loginBox.animate([{ transform: 'translateX(0px)' }, { transform: 'translateX(-15px)' }, { transform: 'translateX(15px)' }, { transform: 'translateX(0px)' }], { duration: 600, iterations: 1 });
-                failureLoader.classList.remove("hidden");
-                failureIcon.classList.add("hidden");
-                failureTitle.textContent = "Login Gagal!";
-                failureMessage.textContent = "Silakan coba lagi.";
+                const failureModal = document.getElementById("failureModal");
                 failureModal.style.display = "flex";
-                setTimeout(() => {
-                    failureLoader.classList.add("hidden");
-                    failureIcon.classList.remove("hidden");
-                    setTimeout(() => { failureModal.style.display = "none"; }, 1500);
-                }, 1000);
+                setTimeout(() => { failureModal.style.display = "none"; }, 2500);
             }
         }
-
-        // --- SISA FUNGSI (TIDAK BERUBAH) ---
+        
         togglePassword.addEventListener("click", function() {
-            this.classList.add("icon-toggle-animation");
             const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
             passwordInput.setAttribute("type", type);
             this.classList.toggle("fa-eye"); this.classList.toggle("fa-eye-slash");
-            this.addEventListener("animationend", () => { this.classList.remove("icon-toggle-animation"); }, { once: true });
         });
         function calculateAndDisplayAge(birthDate) {
             const birthDateObj = new Date(birthDate), today = new Date(); let age = today.getFullYear() - birthDateObj.getFullYear(); const monthDiff = today.getMonth() - birthDateObj.getMonth();
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) { age--; }
             document.getElementById("ageDisplay").innerText = `Hari ini usiamu genap ${age} tahun. Selamat!`;
         }
-        function createBalloons(count) {
-            const colors = ['#FF6B6B', '#FF8E53', '#4ECDC4', '#6A11CB', '#2575FC', '#FFD166', '#EF476F', '#118AB2'];
-            for (let i = 0; i < count; i++) {
-                const balloon = document.createElement('div'); balloon.classList.add('balloon');
-                const size = Math.random() * 40 + 60; balloon.style.width = `${size}px`; balloon.style.height = `${size * 1.1}px`; balloon.style.left = `${Math.random() * 100}%`;
-                const color = colors[Math.floor(Math.random() * colors.length)]; balloon.style.setProperty('--color', color);
-                const duration = Math.random() * 15 + 20; balloon.style.animationDuration = `${duration}s`; balloon.style.animationDelay = `${Math.random() * 2}s`;
-                balloon.style.setProperty('--x-drift', `${(Math.random() - 0.5) * 15}vw`); balloon.style.setProperty('--rotation', `${(Math.random() - 0.5) * 10}deg`);
-                balloon.innerHTML = `<div class="balloon-body"></div>`; document.body.appendChild(balloon);
-                setTimeout(() => { balloon.remove(); }, duration * 1000);
-            }
-        }
-        function createDriftingParticle() {
-            const particle = document.createElement("div"); particle.className = "drifting-particle"; document.body.appendChild(particle);
-            const size = Math.random() * 5 + 3; particle.style.width = `${size}px`; particle.style.height = `${size}px`; particle.style.background = ['#ff6b6b', '#ffd166', '#4ecdc4', '#ffffff'][Math.floor(Math.random() * 4)];
-            particle.style.left = Math.random() * 100 + "vw"; const duration = Math.random() * 5000 + 5000; const xOffset = 200 * (Math.random() - 0.5);
-            particle.animate([{ transform: "translate(0, 0)", opacity: 1 }, { transform: `translate(${xOffset}px, 105vh)`, opacity: 0 }], { duration: duration, easing: "linear" }).onfinish = () => particle.remove();
-        }
-        let fireworksInterval;
-        function createParticle(x, y) {
-            const p = document.createElement("div"); p.className = "drifting-particle"; document.body.appendChild(p);
-            p.style.width = `${Math.random()*5+3}px`; p.style.height = p.style.width; p.style.background = ['#ff6b6b', '#ff8e53', '#6a11cb', '#2575fc', '#4ecdc4', '#ffd166', '#fff'][Math.floor(Math.random()*7)];
-            const xOff = (Math.random()-0.5)*300, yOff = (Math.random()-0.5)*300, dur = Math.random()*800+500;
-            p.style.left = `${x}px`; p.style.top = `${y}px`;
-            p.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${xOff}px,${yOff}px)`,opacity:0}],{duration:dur,easing:"ease-out"}).onfinish=()=>p.remove();
-        }
-        function startFireworks(){ if(fireworksInterval)clearInterval(fireworksInterval); fireworksInterval=setInterval(()=> {const x=window.innerWidth*Math.random(), y=window.innerHeight*Math.random()*0.5; for(let i=0;i<20;i++)createParticle(x,y);}, 500);}
-        function stopFireworks() { clearInterval(fireworksInterval); }
         function openGift() { giftModal.style.display = "flex"; }
-        function openCard() {
-            giftBox.style.display = "none";
-            giftCard.style.display = "block";
-            document.getElementById("giftCardName").textContent = pageData.birthdayName;
-            const qrImg = document.getElementById("qrCodeImg");
-            qrImg.src = pageData.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`Selamat Ulang Tahun ${pageData.birthdayName}!`)}`;
-            startFireworks();
-        }
-        function closeGiftModal() { giftModal.style.display = "none"; giftCard.style.display = "none"; giftBox.style.display = "block"; stopFireworks(); }
+        function openCard() { giftBox.style.display = "none"; giftCard.style.display = "block"; }
+        function closeGiftModal() { giftModal.style.display = "none"; giftCard.style.display = "none"; giftBox.style.display = "block"; }
         giftModal.addEventListener("click", e => { if (e.target === giftModal) closeGiftModal(); });
     </script>
 </body>
