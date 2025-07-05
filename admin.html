@@ -27,7 +27,7 @@
             color: #fff;
             position: relative;
             overflow: hidden;
-            padding: 10px; /* Sedikit padding untuk mobile */
+            padding: 10px;
         }
         body::before, body::after { content: ''; position: absolute; top: 50%; left: 50%; width: 800px; height: 800px; background-image: radial-gradient(circle, var(--primary) 0%, rgba(255,126,95,0) 60%); border-radius: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s linear infinite; filter: blur(100px); opacity: 0.4; }
         body::after { background-image: radial-gradient(circle, var(--accent2) 0%, rgba(255,95,109,0) 60%); animation-name: move-aurora-2; animation-delay: -10s; }
@@ -37,7 +37,7 @@
         #auth-container {
             position: relative;
             width: 100%;
-            height: auto;
+            height: 520px; /* Tinggi awal untuk login box agar animasi stabil */
             max-width: 450px;
             margin: auto;
             transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), max-width 0.8s ease, height 0.8s ease;
@@ -49,7 +49,7 @@
         #adminPanelBox { position: relative; transform: rotateY(-180deg); opacity: 0; }
         #auth-container.is-active {
             max-width: 900px;
-            height: 90vh; /* Mengisi 90% tinggi layar */
+            height: 90vh; /* Tinggi panel admin untuk mengisi layar */
         }
         #auth-container.is-active #adminPanelBox {
             transform: rotateY(0deg);
@@ -67,14 +67,25 @@
         .input-group { margin-bottom: 20px; position: relative; }
         .input-group label { display: block; color: var(--light-text); font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; padding-left: 8px; }
         .input-wrapper { position: relative; }
-        .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 16px; transition: var(--transition-fast); z-index: 3; }
-        .input-wrapper .icon-right { left: auto; right: 16px; cursor: pointer; }
+        .input-wrapper i {
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 16px;
+            transition: var(--transition-fast);
+            z-index: 3;
+        }
+        .input-wrapper .icon-right {
+            left: auto;
+            right: 16px;
+            cursor: pointer;
+        }
         .input-wrapper .icon-right:hover { color: var(--accent1); transform: translateY(-50%) scale(1.1); }
         .input-field { width: 100%; padding: 14px 16px 14px 45px; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-size: 1rem; transition: var(--transition-fast); }
         .input-field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 126, 95, 0.4); }
         .input-field:focus ~ i { color: var(--accent1); transform: translateY(-50%) scale(1.1); }
-        #togglePassword { right: 16px; left: auto; cursor: pointer; }
-        /* === CSS BARU: Menyamakan bentuk kolom tanggal === */
         .input-field[type="date"] {
             -webkit-appearance: none;
             appearance: none;
@@ -84,7 +95,6 @@
             display: none;
             -webkit-appearance: none;
         }
-
         .btn { width: 100%; padding: 15px; background: linear-gradient(90deg, var(--accent2) 0%, var(--primary) 100%); border: none; border-radius: 12px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(255, 95, 109, 0.35); }
         .register-link { text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--light-text); }
@@ -95,9 +105,9 @@
         .logout-btn { background: var(--glass); border: 1px solid var(--glass-border); color: var(--light-text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logout-btn:hover { background: var(--primary); color: #fff; transform: rotate(15deg); }
         .panel-main {
-            flex-grow: 1; /* Membuat area ini mengisi sisa ruang */
-            overflow-y: auto;   /* Izinkan scroll vertikal */
-            overflow-x: hidden; /* Cegah scroll horizontal */
+            flex-grow: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
             width: 100%;
             position: relative;
             z-index: 2;
@@ -107,7 +117,7 @@
         .section-title { display: flex; align-items: center; gap: 15px; font-size: 1.3rem; font-weight: 600; color: var(--light-text); margin-bottom: 25px; }
         .section-title i { color: var(--primary); font-size: 1.5rem; }
         .panel-actions {
-            flex-shrink: 0; /* Mencegah area ini menyusut */
+            flex-shrink: 0;
             width: 100%; padding: 20px 30px; background: rgba(15, 18, 26, 0.8); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 20px;
         }
         .back-link { color: var(--light-text); text-decoration: none; font-weight: 500; transition: var(--transition-fast); }
@@ -167,7 +177,7 @@
                     </div>
                     <div class="input-group">
                         <label>Password</label>
-                        <div class="input-wrapper"><input type="password" id="adminPass" class="input-field" placeholder="••••••••"><i class="fas fa-key"></i><i class="fas fa-eye" id="togglePassword"></i></div>
+                        <div class="input-wrapper"><input type="password" id="adminPass" class="input-field" placeholder="••••••••"><i class="fas fa-key"></i><i class="fas fa-eye icon-right" id="togglePassword"></i></div>
                     </div>
                     <button class="btn" onclick="adminLogin()"><i class="fas fa-sign-in-alt"></i> Masuk</button>
                     <p class="register-link">Admin baru? <a href="register.html">Buat Akun Disini</a></p>
@@ -338,7 +348,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('togglePassword').addEventListener('click', function() {
+            const togglePassword = document.getElementById('togglePassword');
+            togglePassword.addEventListener('click', function() {
                 const passField = document.getElementById('adminPass');
                 passField.type = passField.type === 'password' ? 'text' : 'password';
                 this.classList.toggle('fa-eye-slash');
