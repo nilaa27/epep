@@ -105,6 +105,9 @@
         .gift-card h2 { color: #333; }
         @keyframes fadeInCard-anim { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         @keyframes subtle-glow { from { box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 15px rgba(255, 239, 186, 0.4); } to { box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255, 239, 186, 0.8); } }
+        
+        /* CSS untuk hujan konfeti */
+        .falling-confetti { position: fixed; top: -20px; border-radius: 50%; pointer-events: none; z-index: 1500; }
     </style>
 </head>
 <body>
@@ -215,6 +218,7 @@
                     document.getElementById("birthdayName").textContent = pageData.birthdayName;
                     calculateAndDisplayAge(pageData.birthDate);
                     initScrollAnimations();
+                    startFullScreenConfetti(); // <-- MEMANGGIL EFEK HUJAN KONFETI
                     hideFeedback();
                 }, 1500);
             } else {
@@ -240,20 +244,15 @@
             passwordInput.setAttribute("type", type);
             this.classList.toggle("fa-eye"); this.classList.toggle("fa-eye-slash");
         });
-
         function calculateAndDisplayAge(birthDate) {
             const birthDateObj = new Date(birthDate), today = new Date(); let age = today.getFullYear() - birthDateObj.getFullYear(); const monthDiff = today.getMonth() - birthDateObj.getMonth();
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) { age--; }
             document.getElementById("ageDisplay").innerText = `Hari ini usiamu genap ${age} tahun. Selamat!`;
         }
-
         function initScrollAnimations() {
             const cards = document.querySelectorAll('.message-card');
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('is-visible');
-                    else entry.target.classList.remove('is-visible');
-                });
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
             }, { root: null, rootMargin: '0px', threshold: 0.25 });
             cards.forEach((card, index) => {
                 card.style.setProperty('--initial-rotation', index % 2 === 0 ? '-20deg' : '20deg');
@@ -261,30 +260,45 @@
                 observer.observe(card);
             });
         }
-        
         function openGift() { giftModal.style.display = "flex"; }
-        
-        // FUNGSI INI TELAH DIPERBAIKI UNTUK MEMUAT DATA DINAMIS
         function openCard() {
             giftBox.style.display = "none";
             giftCard.style.display = "block";
-            
-            // Memuat data dinamis
             document.getElementById("giftCardName").textContent = pageData.birthdayName;
             const qrImg = document.getElementById("qrCodeImg");
             qrImg.src = pageData.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`Selamat Ulang Tahun ${pageData.birthdayName}!`)}`;
         }
-
         function closeGiftModal() { 
             giftModal.style.display = "none"; 
-            // Reset ke tampilan awal
-            setTimeout(() => {
-                giftCard.style.display = "none"; 
-                giftBox.style.display = "block"; 
-            }, 500); // Beri jeda sebelum reset
+            setTimeout(() => { giftCard.style.display = "none"; giftBox.style.display = "block"; }, 500);
         }
-        
         giftModal.addEventListener("click", e => { if (e.target === giftModal) closeGiftModal(); });
+
+        // --- FUNGSI BARU UNTUK HUJAN KONFETI ---
+        function startFullScreenConfetti() {
+            const colors = ['#ff7e5f', '#feb47b', '#ffc371', '#ff5f6d', '#30cfd0', '#a1ffce'];
+            setInterval(() => {
+                const confettiEl = document.createElement('div');
+                confettiEl.classList.add('falling-confetti');
+                confettiEl.style.left = Math.random() * 100 + 'vw';
+                confettiEl.style.width = `${Math.random() * 8 + 6}px`;
+                confettiEl.style.height = confettiEl.style.width;
+                confettiEl.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confettiEl.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                document.body.appendChild(confettiEl);
+
+                confettiEl.animate([
+                    { transform: 'translateY(0px) rotate(0deg)' },
+                    { transform: `translateY(110vh) rotate(${Math.random() * 360}deg)` }
+                ], {
+                    duration: 4000 + Math.random() * 3000,
+                    easing: 'linear'
+                }).onfinish = () => {
+                    confettiEl.remove();
+                };
+            }, 150); // Membuat konfeti baru setiap 150ms
+        }
     </script>
 </body>
 </html>
