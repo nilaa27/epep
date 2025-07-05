@@ -19,22 +19,46 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body {
-            background: var(--darker); min-height: 100vh; display: flex;
-            justify-content: center; align-items: center; color: #fff;
-            position: relative; overflow: hidden; padding: 20px;
+            background: var(--darker);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
         }
         body::before, body::after { content: ''; position: absolute; top: 50%; left: 50%; width: 800px; height: 800px; background-image: radial-gradient(circle, var(--primary) 0%, rgba(255,126,95,0) 60%); border-radius: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s linear infinite; filter: blur(100px); opacity: 0.4; }
         body::after { background-image: radial-gradient(circle, var(--accent2) 0%, rgba(255,95,109,0) 60%); animation-name: move-aurora-2; animation-delay: -10s; }
         @keyframes move-aurora { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); } 50% { transform: translate(-45%, -55%) rotate(180deg) scale(1.2); } 100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); } }
         @keyframes move-aurora-2 { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1.1); } 50% { transform: translate(-55%, -45%) rotate(-180deg) scale(0.9); } 100% { transform: translate(-50%, -50%) rotate(-360deg) scale(1.1); } }
         .container { width: 100%; max-width: 1100px; perspective: 1500px; z-index: 10; }
-        #auth-container { position: relative; width: 100%; height: auto; max-width: 450px; margin: auto; transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), max-width 0.8s ease, height 0.8s ease; transform-style: preserve-3d; }
+        #auth-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+            max-width: 450px;
+            margin: auto;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), max-width 0.8s ease, height 0.8s ease;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
         .box { background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; width: 100%; height: 100%; position: absolute; top: 0; left: 0; transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.6s ease; backface-visibility: hidden; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1); overflow: hidden; display: flex; flex-direction: column; }
         #adminLoginBox { position: relative; transform: rotateY(0deg); opacity: 1; z-index: 2; justify-content: center; align-items: center; }
         #auth-container.is-active #adminLoginBox { transform: rotateY(180deg); opacity: 0; pointer-events: none; }
         #adminPanelBox { position: relative; transform: rotateY(-180deg); opacity: 0; }
-        #auth-container.is-active { max-width: 900px; max-height: 90vh; height: 750px;}
-        #auth-container.is-active #adminPanelBox { transform: rotateY(0deg); opacity: 1; z-index: 2; position: relative; }
+        #auth-container.is-active { max-width: 900px; max-height: 95vh; height: auto; }
+        #auth-container.is-active #adminPanelBox {
+            transform: rotateY(0deg);
+            opacity: 1;
+            z-index: 2;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
         .login-content { width: 100%; max-width: 330px; position: relative; z-index: 2; }
         .header { text-align: center; margin-bottom: 30px; }
         .header-icon { width: 75px; height: 75px; background: linear-gradient(45deg, var(--accent2), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; border: 2px solid var(--glass-border); box-shadow: 0 8px 30px rgba(255, 95, 109, 0.4); animation: float 4s ease-in-out infinite; }
@@ -49,7 +73,6 @@
         .input-wrapper .icon-right { left: auto; right: 16px; cursor: pointer; }
         .input-wrapper .icon-right:hover { color: var(--accent1); transform: translateY(-50%) scale(1.1); }
         .input-field { width: 100%; padding: 14px 16px 14px 45px; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-size: 1rem; transition: var(--transition-fast); }
-        .input-field[readonly] { background: rgba(0,0,0,0.4); cursor: default; }
         .input-field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 126, 95, 0.4); }
         .input-field:focus ~ i { color: var(--accent1); transform: translateY(-50%) scale(1.1); }
         #togglePassword { right: 16px; left: auto; cursor: pointer; }
@@ -62,18 +85,15 @@
         .panel-header h1 i { color: var(--primary); margin-right: 10px; }
         .logout-btn { background: var(--glass); border: 1px solid var(--glass-border); color: var(--light-text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logout-btn:hover { background: var(--primary); color: #fff; transform: rotate(15deg); }
-        
-        /* === PERUBAHAN DI SINI === */
         .panel-main {
             flex-grow: 1;
-            overflow-y: auto;   /* Izinkan scroll vertikal (atas-bawah) */
-            overflow-x: hidden; /* Cegah scroll horizontal (kanan-kiri) */
+            overflow-y: auto;
+            overflow-x: hidden;
             width: 100%;
             position: relative;
             z-index: 2;
-            padding-right: 5px; /* sedikit ruang untuk scrollbar */
+            padding-right: 5px;
         }
-
         .panel-section { background: rgba(255, 255, 255, 0.03); border-radius: 18px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--glass-border); }
         .section-title { display: flex; align-items: center; gap: 15px; font-size: 1.3rem; font-weight: 600; color: var(--light-text); margin-bottom: 25px; }
         .section-title i { color: var(--primary); font-size: 1.5rem; }
@@ -102,16 +122,32 @@
         }
 
         @media (max-width: 991px) {
-            #auth-container.is-active { height: 95vh; max-height: none; }
-            #adminPanelBox { padding: 20px 15px; }
-            .panel-main {
-                display: flex; flex-direction: column; gap: 20px;
-                padding-right: 0;
+            #auth-container.is-active {
+                max-height: 95vh;
+                height: auto;
+                overflow: hidden;
             }
-            .panel-section { padding: 20px; margin-bottom: 0; }
+            #adminPanelBox {
+                padding: 20px 15px;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                overflow: hidden;
+            }
+            .panel-main {
+                flex-grow: 1;
+                overflow-y: auto;
+                overflow-x: hidden;
+                width: 100%;
+                padding-right: 5px;
+            }
+            .panel-section { padding: 20px; margin-bottom: 15px; }
             .panel-actions {
-                 padding: 20px; flex-direction: column;
-                 align-items: stretch; gap: 15px;
+                 padding: 20px;
+                 flex-direction: column;
+                 align-items: stretch;
+                 gap: 15px;
+                 margin-top: auto;
             }
             .btn-save { width: 100%; }
         }
@@ -190,7 +226,7 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const authContainer = document.getElementById('auth-container');
-        let currentAdminId = null; 
+        let currentAdminId = null;
 
         function showFeedback(state, title, message = '') {
             const feedbackModal = document.getElementById('feedbackModal'), feedbackTitle = document.getElementById('feedbackTitle'), feedbackMessage = document.getElementById('feedbackMessage'), loader = document.getElementById('feedbackLoader'), successIcon = document.getElementById('successIcon'), failureIcon = document.getElementById('failureIcon');
@@ -203,7 +239,7 @@
             else if (state === 'failure') { failureIcon.classList.remove('hidden'); feedbackContent.style.borderColor = 'var(--error)'; }
         }
         function hideFeedback() { document.getElementById('feedbackModal').style.display = 'none'; }
-        
+
         function adminLogin() {
             const user = document.getElementById('adminUser').value.trim();
             const pass = document.getElementById('adminPass').value;
@@ -227,7 +263,7 @@
                     setTimeout(() => {
                         hideFeedback();
                         authContainer.classList.add('is-active');
-                        loadDataToForm(); 
+                        loadDataToForm();
                     }, 1500);
                 } else {
                     showFeedback('failure', 'Login Gagal!', 'Username atau password salah.');
@@ -238,7 +274,7 @@
                 setTimeout(hideFeedback, 3000);
             });
         }
-        
+
         function logout() {
             currentAdminId = null;
             authContainer.classList.remove('is-active');
@@ -247,7 +283,7 @@
             document.getElementById('adminPass').value = '';
             updateQrPreview();
         }
-        
+
         function loadDataToForm() {
             if (!currentAdminId) return;
             showFeedback('loading', 'Memuat Data...');
@@ -267,7 +303,7 @@
                 setTimeout(hideFeedback, 3000);
             });
         }
-        
+
         function saveData() {
             if (!currentAdminId) {
                 showFeedback('failure', 'Error', 'Admin ID tidak ditemukan. Silakan login ulang.');
