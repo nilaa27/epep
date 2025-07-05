@@ -105,15 +105,26 @@
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         .main-title span { color: var(--primary); }
         .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
+        
         .message-card {
             background: var(--bg-color);
             border-radius: var(--border-radius-main);
             box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
-            padding: 30px; color: var(--text-color);
-            opacity: 0; transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            padding: 30px;
+            color: var(--text-color);
+
+            /* ANIMASI ASLI YANG DIKEMBALIKAN */
+            opacity: 0;
+            filter: blur(5px);
+            transform: perspective(800px) rotateY(var(--initial-rotation, -20deg)) scale(0.9);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.8s ease-out, opacity 0.6s ease-out;
         }
-        .message-card.is-visible { opacity: 1; transform: translateY(0); }
+        .message-card.is-visible {
+            opacity: 1;
+            filter: blur(0);
+            transform: perspective(800px) rotateY(0) scale(1);
+        }
+
         .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--primary); }
         .card-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
         .card-text { font-size: 1rem; line-height: 1.6; font-weight: 300; color: var(--text-light); }
@@ -328,11 +339,11 @@
                 }
                 const years = Math.floor(months / 12);
                 const remainingMonths = months % 12;
-                document.getElementById("ageDisplay").innerText = `Hari ini usiamu genap ${years} tahun ${remainingMonths} bulan. Selamat!`;
+                document.getElementById("ageDisplay").innerText = `sudah berapa lama kamu bertahan? yaitu, ${years} tahun ${remainingMonths} bulan. Selamat!`;
             } else {
                  const birthDateObj = new Date(birthDate), today = new Date(); let age = today.getFullYear() - birthDateObj.getFullYear(); const monthDiff = today.getMonth() - birthDateObj.getMonth();
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) { age--; }
-                document.getElementById("ageDisplay").innerText = `sudah berapa lama kamu bertahan?. Selamat!`;
+                document.getElementById("ageDisplay").innerText = `Hari ini usiamu genap ${age} tahun. Selamat!`;
             }
         }
         
@@ -340,18 +351,23 @@
             const cards = document.querySelectorAll('.message-card');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
+                    // LOGIKA ASLI DIKEMBALIKAN AGAR ANIMASI BISA BERULANG
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
+                    } else {
+                        entry.target.classList.remove('is-visible');
                     }
                 });
             }, { root: null, rootMargin: '0px', threshold: 0.1 });
 
             cards.forEach((card, index) => {
+                // Menambahkan properti --initial-rotation dari versi asli
+                card.style.setProperty('--initial-rotation', index % 2 === 0 ? '-20deg' : '20deg');
                 card.style.transitionDelay = `${index * 150}ms`;
                 observer.observe(card);
             });
         }
+
 
         function openGift() { giftModal.style.display = "flex"; }
         
@@ -402,6 +418,8 @@
                 const piece = document.createElement('div');
                 piece.classList.add('confetti-piece');
                 piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.width = `${Math.random() * 12 + 5}px`;
+                piece.style.height = `${piece.style.width * 0.6}px`;
                 document.body.appendChild(piece);
                 const angle = Math.random() * 360, distance = Math.random() * (window.innerWidth / 2.5) + 50;
                 const x = Math.cos(angle * Math.PI / 180) * distance;
