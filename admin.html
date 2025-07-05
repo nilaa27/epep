@@ -18,7 +18,18 @@
             --light-text: rgba(255, 255, 255, 0.9); --transition-fast: all 0.3s ease;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--darker); min-height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; position: relative; overflow: hidden; padding: 20px; }
+        /* Pengaturan ini membuat semua konten pas di tengah dan tidak bisa digeser */
+        body {
+            background: var(--darker);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden; /* Mencegah scroll horizontal */
+            padding: 20px;
+        }
         body::before, body::after { content: ''; position: absolute; top: 50%; left: 50%; width: 800px; height: 800px; background-image: radial-gradient(circle, var(--primary) 0%, rgba(255,126,95,0) 60%); border-radius: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s linear infinite; filter: blur(100px); opacity: 0.4; }
         body::after { background-image: radial-gradient(circle, var(--accent2) 0%, rgba(255,95,109,0) 60%); animation-name: move-aurora-2; animation-delay: -10s; }
         @keyframes move-aurora { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); } 50% { transform: translate(-45%, -55%) rotate(180deg) scale(1.2); } 100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); } }
@@ -79,7 +90,7 @@
         .qr-preview-container { margin-top: 15px; }
         .qr-preview-image { max-width: 150px; border-radius: 10px; border: 1px solid var(--glass-border); display: none; }
 
-        /* Responsive Layout Grid for Desktop */
+        /* Tata Letak Grid untuk Desktop */
         @media (min-width: 992px) {
             #adminPanelBox .box { padding: 40px; }
             .panel-main { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; padding-top: 20px; }
@@ -87,7 +98,7 @@
             .panel-section[data-span="2"] { grid-column: span 2; }
         }
 
-        /* Modern Responsive Styles for Mobile */
+        /* Tampilan Modern dan Responsif untuk Mobile */
         @media (max-width: 991px) {
             #auth-container.is-active {
                 height: 95vh;
@@ -100,7 +111,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
-                padding-right: 5px; /* Adjust scrollbar padding */
+                padding-right: 5px;
             }
             .panel-section {
                 padding: 20px;
@@ -312,7 +323,6 @@
             });
             document.getElementById('qrImageUrlInput').addEventListener('input', updateQrPreview);
 
-            // New: Add click listener for the copy button
             document.getElementById('copyLinkBtn').addEventListener('click', function() {
                 const linkInput = document.getElementById('shareableLink');
                 const linkToCopy = linkInput.value;
@@ -321,7 +331,6 @@
                     navigator.clipboard.writeText(linkToCopy).then(() => {
                         showFeedback('success', 'Tersalin!', 'Link berhasil disalin ke clipboard.');
                         setTimeout(hideFeedback, 2000);
-                        // Visual feedback on icon
                         this.classList.remove('fa-copy');
                         this.classList.add('fa-check');
                         setTimeout(() => {
