@@ -18,17 +18,10 @@
             --light-text: rgba(255, 255, 255, 0.9); --transition-fast: all 0.3s ease;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        /* Pengaturan ini membuat semua konten pas di tengah dan tidak bisa digeser */
         body {
-            background: var(--darker);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            position: relative;
-            overflow: hidden; /* Mencegah scroll horizontal */
-            padding: 20px;
+            background: var(--darker); min-height: 100vh; display: flex;
+            justify-content: center; align-items: center; color: #fff;
+            position: relative; overflow: hidden; padding: 20px;
         }
         body::before, body::after { content: ''; position: absolute; top: 50%; left: 50%; width: 800px; height: 800px; background-image: radial-gradient(circle, var(--primary) 0%, rgba(255,126,95,0) 60%); border-radius: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s linear infinite; filter: blur(100px); opacity: 0.4; }
         body::after { background-image: radial-gradient(circle, var(--accent2) 0%, rgba(255,95,109,0) 60%); animation-name: move-aurora-2; animation-delay: -10s; }
@@ -69,7 +62,18 @@
         .panel-header h1 i { color: var(--primary); margin-right: 10px; }
         .logout-btn { background: var(--glass); border: 1px solid var(--glass-border); color: var(--light-text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logout-btn:hover { background: var(--primary); color: #fff; transform: rotate(15deg); }
-        .panel-main { flex-grow: 1; overflow-y: auto; padding-right: 15px; width: 100%; position: relative; z-index: 2; }
+        
+        /* === PERUBAHAN DI SINI === */
+        .panel-main {
+            flex-grow: 1;
+            overflow-y: auto;   /* Izinkan scroll vertikal (atas-bawah) */
+            overflow-x: hidden; /* Cegah scroll horizontal (kanan-kiri) */
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            padding-right: 5px; /* sedikit ruang untuk scrollbar */
+        }
+
         .panel-section { background: rgba(255, 255, 255, 0.03); border-radius: 18px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--glass-border); }
         .section-title { display: flex; align-items: center; gap: 15px; font-size: 1.3rem; font-weight: 600; color: var(--light-text); margin-bottom: 25px; }
         .section-title i { color: var(--primary); font-size: 1.5rem; }
@@ -90,7 +94,6 @@
         .qr-preview-container { margin-top: 15px; }
         .qr-preview-image { max-width: 150px; border-radius: 10px; border: 1px solid var(--glass-border); display: none; }
 
-        /* Tata Letak Grid untuk Desktop */
         @media (min-width: 992px) {
             #adminPanelBox .box { padding: 40px; }
             .panel-main { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; padding-top: 20px; }
@@ -98,34 +101,19 @@
             .panel-section[data-span="2"] { grid-column: span 2; }
         }
 
-        /* Tampilan Modern dan Responsif untuk Mobile */
         @media (max-width: 991px) {
-            #auth-container.is-active {
-                height: 95vh;
-                max-height: none;
-            }
-            #adminPanelBox {
-                padding: 20px 15px;
-            }
+            #auth-container.is-active { height: 95vh; max-height: none; }
+            #adminPanelBox { padding: 20px 15px; }
             .panel-main {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                padding-right: 5px;
+                display: flex; flex-direction: column; gap: 20px;
+                padding-right: 0;
             }
-            .panel-section {
-                padding: 20px;
-                margin-bottom: 0;
-            }
+            .panel-section { padding: 20px; margin-bottom: 0; }
             .panel-actions {
-                 padding: 20px;
-                 flex-direction: column;
-                 align-items: stretch;
-                 gap: 15px;
+                 padding: 20px; flex-direction: column;
+                 align-items: stretch; gap: 15px;
             }
-            .btn-save {
-                width: 100%;
-            }
+            .btn-save { width: 100%; }
         }
     </style>
 </head>
