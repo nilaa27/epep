@@ -6,28 +6,27 @@
     <title>Data Management - Super Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
     <style>
         :root {
-            --bg-color: #1a1c23;
-            --surface-color: #23252e;
-            --surface-color-hover: #2c2f3a;
-            --primary-color: #007bff; /* Blue */
-            --primary-color-hover: #0056b3; /* Darker Blue */
-            --text-primary: #f0f2f5;
-            --text-secondary: #a0a4ac;
-            --border-color: #363944;
-            --shadow-color: rgba(0, 0, 0, 0.2);
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --font-family: 'Inter', sans-serif;
-            --border-radius: 12px;
-            --transition-speed: 0.25s ease;
+            /* Dark Neumorphic Palette */
+            --bg-color: #2c2f36;
+            --shadow-dark: #202227;
+            --shadow-light: #383c45;
+            --text-color: #d1d5db;
+            --text-light: #8a91a0;
+            --primary: #5a7dff;
+            --primary-dark: #4a6fe0;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --transition-smooth: all 0.3s ease-in-out;
+            --border-radius-main: 24px;
+            --border-radius-inner: 15px;
         }
 
         @keyframes fadeIn {
@@ -39,16 +38,12 @@
             to { transform: rotate(360deg); }
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
-            font-family: var(--font-family);
-            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -58,371 +53,189 @@
 
         /* --- UTILITIES --- */
         .hidden { display: none !important; }
+        
         .btn {
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: none;
-            /* Changed border-radius to match the very rounded style in the image */
-            border-radius: 9999px; /* This creates a very rounded, pill-like shape */
+            border-radius: var(--border-radius-inner);
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: all var(--transition-speed);
-            /* Make sure it's a flex container to align icon and text */
-            display: flex;
-            justify-content: center; /* Center content horizontally within the button */
-            align-items: center; /* Center content vertically within the button */
-            gap: 8px; /* Space between icon and text */
-            text-decoration: none;
-            width: fit-content; /* Make button only as wide as its content by default */
-            margin: 0 auto; /* Added for centering the button itself if it's the only element in a block */
-        }
-
-        .btn-primary {
-            /* Use a gradient for the background to match the image's appearance */
-            background: linear-gradient(to right, var(--primary-color), var(--primary-color-hover)); /* Blue gradient */
-            color: white;
-            /* Adjusted box-shadow for a more prominent effect like in the image */
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-        }
-        .btn-primary:hover {
-            /* Slightly change the gradient on hover */
-            background: linear-gradient(to right, var(--primary-color-hover), var(--primary-color));
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
-        }
-        .btn-danger { background-color: var(--danger-color); color: white; }
-        .btn-secondary { background-color: #6c757d; color: white; }
-
-        /* --- PASSWORD MODAL --- */
-        .password-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
-            display: flex;
+            transition: var(--transition-smooth);
+            display: inline-flex;
             justify-content: center;
             align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            background: var(--bg-color);
+            box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+        }
+        .btn:hover:not(:disabled) { transform: translateY(-2px); }
+        .btn:active:not(:disabled) {
+            transform: translateY(0px);
+            box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+        }
+        .btn:disabled { cursor: not-allowed; opacity: 0.7; }
+        .btn-primary { color: var(--primary); }
+        .btn-primary:hover:not(:disabled) { color: var(--primary-dark); }
+        .btn-danger { color: var(--danger); }
+        .btn-secondary { color: var(--text-light); }
+
+        .neumorphic-panel {
+            background: var(--bg-color);
+            border-radius: var(--border-radius-main);
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+            padding: 2.5rem;
+        }
+
+        .neumorphic-inset {
+            background: var(--bg-color);
+            border-radius: var(--border-radius-inner);
+            box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light);
+            border: none;
+        }
+        
+        /* --- PASSWORD MODAL --- */
+        .password-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center;
             z-index: 5000;
         }
         .password-box {
-            background-color: var(--surface-color);
-            padding: 40px;
-            border-radius: var(--border-radius);
             text-align: center;
-            width: 90%;
-            max-width: 400px;
+            width: 90%; max-width: 400px;
             animation: fadeIn 0.4s ease forwards;
-            border: 1px solid var(--border-color);
         }
         .password-box h2 { margin-bottom: 1rem; font-size: 1.5rem; }
         .password-box p { margin-bottom: 2rem; color: var(--text-secondary); }
         .password-box input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            color: var(--text-primary);
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%; padding: 14px;
+            color: var(--text-color); font-size: 1rem;
+            margin-bottom: 1.5rem; outline: none;
         }
-        .password-box input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
-        }
-        /* Specific styling for the button inside password-box to make it full width */
-        .password-box .btn {
-            width: 100%; /* Make the button fill the width of its container */
-            margin: 0; /* Override margin: 0 auto from .btn if it's not desired here */
-        }
+        .password-box .btn { width: 100%; }
 
         /* --- KONTEN UTAMA --- */
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        .header {
-            display: flex;
-            justify-content: center; /* Center the title */
-            align-items: center;
-            margin-bottom: 2rem;
-            text-align: center; /* Ensure text inside is centered */
-        }
-        .header-title h1 {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        .header-title p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        .main-content-panel {
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            border: 1px solid var(--border-color);
-        }
+        .container { width: 100%; max-width: 1200px; animation: fadeIn 0.5s ease forwards; }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { font-size: 2rem; font-weight: 700; }
+        .header p { color: var(--text-secondary); font-size: 1rem; }
 
         .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem;
         }
-        .search-wrapper {
-            position: relative;
-            flex-grow: 1;
-            min-width: 250px;
-        }
+        .search-wrapper { position: relative; flex-grow: 1; min-width: 250px; }
         .search-wrapper i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
+            position: absolute; left: 18px; top: 50%;
+            transform: translateY(-50%); color: var(--text-secondary);
         }
         #searchInput {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all var(--transition-speed);
+            width: 100%; padding: 14px 15px 14px 50px;
+            color: var(--text-primary); font-size: 1rem;
+            transition: all var(--transition-smooth);
         }
-        #searchInput:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
-        }
-        
-        #loader {
-            display: flex;
-            justify-content: center;
-            padding: 4rem 0;
-        }
+        #searchInput:focus { outline: none; }
+        #searchInput:focus ~ i { color: var(--primary); }
+
+        #loader { display: flex; justify-content: center; padding: 4rem 0; }
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--border-color);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            width: 50px; height: 50px;
+            border: 5px solid var(--shadow-dark);
+            border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite;
         }
 
         .user-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
         }
 
         .user-card {
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            transition: all var(--transition-speed);
-            box-shadow: 0 2px 10px var(--shadow-color);
+            padding: 1.5rem; display: flex; flex-direction: column;
+            gap: 1rem; transition: all var(--transition-smooth);
+            border-radius: var(--border-radius-inner); /* Inner radius for cards */
         }
-        .user-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-color);
-        }
-
+        .user-card:hover { transform: translateY(-5px); }
         .user-card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: center; gap: 1rem;
+            padding-bottom: 1rem; border-bottom: 1px solid var(--shadow-light);
         }
         .user-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 700;
-            font-size: 1.5rem;
-            flex-shrink: 0;
+            width: 48px; height: 48px; border-radius: 50%;
+            color: var(--primary); font-weight: 700;
+            font-size: 1.5rem; flex-shrink: 0;
+            display: flex; justify-content: center; align-items: center;
         }
-        .user-info h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .user-info p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-        .user-card-body {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            font-size: 0.9rem;
-        }
+        .user-info h3 { font-size: 1.1rem; font-weight: 600; }
+        .user-info p { font-size: 0.9rem; color: var(--text-secondary); overflow-wrap: break-word; }
+        .user-card-body { display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem; }
         .user-card-body div { display: flex; justify-content: space-between; }
         .user-card-body .label { color: var(--text-secondary); }
-        .user-card-body .value { color: var(--text-primary); font-weight: 500; }
+        .user-card-body .value { font-weight: 500; }
         .password-value { font-family: monospace; letter-spacing: 1px; }
 
         .user-card-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
+            display: flex; gap: 0.75rem; margin-top: auto;
+            padding-top: 1rem; border-top: 1px solid var(--shadow-light);
         }
-        /* Override default .btn centering for action buttons */
-        .user-card-actions .btn {
-            flex-grow: 1;
-            padding: 8px 10px;
-            font-size: 0.85rem;
-            margin: 0; /* Remove default margin auto */
-            width: auto; /* Allow buttons to size based on content and flex-grow */
-        }
-        .btn-edit { background-color: transparent; border: 1px solid #6c757d; color: var(--text-primary); }
-        .btn-edit:hover { background-color: #6c757d; color: white; }
-        .btn-delete { background-color: transparent; border: 1px solid var(--danger-color); color: var(--danger-color); }
-        .btn-delete:hover { background-color: var(--danger-color); color: white; }
+        .user-card-actions .btn { flex-grow: 1; padding: 8px 10px; font-size: 0.85rem; }
+        .btn-edit { color: var(--text-secondary); }
+        .btn-edit:hover { color: var(--text-color); }
         
-        .no-data-message {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
-        }
+        .no-data-message { text-align: center; padding: 3rem; color: var(--text-secondary); }
 
         /* --- ADD/EDIT MODAL --- */
         .modal {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
         }
-        .modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: var(--surface-color);
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 500px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px var(--shadow-color);
-            transform: scale(0.95);
-            transition: transform 0.3s;
-        }
+        .modal.show { opacity: 1; visibility: visible; }
+        .modal-content { width: 90%; max-width: 500px; transform: scale(0.95); transition: transform 0.3s; }
         .modal.show .modal-content { transform: scale(1); }
 
         .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 2rem;
         }
         .modal-header h2 { font-size: 1.5rem; }
         .close-button {
             background: none; border: none; font-size: 1.8rem;
             color: var(--text-secondary); cursor: pointer;
-            transition: color var(--transition-speed);
+            transition: color var(--transition-smooth);
         }
-        .close-button:hover { color: var(--text-primary); }
-
+        .close-button:hover { color: var(--text-color); }
         .form-group { margin-bottom: 1.5rem; }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-        .form-group input {
-            width: 100%; padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all var(--transition-speed);
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        /* Override default .btn centering for modal footer buttons */
-        .modal-footer .btn {
-            margin: 0; /* Remove default margin auto */
-            width: auto; /* Allow buttons to size based on content */
-        }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input { width: 100%; padding: 14px; font-size: 1rem; color: var(--text-color); }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
         
         /* --- BACK BUTTON STYLING --- */
-        .back-button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        .back-btn {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
-        }
-
-        .back-btn:hover {
-            background-color: var(--primary-color-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
-        }
-
+        .back-button-container { display: flex; justify-content: center; margin-top: 2rem; }
+        
         /* --- Kustomisasi SweetAlert2 --- */
         .swal2-popup {
-            background-color: var(--surface-color) !important;
-            border-radius: var(--border-radius) !important;
-            border: 1px solid var(--border-color) !important;
-            color: var(--text-primary) !important;
+            background-color: var(--bg-color) !important;
+            border-radius: var(--border-radius-main) !important;
+            color: var(--text-color) !important;
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light) !important;
         }
-        .swal2-title { color: var(--text-primary) !important; }
+        .swal2-title { color: var(--text-color) !important; }
         .swal2-html-container { color: var(--text-secondary) !important; }
-        .swal2-confirm { background-color: var(--primary-color) !important; box-shadow: none !important;}
-        .swal2-cancel { background-color: #6c757d !important; box-shadow: none !important;}
-        .swal2-icon.swal2-success .swal2-success-line-tip,
-        .swal2-icon.swal2-success .swal2-success-line-long { background-color: var(--success-color) !important; }
-        .swal2-icon.swal2-success .swal2-success-ring { border-color: var(--success-color) !important; }
-        .swal2-icon.swal2-error .swal2-x-mark-line-left,
-        .swal2-icon.swal2-error .swal2-x-mark-line-right { background-color: var(--danger-color) !important; }
-        .swal2-icon.swal2-error { border-color: var(--danger-color) !important; }
-        .swal2-icon.swal2-warning { border-color: var(--warning-color) !important; color: var(--warning-color) !important; }
+        .swal2-confirm, .swal2-cancel {
+             box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light) !important;
+             border: none !important;
+        }
+        .swal2-confirm { background-color: var(--bg-color) !important; color: var(--primary) !important; }
+        .swal2-cancel { background-color: var(--bg-color) !important; color: var(--text-light) !important;}
+        .swal2-icon.swal2-success .swal2-success-ring { border-color: var(--success) !important; }
+        .swal2-icon.swal2-error { border-color: var(--danger) !important; }
+        .swal2-icon.swal2-warning { border-color: var(--warning) !important; color: var(--warning) !important; }
 
         /* --- Responsive --- */
         @media (max-width: 600px) {
@@ -439,11 +252,11 @@
 <body>
 
     <div class="password-modal" id="passwordModal">
-        <div class="password-box">
+        <div class="password-box neumorphic-panel">
             <h2><i class="fas fa-user-shield"></i> Akses Super Admin</h2>
             <p>Masukkan password untuk melanjutkan ke panel manajemen.</p>
             <form id="passwordForm">
-                <input type="password" id="superAdminPassword" placeholder="••••••••" required autocomplete="current-password">
+                <input type="password" id="superAdminPassword" class="neumorphic-inset" placeholder="••••••••" required autocomplete="current-password">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-arrow-right-to-bracket"></i> Masuk</button>
             </form>
         </div>
@@ -457,11 +270,11 @@
             </div>
         </div>
 
-        <div class="main-content-panel">
+        <div class="main-content-panel neumorphic-panel">
             <div class="toolbar">
                 <div class="search-wrapper">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Cari admin berdasarkan username...">
+                    <input type="text" id="searchInput" class="neumorphic-inset" placeholder="Cari admin berdasarkan username...">
                 </div>
                 <button class="btn btn-primary" id="addAdminBtn"><i class="fas fa-plus"></i> Tambah Admin Baru</button>
             </div>
@@ -471,8 +284,7 @@
             </div>
             
             <div id="userListContainer" class="hidden">
-                 <div class="user-list" id="userList">
-                    </div>
+                 <div class="user-list" id="userList"></div>
                  <div id="noDataMessage" class="no-data-message hidden">
                     <h3>Tidak Ada Data</h3>
                     <p>Belum ada admin yang terdaftar atau sesuai dengan pencarian Anda.</p>
@@ -481,12 +293,12 @@
         </div>
         
         <div class="back-button-container">
-            <a href="admin.html" class="btn back-btn"><i class="fas fa-arrow-left"></i> Kembali</a>
+            <a href="admin.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
         </div>
     </div>
 
     <div class="modal" id="userModal">
-        <div class="modal-content">
+        <div class="modal-content neumorphic-panel">
             <div class="modal-header">
                 <h2 id="modalTitle">Tambah Admin Baru</h2>
                 <button class="close-button" id="closeModalBtn">&times;</button>
@@ -495,11 +307,11 @@
                 <input type="hidden" id="adminId">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" required>
+                    <input type="text" id="username" class="neumorphic-inset" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="text" id="password" required>
+                    <input type="text" id="password" class="neumorphic-inset" required>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="cancelModalBtn">Batal</button>
@@ -520,7 +332,7 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const SUPER_ADMIN_PASSWORD = "Xlord01"; // Make sure to change this to a strong password in a real application!
+        const SUPER_ADMIN_PASSWORD = "Xlord01"; // Make sure to change this to a strong password!
         let allAdmins = {}; 
 
         // DOM Elements
@@ -595,16 +407,16 @@
             
             adminIds.forEach(id => {
                 const admin = adminsObject[id];
-                const date = new Date(admin.createdAt);
+                const date = admin.createdAt ? new Date(admin.createdAt) : new Date();
                 const formattedDate = date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
                 const firstLetter = admin.username ? admin.username.charAt(0).toUpperCase() : '?';
 
                 const card = document.createElement('div');
-                card.className = 'user-card';
+                card.className = 'user-card neumorphic-panel';
                 card.dataset.adminId = id;
                 card.innerHTML = `
                     <div class="user-card-header">
-                        <div class="user-avatar">${firstLetter}</div>
+                        <div class="user-avatar neumorphic-inset">${firstLetter}</div>
                         <div class="user-info">
                             <h3>${admin.username || 'N/A'}</h3>
                             <p>ID: ${id}</p>
@@ -687,7 +499,7 @@
                 return;
             }
 
-            if (id) {
+            if (id) { // Edit mode
                 const updates = { username, password };
                 database.ref(`/admins/${id}`).update(updates)
                     .then(() => {
@@ -695,7 +507,7 @@
                         closeModal();
                     })
                     .catch(err => Swal.fire({ icon: 'error', title: 'Gagal Memperbarui', text: err.message }));
-            } else {
+            } else { // Add mode
                 const newAdminRef = database.ref('/admins').push();
                 const newAdminId = newAdminRef.key;
                 const newAdminData = {
@@ -703,9 +515,18 @@
                     createdAt: new Date().toISOString()
                 };
                 
+                // Also create a corresponding birthday page
+                const defaultPageData = {
+                    birthdayName: username,
+                    birthDate: "2000-01-01",
+                    guestUser: "guest",
+                    guestPass: "123",
+                    qrImageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YourGiftLinkHere"
+                };
+
                 const updates = {};
                 updates[`/admins/${newAdminId}`] = newAdminData;
-                updates[`/birthday_pages/${newAdminId}`] = { placeholder: true }; // Assuming this is needed for new admins
+                updates[`/birthday_pages/${newAdminId}`] = defaultPageData;
                 
                 database.ref().update(updates)
                     .then(() => {
@@ -719,13 +540,12 @@
         window.deleteUser = (id, username) => {
             Swal.fire({
                 title: 'Konfirmasi Hapus',
-                text: `Anda yakin ingin menghapus "${username}"? Semua data terkait (termasuk halaman ulang tahun) akan ikut terhapus.`,
+                html: `Anda yakin ingin menghapus <b>"${username}"</b>?<br>Semua data terkait (termasuk halaman ulang tahun) akan ikut terhapus secara permanen.`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal',
-                confirmButtonColor: '#dc3545',
-                cancelButtonColor: '#6c757d'
+                reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
                     const updates = {
