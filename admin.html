@@ -37,18 +37,17 @@
         .container {
              width: 100%;
              max-width: 1100px;
-             height: 95vh; /* Beri tinggi agar bisa jadi acuan posisi */
+             height: 95vh;
              display: flex;
              align-items: center;
              justify-content: center;
              perspective: 1500px;
              z-index: 10;
         }
-
         #auth-container {
             position: relative;
             width: 100%;
-            height: 520px; /* Tinggi awal untuk login box */
+            height: 520px;
             max-width: 450px;
             margin: auto;
             transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), max-width 0.8s ease, height 0.8s ease;
@@ -56,14 +55,12 @@
         }
         #auth-container.is-active {
             max-width: 900px;
-            height: 90vh; /* Tinggi panel admin untuk mengisi layar */
+            height: 90vh;
         }
-
         .box { background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; width: 100%; height: 100%; position: absolute; top: 0; left: 0; transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.6s ease; backface-visibility: hidden; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1); overflow: hidden; display: flex; flex-direction: column; }
         #adminLoginBox { position: relative; transform: rotateY(0deg); opacity: 1; z-index: 2; justify-content: center; align-items: center; }
         #auth-container.is-active #adminLoginBox { transform: rotateY(180deg); opacity: 0; pointer-events: none; }
         #adminPanelBox { position: relative; transform: rotateY(-180deg); opacity: 0; }
-
         #auth-container.is-active #adminPanelBox {
             transform: rotateY(0deg);
             opacity: 1;
@@ -81,7 +78,6 @@
         .input-group label { display: block; color: var(--light-text); font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; padding-left: 8px; }
         .input-wrapper { position: relative; }
         
-        /* === PERBAIKAN CSS IKON === */
         .input-wrapper .icon-left, .input-wrapper .icon-right {
             position: absolute;
             top: 50%;
@@ -183,6 +179,7 @@
                         <div class="input-group">
                             <label for="shareableLink">Copy and share this link with your guests</label>
                             <div class="input-wrapper">
+                                <i class="fas fa-link icon-left"></i>
                                 <input type="text" id="shareableLink" class="input-field" readonly style="padding-right: 45px;">
                                 <i class="fas fa-copy icon-right" id="copyLinkBtn" title="Copy to clipboard"></i>
                             </div>
