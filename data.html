@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Data Management - Super Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
+    <style>
+        :root {
+            --primary: #ff7e5f; /* Coral */
+            --secondary: #feb47b; /* Peach */
+            --accent1: #ffc371; /* Light Orange */
+            --accent2: #ff5f6d; /* Reddish Pink */
+            --dark: #1a1a2e; /* Dark Blue */
+            --darker: #16213e; /* Even Darker Blue */
+            --glass: rgba(255, 255, 255, 0.08); /* Translucent White */
+            --glass-border: rgba(255, 255, 255, 0.15); /* Slightly less translucent white */
+            --success: #30cfd0; /* Teal Green */
+            --error: #f87171; /* Light Red */
+            --light-text: rgba(255, 255, 255, 0.9); /* Off-white for text */
+            --transition-fast: all 0.3s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background: var(--darker); min-height: 100vh;
+            color: #fff; position: relative; overflow-x: hidden;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px; /* Adjusted back to 1000px as password column is removed */
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--accent1));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .header p {
+            font-size: 1.1rem;
+            color: var(--light-text);
+        }
+        .data-table-container {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 20px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow-x: auto; /* For responsive table scrolling */
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #fff;
+            min-width: 600px; /* Ensures table is not too narrow on small screens */
+        }
+        .data-table th, .data-table td {
+            padding: 15px;
+            text-align: left;
+            white-space: nowrap; /* Prevent text wrapping in table cells */
+        }
+        .data-table thead {
+            border-bottom: 2px solid var(--glass-border);
+        }
+        .data-table th {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--light-text);
+        }
+        .data-table tbody tr {
+            border-bottom: 1px solid var(--glass-border);
+            transition: background-color 0.2s ease;
+        }
+        .data-table tbody tr:last-child {
+            border-bottom: none;
+        }
+        .data-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .action-buttons button, .action-buttons a {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .edit-btn { background-color: var(--primary); }
+        .edit-btn:hover { background-color: #ff6a48; transform: translateY(-2px); }
+        .delete-btn { background-color: var(--error); }
+        .delete-btn:hover { background-color: #f75454; transform: translateY(-2px); }
+
+        /* Password Modal */
+        .password-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+        }
+        .password-box {
+            background: var(--dark);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            max-width: 400px;
+            width: 90%;
+        }
+        .password-box h2 { margin-bottom: 10px; font-size: 1.5rem; }
+        .password-box p { margin-bottom: 20px; color: var(--light-text); }
+        .password-box input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.2);
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none; /* Remove outline on focus */
+        }
+        .password-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 126, 95, 0.3);
+        }
+        .password-box button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        .password-box button:hover {
+            background: #ff6a48;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 126, 95, 0.4);
+        }
+        .hidden { display: none !important; } /* Use !important for strong override */
+        .loader { margin: 40px auto; border: 6px solid rgba(255, 255, 255, 0.1); border-top: 6px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* SweetAlert2 custom styles */
+        .swal2-popup {
+            border-radius: 18px !important;
+            background: var(--darker) !important;
+            color: var(--light-text) !important;
+            border: 1px solid var(--glass-border) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important;
+        }
+        .swal2-title {
+            color: var(--light-text) !important;
+        }
+        .swal2-html-container {
+            color: var(--light-text) !important;
+        }
+        .swal2-confirm.swal2-styled {
+            background-color: var(--primary) !important;
+            border: none !important;
+            transition: var(--transition-fast);
+        }
+        .swal2-confirm.swal2-styled:hover {
+            background-color: #ff6a48 !important;
+            transform: translateY(-1px);
+        }
+        .swal2-deny.swal2-styled {
+            background-color: var(--error) !important;
+            border: none !important;
+            transition: var(--transition-fast);
+        }
+        .swal2-deny.swal2-styled:hover {
+            background-color: #f75454 !important;
+            transform: translateY(-1px);
+        }
+        .swal2-input {
+            background-color: rgba(0,0,0,0.2) !important;
+            color: #fff !important;
+            border: 1px solid var(--glass-border) !important;
+            box-shadow: none !important;
+            transition: var(--transition-fast);
+        }
+        .swal2-input:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 2px rgba(255, 126, 95, 0.3) !important;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header p {
+                font-size: 1rem;
+            }
+            .data-table th, .data-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .action-buttons button, .action-buttons a {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+                margin-right: 5px;
+                gap: 3px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .password-box {
+                padding: 25px;
+            }
+            .password-box h2 {
+                font-size: 1.3rem;
+            }
+            .password-box input, .password-box button {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="password-modal" id="passwordModal">
+        <div class="password-box">
+            <h2><i class="fas fa-user-shield"></i> Super Admin Access</h2>
+            <p>Please enter the password to manage data.</p>
+            <form id="passwordForm">
+                <input type="password" id="superAdminPassword" placeholder="••••••••" required autocomplete="current-password">
+                <button type="submit">Unlock</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container hidden" id="mainContent">
+        <div class="header">
+            <h1>Data Management</h1>
+            <p>View, edit, or delete user data.</p>
+        </div>
+        <div class="data-table-container">
+            <div id="loader" class="loader"></div>
+            <table class="data-table hidden" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userDataBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
+    <script>
+        const firebaseConfig = { 
+            apiKey: "GANTI_DENGAN_API_KEY_ANDA", 
+            authDomain: "mayfa-fa284.firebaseapp.com", 
+            databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // --- GANTI PASSWORD SUPER ADMIN DI SINI ---
+        // PENTING: Untuk keamanan yang lebih baik dalam lingkungan produksi,
+        // pertimbangkan untuk menyimpan password ini di server-side atau
+        // menggunakan sistem autentikasi yang lebih aman.
+        const SUPER_ADMIN_PASSWORD = "superadmin123";
+
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordForm = document.getElementById('passwordForm');
+        const mainContent = document.getElementById('mainContent');
+        const loader = document.getElementById('loader');
+        const dataTable = document.getElementById('dataTable');
+        const userDataBody = document.getElementById('userDataBody');
+
+        passwordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const passwordInput = document.getElementById('superAdminPassword').value;
+            if (passwordInput === SUPER_ADMIN_PASSWORD) {
+                passwordModal.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Akses Diberikan!',
+                    text: 'Selamat datang, Super Admin.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    customClass: {
+                        popup: 'swal2-popup',
+                        title: 'swal2-title',
+                        htmlContainer: 'swal2-html-container',
+                        confirmButton: 'swal2-confirm'
+                    }
+                });
+                loadAllUserData();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Akses Ditolak!',
+                    text: 'Password salah. Silakan coba lagi.',
+                    confirmButtonText: 'Oke',
+                    customClass: {
+                        popup: 'swal2-popup',
+                        title: 'swal2-title',
+                        htmlContainer: 'swal2-html-container',
+                        confirmButton: 'swal2-confirm'
+                    }
+                });
+            }
+        });
+
+        function loadAllUserData() {
+            loader.classList.remove('hidden');
+            dataTable.classList.add('hidden');
+            userDataBody.innerHTML = ''; // Clear previous data
+
+            database.ref('admins').once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnapshot => {
+                        const adminId = childSnapshot.key;
+                        const adminData = childSnapshot.val();
+                        
+                        const row = document.createElement('tr');
+                        
+                        const date = new Date(adminData.createdAt);
+                        const formattedDate = date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+
+                        row.innerHTML = `
+                            <td>${adminData.username || 'N/A'}</td>
+                            <td>${formattedDate}</td>
+                            <td class="action-buttons">
+                                <a href="admin.html?id=${adminId}" class="edit-btn" target="_blank"><i class="fas fa-edit"></i> Edit</a>
+                                <button class="delete-btn" onclick="deleteUser('${adminId}', '${adminData.username || 'Unknown'}')"><i class="fas fa-trash"></i> Delete</button>
+                            </td>
+                        `;
+                        userDataBody.appendChild(row);
+                    });
+                } else {
+                    userDataBody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Tidak ada data admin yang terdaftar.</td></tr>';
+                }
+                loader.classList.add('hidden');
+                dataTable.classList.remove('hidden');
+            }).catch(error => {
+                console.error("Error fetching data: ", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Memuat Data',
+                    text: 'Terjadi kesalahan saat memuat data dari Firebase. Cek konsol browser untuk detail.',
+                    confirmButtonText: 'Oke',
+                    customClass: {
+                        popup: 'swal2-popup',
+                        title: 'swal2-title',
+                        htmlContainer: 'swal2-html-container',
+                        confirmButton: 'swal2-confirm'
+                    }
+                });
+                loader.classList.add('hidden');
+            });
+        }
+        
+        function deleteUser(adminId, username) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: `Apakah Anda yakin ingin menghapus pengguna "${username}"? Tindakan ini akan menghapus akun admin dan halaman ulang tahunnya secara permanen.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff7e5f', // Using hex value directly for SweetAlert
+                cancelButtonColor: '#f87171',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    popup: 'swal2-popup',
+                    title: 'swal2-title',
+                    htmlContainer: 'swal2-html-container',
+                    confirmButton: 'swal2-confirm',
+                    cancelButton: 'swal2-deny'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const updates = {};
+                    updates[`/admins/${adminId}`] = null;
+                    updates[`/birthday_pages/${adminId}`] = null;
+
+                    database.ref().update(updates)
+                        .then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Dihapus!',
+                                text: `Pengguna "${username}" berhasil dihapus.`,
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    popup: 'swal2-popup',
+                                    title: 'swal2-title',
+                                    htmlContainer: 'swal2-html-container'
+                                }
+                            });
+                            loadAllUserData(); // Muat ulang data setelah hapus
+                        })
+                        .catch((error) => {
+                            console.error("Error deleting user: ", error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal Menghapus',
+                                text: 'Terjadi kesalahan saat menghapus pengguna. Cek konsol browser untuk detail.',
+                                confirmButtonText: 'Oke',
+                                customClass: {
+                                    popup: 'swal2-popup',
+                                    title: 'swal2-title',
+                                    htmlContainer: 'swal2-html-container',
+                                    confirmButton: 'swal2-confirm'
+                                }
+                            });
+                        });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
