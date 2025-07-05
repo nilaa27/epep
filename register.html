@@ -18,26 +18,58 @@
             --light-text: rgba(255, 255, 255, 0.9); --transition-fast: all 0.3s ease;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--darker); min-height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; position: relative; overflow: hidden; padding: 20px; }
-        body::before, body::after { content: ''; position: absolute; top: 50%; left: 50%; width: 800px; height: 800px; background-image: radial-gradient(circle, var(--primary) 0%, rgba(255,126,95,0) 60%); border-radius: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s linear infinite; filter: blur(100px); opacity: 0.4; }
-        body::after { background-image: radial-gradient(circle, var(--accent2) 0%, rgba(255,95,109,0) 60%); animation-name: move-aurora-2; animation-delay: -10s; }
+        body {
+            background: var(--darker); min-height: 100vh; display: flex; justify-content: center;
+            align-items: center; color: #fff; position: relative; overflow: hidden; padding: 20px;
+        }
+        body::before, body::after {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 800px; height: 800px;
+            background-image: radial-gradient(circle, var(--primary) 0%, rgba(255,126,95,0) 60%);
+            border-radius: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s linear infinite;
+            filter: blur(100px); opacity: 0.4;
+        }
+        body::after {
+            background-image: radial-gradient(circle, var(--accent2) 0%, rgba(255,95,109,0) 60%);
+            animation-name: move-aurora-2; animation-delay: -10s;
+        }
         @keyframes move-aurora { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); } 50% { transform: translate(-45%, -55%) rotate(180deg) scale(1.2); } 100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); } }
         @keyframes move-aurora-2 { 0% { transform: translate(-50%, -50%) rotate(0deg) scale(1.1); } 50% { transform: translate(-55%, -45%) rotate(-180deg) scale(0.9); } 100% { transform: translate(-50%, -50%) rotate(-360deg) scale(1.1); } }
         .container { width: 100%; max-width: 450px; z-index: 10; }
-        .box { background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; width: 100%; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .box {
+            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+        }
         .header { text-align: center; margin-bottom: 30px; }
-        .header-icon { width: 75px; height: 75px; background: linear-gradient(45deg, var(--accent2), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; border: 2px solid var(--glass-border); box-shadow: 0 8px 30px rgba(255, 95, 109, 0.4); animation: float 4s ease-in-out infinite; }
+        .header-icon {
+            width: 75px; height: 75px; background: linear-gradient(45deg, var(--accent2), var(--primary));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;
+            border: 2px solid var(--glass-border); box-shadow: 0 8px 30px rgba(255, 95, 109, 0.4); animation: float 4s ease-in-out infinite;
+        }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
         .header-icon i { font-size: 36px; color: #fff; text-shadow: 0 0 15px rgba(0,0,0,0.3); }
-        h1 { font-size: 2rem; font-weight: 700; background: linear-gradient(45deg, var(--primary), var(--accent1)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 6px; }
+        h1 {
+            font-size: 2rem; font-weight: 700; background: linear-gradient(45deg, var(--primary), var(--accent1));
+            -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 6px;
+        }
         .header p { color: var(--light-text); font-size: 1rem; }
         .input-group { margin-bottom: 20px; position: relative; }
+        .input-group label { display: block; color: var(--light-text); font-size: 0.9rem; font-weight: 500; margin-bottom: 4px; text-align: left; }
         .input-wrapper { position: relative; }
         .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 16px; transition: var(--transition-fast); }
-        .input-field { width: 100%; padding: 14px 16px 14px 45px; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-size: 1rem; transition: var(--transition-fast); }
+        .input-field {
+            width: 100%; padding: 14px 16px 14px 45px; background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-size: 1rem; transition: var(--transition-fast);
+        }
+        .input-field[readonly] { background: rgba(0,0,0,0.4); cursor: default; }
         .input-field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 126, 95, 0.4); }
         .input-field:focus + i { color: var(--accent1); }
-        .btn { width: 100%; padding: 15px; background: linear-gradient(90deg, var(--accent2) 0%, var(--primary) 100%); border: none; border-radius: 12px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+        .btn {
+            width: 100%; padding: 15px; background: linear-gradient(90deg, var(--accent2) 0%, var(--primary) 100%);
+            border: none; border-radius: 12px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
+        }
         .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(255, 95, 109, 0.35); }
         .btn:disabled { cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
         .btn i { transition: transform 0.3s ease; }
@@ -52,26 +84,34 @@
         #failureModal .feedback-content { border-top: 4px solid var(--error); }
         #failureModal h2 { background: linear-gradient(45deg, var(--error), var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .feedback-content .icon-container { height: 60px; margin-bottom: 20px; }
-        .feedback-content .icon { font-size: 50px; }
+        .feedback-content .icon { font-size: 50px; animation: popIn 0.4s ease-out; }
+        @keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .feedback-content .icon.failure { color: var(--error); animation: shake 0.5s ease-out; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); } 20%, 40%, 60%, 80% { transform: translateX(8px); } }
         .feedback-content h2 { font-size: 1.8rem; margin-bottom: 10px; font-weight: 600; }
         #accountModal h2 { background: linear-gradient(45deg, var(--success), #a1ffce); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .feedback-content p { font-size: 1rem; color: var(--light-text); }
         .data-display { background: rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 20px; margin-top: 20px; margin-bottom: 25px; text-align: left; }
-        .data-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 1.1rem; }
+        .data-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .data-item:last-child { margin-bottom: 0; }
-        .data-item span { color: var(--light-text); }
-        .data-item strong, .data-item .share-link { color: #fff; font-weight: 600; word-break: break-all; }
-        .share-link-container { background: rgba(0,0,0,0.3); padding: 10px 15px; border-radius: 8px; }
-        .copy-btn { background: none; border: 1px solid var(--glass-border); color: var(--light-text); padding: 5px 10px; border-radius: 8px; cursor: pointer; transition: var(--transition-fast); margin-left: 10px; }
-        .copy-btn:hover { background: var(--success); color: var(--darker); }
-        .feedback-actions { display: flex; gap: 15px; justify-content: center; }
+        .data-item span { color: var(--light-text); font-size: 1rem; }
+        .data-item strong { color: #fff; font-weight: 600; font-size: 1.1rem; }
+        .copy-icon { right: 16px; left: auto; cursor: pointer; color: var(--light-text); transition: all 0.2s ease; }
+        .copy-icon:hover { color: var(--primary); transform: translateY(-50%) scale(1.1); }
+        .feedback-actions { display: flex; gap: 15px; justify-content: center; margin-top: 10px; }
         .feedback-btn { flex-grow: 1; padding: 12px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition-fast); }
         .btn-back { background: var(--glass); border: 1px solid var(--glass-border); color: var(--light-text); }
         .btn-back:hover { background: rgba(255, 255, 255, 0.1); }
         .btn-signin { background: linear-gradient(to right, var(--success) 0%, #a1ffce 100%); border: none; color: var(--darker); }
         .btn-signin:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(48, 207, 208, 0.4); }
+        /* Style baru untuk deskripsi link */
+        .link-description {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: left;
+            margin-bottom: 8px;
+            margin-top: -10px;
+        }
     </style>
 </head>
 <body>
@@ -100,24 +140,26 @@
             <a href="admin.html" class="back-link">Go to Admin Panel</a>
         </div>
     </div>
+    
     <div class="feedback-modal" id="accountModal">
         <div class="feedback-content">
             <h2><i class="fas fa-party-horn"></i> Account Created!</h2>
             <div class="data-display">
                 <div class="data-item">
                     <span>Username:</span>
-                    <div><strong id="displayUser"></strong><button class="copy-btn" onclick="copyData('displayUser')"><i class="fas fa-copy"></i></button></div>
+                    <strong id="displayUser"></strong>
                 </div>
                 <div class="data-item">
                     <span>Password:</span>
-                     <div><strong id="displayPass"></strong><button class="copy-btn" onclick="copyData('displayPass')"><i class="fas fa-copy"></i></button></div>
+                     <strong id="displayPass"></strong>
                 </div>
-                <div class="data-item">
-                    <span>Share Link:</span>
-                    <button class="copy-btn" onclick="copyData('shareLink')"><i class="fas fa-copy"></i></button>
-                </div>
-                <div class="share-link-container">
-                    <span id="shareLink" class="share-link"></span>
+                <div class="input-group" style="margin-top: 25px; margin-bottom: 0;">
+                    <label for="shareLink">Your Unique Share Link</label>
+                    <p class="link-description">Bagikan link ini kepada tamu untuk melihat halaman ucapan.</p>
+                    <div class="input-wrapper">
+                        <input type="text" id="shareLink" class="input-field" style="padding-right: 45px; font-size: 0.9rem;" readonly>
+                        <i class="fas fa-copy copy-icon" onclick="copyShareLink(this)"></i>
+                    </div>
                 </div>
             </div>
             <div class="feedback-actions">
@@ -126,6 +168,7 @@
             </div>
         </div>
     </div>
+    
     <div class="feedback-modal" id="failureModal">
         <div class="feedback-content">
             <div class="icon-container"><i class="fas fa-times-circle icon failure"></i></div>
@@ -133,17 +176,21 @@
             <p id="failureMessage"></p>
         </div>
     </div>
+
     <script>
         const firebaseConfig = { apiKey: "GANTI_DENGAN_API_KEY_ANDA", authDomain: "mayfa-fa284.firebaseapp.com", databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+
         function createAccount() {
             const adminName = document.getElementById('adminName').value.trim();
             const adminPass = document.getElementById('adminPass').value;
             const submitBtn = document.querySelector('#registerForm button');
             if (!adminName || !adminPass) { return alert("Admin Name and Password are required."); }
+
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
             submitBtn.disabled = true;
+
             database.ref('admins').orderByChild('username').equalTo(adminName).once('value', snapshot => {
                 if (snapshot.exists()) {
                     showFailureModal("Username sudah terdaftar", "Silakan pilih nama lain.");
@@ -155,7 +202,6 @@
                     newAdminRef.set({ username: adminName, password: adminPass, createdAt: new Date().toISOString() })
                     .then(() => {
                         const newAdminId = newAdminRef.key;
-                        // Membuat data default untuk halaman ulang tahun baru
                         const defaultPageData = {
                             birthdayName: "Your Name",
                             birthDate: "2000-01-01",
@@ -176,16 +222,18 @@
                 }
             });
         }
+        
         function showAccountModal(user, pass, newId) {
             document.getElementById('displayUser').textContent = user;
             document.getElementById('displayPass').textContent = pass;
-            const shareLinkElement = document.getElementById('shareLink');
+            const shareLinkInput = document.getElementById('shareLink');
             const fullLink = `${window.location.origin}/index.html?id=${newId}`;
-            shareLinkElement.textContent = fullLink;
+            shareLinkInput.value = fullLink;
             const modal = document.getElementById('accountModal');
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('visible'), 10);
         }
+
         function showFailureModal(title, message) {
             document.getElementById('failureTitle').textContent = title;
             document.getElementById('failureMessage').textContent = message;
@@ -194,6 +242,7 @@
             setTimeout(() => modal.classList.add('visible'), 10);
             setTimeout(() => closeModal('failureModal'), 3500);
         }
+        
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.remove('visible');
@@ -202,19 +251,27 @@
                 if (modalId === 'accountModal') { document.getElementById('registerForm').reset(); }
             }, 300);
         }
+
         document.querySelectorAll('.feedback-modal').forEach(modal => {
             modal.addEventListener('click', (event) => {
                 if (event.target === modal) { closeModal(modal.id); }
             });
         });
+
         function goToAdmin() { window.location.href = 'admin.html'; }
-        function copyData(elementId) {
-            const textToCopy = document.getElementById(elementId).textContent;
-            const copyButton = event.target.closest('.copy-btn');
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                copyButton.innerHTML = '<i class="fas fa-check"></i>';
-                setTimeout(() => { copyButton.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
-            }).catch(err => { alert('Gagal menyalin!'); });
+        
+        function copyShareLink(copyIconElement) {
+            const linkInput = document.getElementById('shareLink');
+            navigator.clipboard.writeText(linkInput.value).then(() => {
+                copyIconElement.classList.remove('fa-copy');
+                copyIconElement.classList.add('fa-check');
+                setTimeout(() => {
+                    copyIconElement.classList.remove('fa-check');
+                    copyIconElement.classList.add('fa-copy');
+                }, 2000);
+            }).catch(err => {
+                alert('Gagal menyalin link!');
+            });
         }
     </script>
 </body>
