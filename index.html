@@ -49,6 +49,7 @@
             background: var(--bg-color); border: none; border-radius: var(--border-radius-inner);
             color: var(--primary); font-size: 1.05rem; font-weight: 600;
             cursor: pointer;
+            width: 100%;
             transition: var(--transition-smooth);
             box-shadow: 8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light);
             display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -97,6 +98,7 @@
         .input-group input:focus { outline: none; box-shadow: inset 9px 9px 18px var(--shadow-dark), inset -9px -9px 18px var(--shadow-light); }
         .input-group:focus-within .icon { color: var(--primary); }
         #togglePassword { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-light); }
+        .login-box .btn { margin-top: 10px; }
 
         /* Birthday Page */
         .birthday-page-container { display: none; align-items: flex-start; padding-top: 8vh; padding-bottom: 8vh; width: 100%; max-width: 1000px; animation: fadeIn 1s ease-out; }
@@ -112,8 +114,6 @@
             box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
             padding: 30px;
             color: var(--text-color);
-
-            /* ANIMASI ASLI YANG DIKEMBALIKAN */
             opacity: 0;
             filter: blur(5px);
             transform: perspective(800px) rotateY(var(--initial-rotation, -20deg)) scale(0.9);
@@ -128,7 +128,7 @@
         .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--primary); }
         .card-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
         .card-text { font-size: 1rem; line-height: 1.6; font-weight: 300; color: var(--text-light); }
-        .gift-btn { margin-top: 20px; color: var(--success) }
+        .gift-btn { margin-top: 20px; color: var(--success); width: auto; padding: 15px 40px; font-size: 1.2rem;}
 
         /* Modals */
         .feedback-modal, .gift-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
@@ -203,7 +203,10 @@
                 <div class="message-card"><i class="fas fa-star card-icon"></i><h2 class="card-title">Harapan Terbaik</h2><p class="card-text">semoga hal baik selalu beriringan denganmu, semoga semesta senantiasa berpihak padamu, semoga jalanmu untuk mencapai masa depan yang cerah di permudahkan, teruslah tumbuh, teruslah melangkah & berbahagia . aku akan selalu bangga atas setiap proses yang sudah kamu lalui. selamat berkelana, i will always support u from afar</p></div>
                 <div class="message-card"><i class="fas fa-heart card-icon"></i><h2 class="card-title">Jadilah Kuat</h2><p class="card-text">"untuk segala hal yang membuat mu patah. it's okay, just say: Allah itu baik"</p></div>
             </div>
-            <div class="message-card" style="margin-top: 30px;"><h2 class="card-title">Ada Sesuatu Untukmu...</h2><button class="btn gift-btn" onclick="openGift()"><i class="fas fa-gift"></i> Klaim Hadiahmu</button></div>
+            <div class="message-card" style="margin-top: 30px;">
+                <h2 class="card-title">Ada Sesuatu Untukmu...</h2>
+                <button class="btn gift-btn" onclick="openGift()"><i class="fas fa-gift"></i> Klaim Hadiahmu</button>
+            </div>
         </div>
     </div>
 
@@ -327,7 +330,6 @@
         });
 
         function calculateAndDisplayAge(birthDate) {
-            // Menggunakan data yang sudah ada dari ingatan
             if (birthDate === '2005-09-28') {
                 const birthDateObj = new Date(birthDate);
                 const today = new Date();
@@ -351,7 +353,6 @@
             const cards = document.querySelectorAll('.message-card');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    // LOGIKA ASLI DIKEMBALIKAN AGAR ANIMASI BISA BERULANG
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
                     } else {
@@ -361,13 +362,11 @@
             }, { root: null, rootMargin: '0px', threshold: 0.1 });
 
             cards.forEach((card, index) => {
-                // Menambahkan properti --initial-rotation dari versi asli
                 card.style.setProperty('--initial-rotation', index % 2 === 0 ? '-20deg' : '20deg');
                 card.style.transitionDelay = `${index * 150}ms`;
                 observer.observe(card);
             });
         }
-
 
         function openGift() { giftModal.style.display = "flex"; }
         
