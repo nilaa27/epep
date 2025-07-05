@@ -6,486 +6,512 @@
     <title>Data Management - Super Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
     <style>
         :root {
-            --primary-light: #6a11cb; /* Lighter purple */
-            --primary-dark: #2575fc;  /* Darker blue */
-            --gradient-bg: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
-            --text-light: #e0e0e0;
-            --text-dark: #333;
-            --card-bg: rgba(255, 255, 255, 0.08); /* Lighter glass */
-            --card-border: rgba(255, 255, 255, 0.15);
-            --input-bg: rgba(255, 255, 255, 0.1);
-            --button-bg: #4CAF50; /* Green for save/edit */
-            --button-delete: #F44336; /* Red for delete */
-            --button-cancel: #757575; /* Grey for cancel */
-            --shadow-light: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            --shadow-dark: 0 10px 40px rgba(0, 0, 0, 0.5);
-            --transition-speed: 0.3s ease;
+            --bg-color: #1a1c23;
+            --surface-color: #23252e;
+            --surface-color-hover: #2c2f3a;
+            --primary-color: #007bff; /* Blue */
+            --primary-color-hover: #0056b3; /* Darker Blue */
+            --text-primary: #f0f2f5;
+            --text-secondary: #a0a4ac;
+            --border-color: #363944;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --font-family: 'Inter', sans-serif;
+            --border-radius: 12px;
+            --transition-speed: 0.25s ease;
         }
 
-        /* --- Base Styles --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
         }
 
         body {
-            background: var(--gradient-bg);
-            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: var(--font-family);
+            color: var(--text-primary);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--text-light);
-            overflow-x: hidden; /* Prevent horizontal scroll on body */
-            padding: 20px; /* Add some padding around the content */
+            min-height: 100vh;
+            padding: 2rem;
         }
 
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto; /* Center the container */
-            padding: 0; /* Remove internal padding, handled by data-table-container */
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 0 15px; /* Add horizontal padding for header */
-        }
-
-        .header h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            opacity: 0.9;
-        }
-
-        /* --- Table & Card Styles --- */
-        .data-table-container {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 25px;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: var(--shadow-light);
-            overflow-x: auto; /* Allows horizontal scrolling for table on smaller screens if needed */
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            color: var(--text-light);
-            min-width: 600px; /* Default minimum width for desktop/tablet */
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 15px 10px;
-            text-align: left;
-            white-space: nowrap; /* Prevent text wrapping by default */
-            vertical-align: middle;
-        }
-
-        .data-table thead {
-            border-bottom: 2px solid var(--card-border);
-        }
-
-        .data-table th {
-            font-weight: 600;
-            font-size: 1rem;
-            color: #fff;
-            opacity: 0.9;
-        }
-
-        .data-table tbody tr {
-            border-bottom: 1px solid var(--card-border);
-            transition: background-color var(--transition-speed);
-        }
-
-        .data-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        .data-table tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        /* Input styles */
-        .data-table input[type="text"],
-        .data-table input[type="password"] {
-            background: var(--input-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            width: 100%;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-        }
-
-        .data-table input[type="text"]:focus,
-        .data-table input[type="password"]:focus {
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.3);
-        }
-
-        /* --- Button Styles --- */
-        .action-buttons button,
-        .action-buttons a {
+        /* --- UTILITIES --- */
+        .hidden { display: none !important; }
+        .btn {
+            padding: 10px 20px;
             border: none;
-            padding: 9px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-right: 8px;
-            font-size: 0.9rem;
+            /* Changed border-radius to match the very rounded style in the image */
+            border-radius: 9999px; /* This creates a very rounded, pill-like shape */
             font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
             transition: all var(--transition-speed);
-            color: #fff;
+            /* Make sure it's a flex container to align icon and text */
+            display: flex;
+            justify-content: center; /* Center content horizontally within the button */
+            align-items: center; /* Center content vertically within the button */
+            gap: 8px; /* Space between icon and text */
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            white-space: nowrap; /* Prevent button text from wrapping */
+            width: fit-content; /* Make button only as wide as its content by default */
+            margin: 0 auto; /* Added for centering the button itself if it's the only element in a block */
         }
-        
-        .edit-btn { background: #3498db; }
-        .edit-btn:hover { background: #2980b9; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }
 
-        .save-btn { background: #27ae60; }
-        .save-btn:hover { background: #229954; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }
+        .btn-primary {
+            /* Use a gradient for the background to match the image's appearance */
+            background: linear-gradient(to right, var(--primary-color), var(--primary-color-hover)); /* Blue gradient */
+            color: white;
+            /* Adjusted box-shadow for a more prominent effect like in the image */
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+        }
+        .btn-primary:hover {
+            /* Slightly change the gradient on hover */
+            background: linear-gradient(to right, var(--primary-color-hover), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+        }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
 
-        .cancel-btn { background: #e67e22; }
-        .cancel-btn:hover { background: #d35400; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }
-
-        .delete-btn { background: #e74c3c; }
-        .delete-btn:hover { background: #c0392b; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }
-
-
-        /* --- Password Modal Styles --- */
+        /* --- PASSWORD MODAL --- */
         .password-modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.85); /* Slightly darker overlay */
+            background-color: rgba(0,0,0,0.7);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 5000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity var(--transition-speed), visibility var(--transition-speed);
         }
-        .password-modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
         .password-box {
-            background: var(--card-bg);
+            background-color: var(--surface-color);
             padding: 40px;
-            border-radius: 20px;
-            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
             text-align: center;
-            box-shadow: var(--shadow-dark);
-            max-width: 450px;
             width: 90%;
-            transform: translateY(-20px);
-            opacity: 0;
-            transition: transform var(--transition-speed) ease-out, opacity var(--transition-speed) ease-out;
+            max-width: 400px;
+            animation: fadeIn 0.4s ease forwards;
+            border: 1px solid var(--border-color);
         }
-        .password-modal.show .password-box {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .password-box h2 {
-            margin-bottom: 15px;
-            font-size: 1.8rem;
-            color: #fff;
-        }
-        .password-box p {
-            margin-bottom: 25px;
-            color: var(--text-light);
-            font-size: 1rem;
-        }
+        .password-box h2 { margin-bottom: 1rem; font-size: 1.5rem; }
+        .password-box p { margin-bottom: 2rem; color: var(--text-secondary); }
         .password-box input {
             width: 100%;
             padding: 14px;
-            border-radius: 10px;
-            border: 1px solid var(--card-border);
-            background: var(--input-bg);
-            color: #fff;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
             outline: none;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
         .password-box input:focus {
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.4);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
         }
-        .password-box button {
+        /* Specific styling for the button inside password-box to make it full width */
+        .password-box .btn {
+            width: 100%; /* Make the button fill the width of its container */
+            margin: 0; /* Override margin: 0 auto from .btn if it's not desired here */
+        }
+
+        /* --- KONTEN UTAMA --- */
+        .container {
             width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: var(--primary-dark);
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(37, 117, 252, 0.4);
+            max-width: 1000px;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center; /* Center the title */
+            align-items: center;
+            margin-bottom: 2rem;
+            text-align: center; /* Ensure text inside is centered */
+        }
+        .header-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .main-content-panel {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .search-wrapper {
+            position: relative;
+            flex-grow: 1;
+            min-width: 250px;
+        }
+        .search-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        #searchInput {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-size: 1rem;
             transition: all var(--transition-speed);
         }
-        .password-box button:hover {
-            background: var(--primary-light);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.5);
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
         }
-        .hidden { display: none !important; }
-        .loader { margin: 40px auto; border: 6px solid rgba(255, 255, 255, 0.1); border-top: 6px solid #fff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        #loader {
+            display: flex;
+            justify-content: center;
+            padding: 4rem 0;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
 
-        /* --- SweetAlert2 Custom Styles --- */
+        .user-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .user-card {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all var(--transition-speed);
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .user-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .user-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .user-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .user-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .user-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .user-card-body div { display: flex; justify-content: space-between; }
+        .user-card-body .label { color: var(--text-secondary); }
+        .user-card-body .value { color: var(--text-primary); font-weight: 500; }
+        .password-value { font-family: monospace; letter-spacing: 1px; }
+
+        .user-card-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        /* Override default .btn centering for action buttons */
+        .user-card-actions .btn {
+            flex-grow: 1;
+            padding: 8px 10px;
+            font-size: 0.85rem;
+            margin: 0; /* Remove default margin auto */
+            width: auto; /* Allow buttons to size based on content and flex-grow */
+        }
+        .btn-edit { background-color: transparent; border: 1px solid #6c757d; color: var(--text-primary); }
+        .btn-edit:hover { background-color: #6c757d; color: white; }
+        .btn-delete { background-color: transparent; border: 1px solid var(--danger-color); color: var(--danger-color); }
+        .btn-delete:hover { background-color: var(--danger-color); color: white; }
+        
+        .no-data-message {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- ADD/EDIT MODAL --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+        .modal.show .modal-content { transform: scale(1); }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .modal-header h2 { font-size: 1.5rem; }
+        .close-button {
+            background: none; border: none; font-size: 1.8rem;
+            color: var(--text-secondary); cursor: pointer;
+            transition: color var(--transition-speed);
+        }
+        .close-button:hover { color: var(--text-primary); }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .form-group input {
+            width: 100%; padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all var(--transition-speed);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        /* Override default .btn centering for modal footer buttons */
+        .modal-footer .btn {
+            margin: 0; /* Remove default margin auto */
+            width: auto; /* Allow buttons to size based on content */
+        }
+        
+        /* --- BACK BUTTON STYLING --- */
+        .back-button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .back-btn {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-color-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        /* --- Kustomisasi SweetAlert2 --- */
         .swal2-popup {
-            border-radius: 18px !important;
-            background: var(--card-bg) !important;
-            color: var(--text-light) !important;
-            border: 1px solid var(--card-border) !important;
-            box-shadow: var(--shadow-dark) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
+            background-color: var(--surface-color) !important;
+            border-radius: var(--border-radius) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
         }
-        .swal2-title {
-            color: #fff !important;
-            font-size: 1.6rem !important;
-        }
-        .swal2-html-container {
-            color: var(--text-light) !important;
-        }
-        .swal2-icon {
-            margin-top: 15px !important;
-        }
-        .swal2-actions button {
-            font-weight: 600 !important;
-            border-radius: 8px !important;
-        }
-        .swal2-confirm.swal2-styled {
-            background-color: var(--primary-dark) !important;
-            transition: all var(--transition-speed) !important;
-        }
-        .swal2-confirm.swal2-styled:hover {
-            background-color: var(--primary-light) !important;
-            transform: translateY(-2px);
-        }
-        .swal2-deny.swal2-styled, .swal2-cancel.swal2-styled {
-            background-color: var(--button-cancel) !important;
-            transition: all var(--transition-speed) !important;
-        }
-        .swal2-deny.swal2-styled:hover, .swal2-cancel.swal2-styled:hover {
-            background-color: #616161 !important;
-            transform: translateY(-2px);
-        }
+        .swal2-title { color: var(--text-primary) !important; }
+        .swal2-html-container { color: var(--text-secondary) !important; }
+        .swal2-confirm { background-color: var(--primary-color) !important; box-shadow: none !important;}
+        .swal2-cancel { background-color: #6c757d !important; box-shadow: none !important;}
+        .swal2-icon.swal2-success .swal2-success-line-tip,
+        .swal2-icon.swal2-success .swal2-success-line-long { background-color: var(--success-color) !important; }
+        .swal2-icon.swal2-success .swal2-success-ring { border-color: var(--success-color) !important; }
+        .swal2-icon.swal2-error .swal2-x-mark-line-left,
+        .swal2-icon.swal2-error .swal2-x-mark-line-right { background-color: var(--danger-color) !important; }
+        .swal2-icon.swal2-error { border-color: var(--danger-color) !important; }
+        .swal2-icon.swal2-warning { border-color: var(--warning-color) !important; color: var(--warning-color) !important; }
 
-        /* --- NEW: SweetAlert2 Success Animation (Pop/Zoom) --- */
-        @keyframes swal2-pop-in {
-            from {
-                transform: scale(0.7) translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .swal2-show {
-            animation: swal2-pop-in 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-        }
-
-        /* --- Responsive Adjustments for Mobile --- */
-        @media (max-width: 768px) {
-            body { 
-                padding: 15px; /* Reduce overall padding for smaller screens */
-                align-items: flex-start; /* Align content to top on mobile */
-            }
-            .header {
-                margin-bottom: 30px;
-            }
-            .header h1 {
-                font-size: 2.2rem;
-            }
-            .header p {
-                font-size: 0.95rem;
-            }
-
-            .data-table-container {
-                padding: 15px; /* Reduce padding inside the table container */
-            }
-
-            .data-table {
-                display: block; /* Make table behave like a block element */
-                width: 100%;
-                min-width: unset; /* Remove minimum width constraint */
-            }
-
-            .data-table thead {
-                display: none; /* Hide table header on small screens */
-            }
-
-            .data-table tbody, .data-table tr {
-                display: block; /* Make tbody and tr behave like block elements */
-                width: 100%;
-            }
-
-            .data-table tr {
-                margin-bottom: 15px; /* Add space between "cards" */
-                border: 1px solid var(--card-border); /* Add border to each "card" */
-                border-radius: 12px; /* Rounded corners for each "card" */
-                padding: 15px; /* Padding for each "card" */
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                background-color: rgba(255, 255, 255, 0.05); /* Slightly darker background for cards */
-                overflow: hidden; /* Ensure content doesn't overflow rounded corners */
-                position: relative;
-                white-space: normal; /* Allow text to wrap within cards */
-            }
-            
-            .data-table tbody tr:hover {
-                background-color: rgba(255, 255, 255, 0.08); /* Stronger hover effect */
-            }
-
-            .data-table td {
-                display: flex; /* Make cells flex containers */
-                justify-content: space-between; /* Space out label and value */
-                align-items: center;
-                padding: 8px 0; /* Reduce vertical padding for cells */
-                border-bottom: 1px dashed rgba(255, 255, 255, 0.1); /* Dashed separator */
-                white-space: normal; /* Allow text to wrap */
-            }
-
-            .data-table td:last-child {
-                border-bottom: none; /* No border for the last cell */
-            }
-
-            .data-table td::before {
-                content: attr(data-label); /* Use data-label for pseudo-element */
-                font-weight: 600;
-                color: #fff;
-                opacity: 0.8;
-                flex-basis: 40%; /* Give label some fixed width */
-                min-width: 100px;
-                flex-shrink: 0;
-            }
-
-            .data-table .action-buttons {
-                justify-content: flex-end; /* Align buttons to the right */
-                flex-wrap: wrap; /* Allow buttons to wrap to next line */
-                gap: 8px; /* Space between buttons */
-                margin-top: 15px; /* Space above action buttons */
-                padding-top: 15px; /* Padding to separate from last data row */
-                border-top: 1px dashed rgba(255, 255, 255, 0.1);
-            }
-
-            .action-buttons button, .action-buttons a {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-                margin-right: 0; /* Remove right margin */
-                flex-grow: 1; /* Allow buttons to grow and fill space */
-                max-width: calc(50% - 4px); /* Two buttons per row if space allows */
-                justify-content: center; /* Center icon and text */
-            }
-            .action-buttons button:last-child, .action-buttons a:last-child {
-                 margin-right: 0;
-            }
-
-            .data-table input[type="text"],
-            .data-table input[type="password"] {
-                flex-basis: 60%; /* Allow input to take remaining space */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            .header p {
-                font-size: 0.85rem;
-            }
-            .password-box {
-                padding: 25px;
-            }
-            .password-box h2 {
-                font-size: 1.3rem;
-            }
-            .password-box input, .password-box button {
-                padding: 10px;
-                font-size: 0.9rem;
-            }
-            .data-table td::before {
-                font-size: 0.8rem;
-            }
-            .action-buttons button, .action-buttons a {
-                font-size: 0.75rem;
-                padding: 7px 10px;
-                gap: 3px;
-            }
+        /* --- Responsive --- */
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .main-content-panel { padding: 1.5rem; }
+            .user-list { grid-template-columns: 1fr; }
+            .modal-content { padding: 1.5rem; }
+            .modal-footer { flex-direction: column; align-items: stretch; }
+            .modal-footer .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
+
     <div class="password-modal" id="passwordModal">
         <div class="password-box">
-            <h2><i class="fas fa-user-shield"></i> Super Admin Access</h2>
-            <p>Please enter the password to manage data.</p>
+            <h2><i class="fas fa-user-shield"></i> Akses Super Admin</h2>
+            <p>Masukkan password untuk melanjutkan ke panel manajemen.</p>
             <form id="passwordForm">
                 <input type="password" id="superAdminPassword" placeholder="••••••••" required autocomplete="current-password">
-                <button type="submit">Unlock</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-arrow-right-to-bracket"></i> Masuk</button>
             </form>
         </div>
     </div>
 
     <div class="container hidden" id="mainContent">
         <div class="header">
-            <h1>Data Management</h1>
-            <p>Manage admin user accounts.</p>
+            <div class="header-title">
+                <h1>Manajemen Data Admin</h1>
+                <p>Tambah, edit, atau hapus akun admin.</p>
+            </div>
         </div>
-        <div class="data-table-container">
-            <div id="loader" class="loader"></div>
-            <table class="data-table hidden" id="dataTable">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Admin Password</th> <th>Created At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="userDataBody">
-                    </tbody>
-            </table>
+
+        <div class="main-content-panel">
+            <div class="toolbar">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Cari admin berdasarkan username...">
+                </div>
+                <button class="btn btn-primary" id="addAdminBtn"><i class="fas fa-plus"></i> Tambah Admin Baru</button>
+            </div>
+
+            <div id="loader">
+                <div class="spinner"></div>
+            </div>
+            
+            <div id="userListContainer" class="hidden">
+                 <div class="user-list" id="userList">
+                    </div>
+                 <div id="noDataMessage" class="no-data-message hidden">
+                    <h3>Tidak Ada Data</h3>
+                    <p>Belum ada admin yang terdaftar atau sesuai dengan pencarian Anda.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-button-container">
+            <a href="admin.html" class="btn back-btn"><i class="fas fa-arrow-left"></i> Kembali</a>
+        </div>
+    </div>
+
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Tambah Admin Baru</h2>
+                <button class="close-button" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="userForm">
+                <input type="hidden" id="adminId">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="text" id="password" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelModalBtn">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <script>
+        // NOTE: Replace "GANTI_DENGAN_API_KEY_ANDA" with your actual Firebase API Key
         const firebaseConfig = { 
             apiKey: "GANTI_DENGAN_API_KEY_ANDA", 
             authDomain: "mayfa-fa284.firebaseapp.com", 
@@ -494,301 +520,224 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // --- GANTI PASSWORD SUPER ADMIN DI SINI ---
-        const SUPER_ADMIN_PASSWORD = "Xlord01";
-        const BIRTHDAY_PAGE_BASE_URL = "https://https://epep.xlord.web.id/index.html"; // <-- GANTI DENGAN URL ASLI ANDA
+        const SUPER_ADMIN_PASSWORD = "Xlord01"; // Make sure to change this to a strong password in a real application!
+        let allAdmins = {}; 
 
+        // DOM Elements
         const passwordModal = document.getElementById('passwordModal');
         const passwordForm = document.getElementById('passwordForm');
         const mainContent = document.getElementById('mainContent');
         const loader = document.getElementById('loader');
-        const dataTable = document.getElementById('dataTable');
-        const userDataBody = document.getElementById('userDataBody');
-
-        let currentEditingRow = null;
+        const userListContainer = document.getElementById('userListContainer');
+        const userList = document.getElementById('userList');
+        const noDataMessage = document.getElementById('noDataMessage');
+        const searchInput = document.getElementById('searchInput');
+        
+        const userModal = document.getElementById('userModal');
+        const userForm = document.getElementById('userForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const adminIdInput = document.getElementById('adminId');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        
+        const addAdminBtn = document.getElementById('addAdminBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
 
         document.addEventListener('DOMContentLoaded', () => {
             passwordModal.classList.add('show');
+            document.getElementById('superAdminPassword').focus();
         });
 
         passwordForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const passwordInput = document.getElementById('superAdminPassword').value;
-            if (passwordInput === SUPER_ADMIN_PASSWORD) {
-                passwordModal.classList.remove('show');
-                setTimeout(() => {
-                    passwordModal.classList.add('hidden');
-                    mainContent.classList.remove('hidden');
-                }, 300);
-
-                // Modified SweetAlert for a more modern pop-up
+            const password = document.getElementById('superAdminPassword').value;
+            if (password === SUPER_ADMIN_PASSWORD) {
+                passwordModal.style.display = 'none';
+                mainContent.classList.remove('hidden');
                 Swal.fire({
-                    icon: 'success',
-                    title: '<span style="color: #fff;">Akses Diberikan!</span>', // Inline style for white title
-                    text: 'Selamat datang, Super Admin.',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    customClass: {
-                        popup: 'swal2-popup',
-                        title: 'swal2-title', // Use custom class for general styling
-                        htmlContainer: 'swal2-html-container',
-                        confirmButton: 'swal2-confirm',
-                        icon: 'swal2-icon'
-                    },
-                    // Add animation effect
-                    showClass: {
-                        popup: 'animate__animated animate__fadeInUp animate__faster' // Requires animate.css or custom animation
-                    },
-                    hideClass: {
-                        popup: 'animate__animated animate__fadeOutDown animate__faster'
-                    }
+                    icon: 'success', title: 'Akses Diberikan!',
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true,
                 });
                 loadAllUserData();
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Akses Ditolak!',
-                    text: 'Password salah. Silakan coba lagi.',
-                    confirmButtonText: 'Oke',
-                    customClass: {
-                        popup: 'swal2-popup',
-                        title: 'swal2-title',
-                        htmlContainer: 'swal2-html-container',
-                        confirmButton: 'swal2-confirm'
-                    }
-                });
+                Swal.fire({ icon: 'error', title: 'Akses Ditolak!', text: 'Password salah.' });
+                document.getElementById('superAdminPassword').value = '';
             }
         });
-
+        
         function loadAllUserData() {
             loader.classList.remove('hidden');
-            dataTable.classList.add('hidden');
-            userDataBody.innerHTML = '';
-
-            database.ref('admins').once('value').then(adminSnapshot => {
-                if (adminSnapshot.exists()) {
-                    const adminPromises = [];
-                    adminSnapshot.forEach(adminChildSnapshot => {
-                        const adminId = adminChildSnapshot.key;
-                        const adminData = adminChildSnapshot.val();
-                        adminPromises.push(Promise.resolve({ adminId, adminData }));
-                    });
-
-                    Promise.all(adminPromises).then(results => {
-                        results.forEach(({ adminId, adminData }) => {
-                            const row = document.createElement('tr');
-                            row.dataset.adminId = adminId;
-
-                            const date = new Date(adminData.createdAt);
-                            const formattedDate = date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
-
-                            row.innerHTML = `
-                                <td data-label="Username"><span class="view-mode username-display">${adminData.username || 'N/A'}</span><input type="text" class="edit-mode hidden username-input" value="${adminData.username || ''}"></td>
-                                <td data-label="Admin Password"><span class="view-mode password-display">${adminData.password || 'N/A'}</span><input type="text" class="edit-mode hidden password-input" value="${adminData.password || ''}"></td>
-                                <td data-label="Created At">${formattedDate}</td>
-                                <td class="action-buttons">
-                                    <button class="edit-btn" onclick="toggleEditMode(this, '${adminId}')"><i class="fas fa-edit"></i> Edit</button>
-                                    <button class="save-btn hidden" onclick="saveUser(this, '${adminId}')"><i class="fas fa-save"></i> Save</button>
-                                    <button class="cancel-btn hidden" onclick="cancelEdit(this, '${adminId}')"><i class="fas fa-times-circle"></i> Cancel</button>
-                                    <button class="delete-btn" onclick="deleteUser('${adminId}', '${adminData.username || 'Unknown'}')"><i class="fas fa-trash"></i> Delete</button>
-                                </td>
-                            `;
-                            userDataBody.appendChild(row);
-                        });
-                        loader.classList.add('hidden');
-                        dataTable.classList.remove('hidden');
-                    }).catch(error => {
-                        console.error("Error fetching all data: ", error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal Memuat Data',
-                            text: 'Terjadi kesalahan saat memuat semua data dari Firebase.',
-                            confirmButtonText: 'Oke'
-                        });
-                        loader.classList.add('hidden');
-                    });
-
-                } else {
-                    userDataBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Tidak ada data admin yang terdaftar.</td></tr>';
-                    loader.classList.add('hidden');
-                    dataTable.classList.remove('hidden');
-                }
-            }).catch(error => {
+            userListContainer.classList.add('hidden');
+            
+            database.ref('admins').on('value', snapshot => {
+                allAdmins = snapshot.val() || {};
+                renderUsers(allAdmins);
+                loader.classList.add('hidden');
+                userListContainer.classList.remove('hidden');
+            }, error => {
                 console.error("Error fetching admin data: ", error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal Memuat Data',
-                    text: 'Terjadi kesalahan saat memuat data admin dari Firebase.',
-                    confirmButtonText: 'Oke'
-                });
+                Swal.fire({ icon: 'error', title: 'Gagal Memuat Data', text: 'Terjadi kesalahan saat memuat data dari Firebase.' });
                 loader.classList.add('hidden');
             });
         }
         
-        function toggleEditMode(button, adminId) {
-            const row = button.closest('tr');
+        function renderUsers(adminsObject) {
+            userList.innerHTML = '';
+            const adminIds = Object.keys(adminsObject);
             
-            if (currentEditingRow && currentEditingRow !== row) {
-                cancelEdit(currentEditingRow.querySelector('.cancel-btn'), currentEditingRow.dataset.adminId);
+            if (adminIds.length === 0) {
+                noDataMessage.classList.remove('hidden');
+                return;
             }
+            
+            noDataMessage.classList.add('hidden');
+            
+            adminIds.forEach(id => {
+                const admin = adminsObject[id];
+                const date = new Date(admin.createdAt);
+                const formattedDate = date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+                const firstLetter = admin.username ? admin.username.charAt(0).toUpperCase() : '?';
 
-            const viewElements = row.querySelectorAll('.view-mode');
-            const editElements = row.querySelectorAll('.edit-mode');
-            const editBtn = row.querySelector('.edit-btn');
-            const saveBtn = row.querySelector('.save-btn');
-            const cancelBtn = row.querySelector('.cancel-btn');
-            const deleteBtn = row.querySelector('.delete-btn');
-
-            if (row.classList.contains('editing')) {
-                viewElements.forEach(el => el.classList.remove('hidden'));
-                editElements.forEach(el => el.classList.add('hidden'));
-                editBtn.classList.remove('hidden');
-                saveBtn.classList.add('hidden');
-                cancelBtn.classList.add('hidden');
-                deleteBtn.classList.remove('hidden');
-                row.classList.remove('editing');
-                currentEditingRow = null;
-            } else {
-                viewElements.forEach(el => el.classList.add('hidden'));
-                editElements.forEach(el => el.classList.remove('hidden'));
-                editBtn.classList.add('hidden');
-                saveBtn.classList.remove('hidden');
-                cancelBtn.classList.remove('hidden');
-                deleteBtn.classList.add('hidden');
-                row.classList.add('editing');
-                currentEditingRow = row;
-            }
+                const card = document.createElement('div');
+                card.className = 'user-card';
+                card.dataset.adminId = id;
+                card.innerHTML = `
+                    <div class="user-card-header">
+                        <div class="user-avatar">${firstLetter}</div>
+                        <div class="user-info">
+                            <h3>${admin.username || 'N/A'}</h3>
+                            <p>ID: ${id}</p>
+                        </div>
+                    </div>
+                    <div class="user-card-body">
+                        <div>
+                            <span class="label">Password:</span>
+                            <span class="value password-value">${admin.password || 'N/A'}</span>
+                        </div>
+                        <div>
+                            <span class="label">Dibuat:</span>
+                            <span class="value">${formattedDate}</span>
+                        </div>
+                    </div>
+                    <div class="user-card-actions">
+                        <button class="btn btn-edit" onclick="openEditModal('${id}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn btn-delete" onclick="deleteUser('${id}', '${admin.username}')"><i class="fas fa-trash"></i> Hapus</button>
+                    </div>
+                `;
+                userList.appendChild(card);
+            });
         }
 
-        function saveUser(button, adminId) {
-            const row = button.closest('tr');
-            const usernameInput = row.querySelector('.username-input').value;
-            const passwordInput = row.querySelector('.password-input').value;
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            if (!searchTerm) {
+                renderUsers(allAdmins);
+                return;
+            }
+            
+            const filteredAdmins = Object.keys(allAdmins)
+                .filter(key => allAdmins[key].username.toLowerCase().includes(searchTerm))
+                .reduce((obj, key) => {
+                    obj[key] = allAdmins[key];
+                    return obj;
+                }, {});
+                
+            renderUsers(filteredAdmins);
+        });
+        
+        function openModal(mode, adminId = null) {
+            userForm.reset();
+            if (mode === 'add') {
+                modalTitle.textContent = 'Tambah Admin Baru';
+                adminIdInput.value = '';
+            } else {
+                modalTitle.textContent = 'Edit Admin';
+                adminIdInput.value = adminId;
+                const admin = allAdmins[adminId];
+                usernameInput.value = admin.username;
+                passwordInput.value = admin.password;
+            }
+            userModal.classList.add('show');
+        }
 
-            if (!usernameInput || !passwordInput) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Input Tidak Lengkap',
-                    text: 'Username dan Admin Password tidak boleh kosong.',
-                    confirmButtonText: 'Oke'
-                });
+        function closeModal() {
+            userModal.classList.remove('show');
+        }
+        
+        window.openEditModal = (id) => {
+            openModal('edit', id);
+        }
+
+        addAdminBtn.addEventListener('click', () => openModal('add'));
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelModalBtn.addEventListener('click', closeModal);
+        userModal.addEventListener('click', (e) => {
+            if(e.target === userModal) closeModal();
+        });
+
+        userForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = adminIdInput.value;
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            if(!username || !password) {
+                Swal.fire({ icon: 'warning', title: 'Input Tidak Lengkap', text: 'Username dan Password wajib diisi.' });
                 return;
             }
 
-            Swal.fire({
-                title: 'Menyimpan Data...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                },
-                customClass: {
-                    popup: 'swal2-popup',
-                    title: 'swal2-title',
-                    htmlContainer: 'swal2-html-container'
-                }
-            });
-
-            const adminUpdates = {
-                username: usernameInput,
-                password: passwordInput
-            };
-
-            database.ref(`/admins/${adminId}`).update(adminUpdates)
-                .then(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Data Berhasil Disimpan!',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        customClass: {
-                            popup: 'swal2-popup',
-                            title: 'swal2-title',
-                            htmlContainer: 'swal2-html-container'
-                        }
-                    });
-                    loadAllUserData();
-                })
-                .catch(error => {
-                    console.error("Error saving admin data: ", error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal Menyimpan Data',
-                        text: `Terjadi kesalahan saat menyimpan data admin: ${error.message}`,
-                        confirmButtonText: 'Oke'
-                    });
-                });
-        }
-
-        function cancelEdit(button, adminId) {
-            const row = button.closest('tr');
-            toggleEditMode(row.querySelector('.edit-btn'), adminId);
-            loadAllUserData();
-            Swal.fire({
-                icon: 'info',
-                title: 'Perubahan Dibatalkan',
-                showConfirmButton: false,
-                timer: 1000,
-                customClass: {
-                    popup: 'swal2-popup',
-                    title: 'swal2-title',
-                    htmlContainer: 'swal2-html-container'
-                }
-            });
-        }
+            if (id) {
+                const updates = { username, password };
+                database.ref(`/admins/${id}`).update(updates)
+                    .then(() => {
+                        Swal.fire({ icon: 'success', title: 'Data berhasil diperbarui!', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                        closeModal();
+                    })
+                    .catch(err => Swal.fire({ icon: 'error', title: 'Gagal Memperbarui', text: err.message }));
+            } else {
+                const newAdminRef = database.ref('/admins').push();
+                const newAdminId = newAdminRef.key;
+                const newAdminData = {
+                    username, password,
+                    createdAt: new Date().toISOString()
+                };
+                
+                const updates = {};
+                updates[`/admins/${newAdminId}`] = newAdminData;
+                updates[`/birthday_pages/${newAdminId}`] = { placeholder: true }; // Assuming this is needed for new admins
+                
+                database.ref().update(updates)
+                    .then(() => {
+                         Swal.fire({ icon: 'success', title: 'Admin baru berhasil ditambahkan!', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                         closeModal();
+                    })
+                    .catch(err => Swal.fire({ icon: 'error', title: 'Gagal Menambah', text: err.message }));
+            }
+        });
         
-        function deleteUser(adminId, username) {
+        window.deleteUser = (id, username) => {
             Swal.fire({
                 title: 'Konfirmasi Hapus',
-                text: `Apakah Anda yakin ingin menghapus pengguna "${username}"? Tindakan ini akan menghapus akun admin dan halaman ulang tahunnya secara permanen.`,
+                text: `Anda yakin ingin menghapus "${username}"? Semua data terkait (termasuk halaman ulang tahun) akan ikut terhapus.`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#e74c3c',
-                cancelButtonColor: '#757575',
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal',
-                customClass: {
-                    popup: 'swal2-popup',
-                    title: 'swal2-title',
-                    htmlContainer: 'swal2-html-container',
-                    confirmButton: 'swal2-confirm',
-                    cancelButton: 'swal2-deny'
-                }
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    const updates = {};
-                    updates[`/admins/${adminId}`] = null;
-                    updates[`/birthday_pages/${adminId}`] = null;
-
+                    const updates = {
+                        [`/admins/${id}`]: null,
+                        [`/birthday_pages/${id}`]: null
+                    };
                     database.ref().update(updates)
                         .then(() => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil Dihapus!',
-                                text: `Pengguna "${username}" berhasil dihapus.`,
-                                showConfirmButton: false,
-                                timer: 1500,
-                                customClass: {
-                                    popup: 'swal2-popup',
-                                    title: 'swal2-title',
-                                    htmlContainer: 'swal2-html-container'
-                                }
-                            });
-                            loadAllUserData();
+                            Swal.fire({ icon: 'success', title: 'Terhapus!', text: `Pengguna "${username}" telah dihapus.` });
                         })
                         .catch((error) => {
-                            console.error("Error deleting user: ", error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal Menghapus',
-                                text: 'Terjadi kesalahan saat menghapus pengguna. Cek konsol browser untuk detail.',
-                                confirmButtonText: 'Oke',
-                                customClass: {
-                                    popup: 'swal2-popup',
-                                    title: 'swal2-title',
-                                    htmlContainer: 'swal2-html-container',
-                                    confirmButton: 'swal2-confirm'
-                                }
-                            });
+                            Swal.fire({ icon: 'error', title: 'Gagal Menghapus', text: error.message });
                         });
                 }
             });
