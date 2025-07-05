@@ -27,7 +27,7 @@
             color: #fff;
             position: relative;
             overflow: hidden;
-            padding: 20px;
+            padding: 10px; /* Sedikit padding untuk mobile */
         }
         body::before, body::after { content: ''; position: absolute; top: 50%; left: 50%; width: 800px; height: 800px; background-image: radial-gradient(circle, var(--primary) 0%, rgba(255,126,95,0) 60%); border-radius: 50%; transform: translate(-50%, -50%); animation: move-aurora 20s linear infinite; filter: blur(100px); opacity: 0.4; }
         body::after { background-image: radial-gradient(circle, var(--accent2) 0%, rgba(255,95,109,0) 60%); animation-name: move-aurora-2; animation-delay: -10s; }
@@ -42,22 +42,20 @@
             margin: auto;
             transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), max-width 0.8s ease, height 0.8s ease;
             transform-style: preserve-3d;
-            overflow: hidden;
         }
         .box { background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; width: 100%; height: 100%; position: absolute; top: 0; left: 0; transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.6s ease; backface-visibility: hidden; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1); overflow: hidden; display: flex; flex-direction: column; }
         #adminLoginBox { position: relative; transform: rotateY(0deg); opacity: 1; z-index: 2; justify-content: center; align-items: center; }
         #auth-container.is-active #adminLoginBox { transform: rotateY(180deg); opacity: 0; pointer-events: none; }
         #adminPanelBox { position: relative; transform: rotateY(-180deg); opacity: 0; }
-        #auth-container.is-active { max-width: 900px; max-height: 95vh; height: auto; }
+        #auth-container.is-active {
+            max-width: 900px;
+            height: 90vh; /* Mengisi 90% tinggi layar */
+        }
         #auth-container.is-active #adminPanelBox {
             transform: rotateY(0deg);
             opacity: 1;
             z-index: 2;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            overflow: hidden;
         }
         .login-content { width: 100%; max-width: 330px; position: relative; z-index: 2; }
         .header { text-align: center; margin-bottom: 30px; }
@@ -76,6 +74,17 @@
         .input-field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(255, 126, 95, 0.4); }
         .input-field:focus ~ i { color: var(--accent1); transform: translateY(-50%) scale(1.1); }
         #togglePassword { right: 16px; left: auto; cursor: pointer; }
+        /* === CSS BARU: Menyamakan bentuk kolom tanggal === */
+        .input-field[type="date"] {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .input-field[type="date"]::-webkit-inner-spin-button,
+        .input-field[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+
         .btn { width: 100%; padding: 15px; background: linear-gradient(90deg, var(--accent2) 0%, var(--primary) 100%); border: none; border-radius: 12px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(255, 95, 109, 0.35); }
         .register-link { text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--light-text); }
@@ -86,18 +95,21 @@
         .logout-btn { background: var(--glass); border: 1px solid var(--glass-border); color: var(--light-text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logout-btn:hover { background: var(--primary); color: #fff; transform: rotate(15deg); }
         .panel-main {
-            flex-grow: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
+            flex-grow: 1; /* Membuat area ini mengisi sisa ruang */
+            overflow-y: auto;   /* Izinkan scroll vertikal */
+            overflow-x: hidden; /* Cegah scroll horizontal */
             width: 100%;
             position: relative;
             z-index: 2;
-            padding-right: 5px;
+            padding: 5px;
         }
         .panel-section { background: rgba(255, 255, 255, 0.03); border-radius: 18px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--glass-border); }
         .section-title { display: flex; align-items: center; gap: 15px; font-size: 1.3rem; font-weight: 600; color: var(--light-text); margin-bottom: 25px; }
         .section-title i { color: var(--primary); font-size: 1.5rem; }
-        .panel-actions { flex-shrink: 0; width: 100%; padding: 20px 30px; background: rgba(15, 18, 26, 0.8); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 20px; }
+        .panel-actions {
+            flex-shrink: 0; /* Mencegah area ini menyusut */
+            width: 100%; padding: 20px 30px; background: rgba(15, 18, 26, 0.8); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 20px;
+        }
         .back-link { color: var(--light-text); text-decoration: none; font-weight: 500; transition: var(--transition-fast); }
         .back-link:hover { color: var(--primary); }
         .btn-save { background: linear-gradient(to right, var(--primary) 0%, var(--secondary) 100%); border: none; border-radius: 10px; color: var(--darker); font-size: 1rem; font-weight: 600; padding: 12px 25px; cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; gap: 10px; }
@@ -122,32 +134,18 @@
         }
 
         @media (max-width: 991px) {
-            #auth-container.is-active {
-                max-height: 95vh;
-                height: auto;
-                overflow: hidden;
-            }
             #adminPanelBox {
                 padding: 20px 15px;
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                overflow: hidden;
             }
             .panel-main {
-                flex-grow: 1;
-                overflow-y: auto;
-                overflow-x: hidden;
-                width: 100%;
-                padding-right: 5px;
+                display: flex; flex-direction: column; gap: 0;
             }
-            .panel-section { padding: 20px; margin-bottom: 15px; }
+            .panel-section { padding: 20px; margin-bottom: 20px; }
             .panel-actions {
                  padding: 20px;
                  flex-direction: column;
                  align-items: stretch;
                  gap: 15px;
-                 margin-top: auto;
             }
             .btn-save { width: 100%; }
         }
