@@ -106,27 +106,18 @@
         @keyframes fadeInCard-anim { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         @keyframes subtle-glow { from { box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 15px rgba(255, 239, 186, 0.4); } to { box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255, 239, 186, 0.8); } }
         
-        /* CSS untuk hujan konfeti */
         .falling-confetti { position: fixed; top: -20px; border-radius: 50%; pointer-events: none; z-index: 1500; }
         
-        /* CSS untuk ledakan konfeti */
         .confetti-piece {
             position: fixed; top: 50%; left: 50%; width: 10px; height: 10px;
             background-color: #ff0; border-radius: 50%; pointer-events: none;
             z-index: 3000; opacity: 0;
         }
 
-        /* PERUBAHAN CSS: Untuk efek salju */
         .snow-fall {
-            position: fixed;
-            top: -20px; /* Mulai dari atas */
-            width: 8px; /* Ukuran salju */
-            height: 8px; /* Ukuran salju */
-            pointer-events: none;
-            z-index: 2500;
-            background-color: white;
-            border-radius: 50%; /* Membuat bentuknya bulat */
-            opacity: 0.8;
+            position: fixed; top: -20px; width: 8px; height: 8px;
+            pointer-events: none; z-index: 2500;
+            border-radius: 50%; opacity: 0.8;
         }
     </style>
 </head>
@@ -193,7 +184,7 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         let pageData = {};
-        let snowInterval; // Mengganti nama variabel agar lebih jelas
+        let snowInterval;
 
         const loginContainer = document.getElementById("loginContainer"), birthdayPage = document.getElementById("birthdayPage"), errorPage = document.getElementById("errorPage"), giftModal = document.getElementById("giftModal"), giftBox = document.querySelector(".gift-box"), giftCard = document.getElementById("giftCard"), backgroundMusic = document.getElementById("background-music"), togglePassword = document.getElementById("togglePassword"), passwordInput = document.getElementById("password");
         
@@ -271,17 +262,28 @@
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) { age--; }
             document.getElementById("ageDisplay").innerText = `Hari ini usiamu genap ${age} tahun. Selamat!`;
         }
+
+        // --- FUNGSI INI DIUBAH ---
         function initScrollAnimations() {
             const cards = document.querySelectorAll('.message-card');
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
-            }, { root: null, rootMargin: '0px', threshold: 0.25 });
+                entries.forEach(entry => {
+                    // PERUBAHAN: Tambah/Hapus class 'is-visible' agar animasi bisa berulang
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    } else {
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, { root: null, rootMargin: '0px', threshold: 0.1 }); // threshold diubah agar lebih responsif
+
             cards.forEach((card, index) => {
                 card.style.setProperty('--initial-rotation', index % 2 === 0 ? '-20deg' : '20deg');
                 card.style.transitionDelay = `${index * 150}ms`;
                 observer.observe(card);
             });
         }
+
         function openGift() { giftModal.style.display = "flex"; }
         
         function openCard() {
@@ -291,10 +293,8 @@
             const qrImg = document.getElementById("qrCodeImg");
             qrImg.src = pageData.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`Selamat Ulang Tahun ${pageData.birthdayName}!`)}`;
             
-            // Panggil ledakan awal
             createConfettiExplosion(150);
             
-            // Panggil efek salju setelah jeda singkat
             setTimeout(() => {
                 startSnowFall();
             }, 500);
@@ -302,10 +302,7 @@
 
         function closeGiftModal() { 
             giftModal.style.display = "none"; 
-            
-            // Hentikan interval salju
             clearInterval(snowInterval);
-
             setTimeout(() => { 
                 giftCard.style.display = "none"; 
                 giftBox.style.display = "block"; 
@@ -373,36 +370,42 @@
             }
         }
 
-        // --- FUNGSI BARU: EFEK SALJU BERKELANJUTAN ---
+        // --- FUNGSI INI JUGA DIUBAH ---
         function startSnowFall() {
+            // PERUBAHAN: Menambahkan palet warna
+            const colors = ['#ff7e5f', '#feb47b', '#ffc371', '#ff5f6d', '#30cfd0', '#ffffff', '#a1ffce'];
+
             snowInterval = setInterval(() => {
                 const snowFlake = document.createElement('div');
                 snowFlake.classList.add('snow-fall');
 
-                const size = Math.random() * 4 + 4; // Ukuran salju antara 4px dan 8px
-                const xPos = Math.random() * 100; // Posisi horizontal acak
-                const opacity = Math.random() * 0.5 + 0.3; // Opasitas acak
+                const size = Math.random() * 4 + 4;
+                const xPos = Math.random() * 100;
+                const opacity = Math.random() * 0.5 + 0.3;
+                // PERUBAHAN: Ambil warna acak dari palet
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
                 snowFlake.style.width = `${size}px`;
                 snowFlake.style.height = `${size}px`;
                 snowFlake.style.left = xPos + 'vw';
                 snowFlake.style.opacity = opacity;
+                snowFlake.style.backgroundColor = randomColor; // Terapkan warna
 
                 document.body.appendChild(snowFlake);
 
-                const duration = 5000 + Math.random() * 5000; // Durasi jatuh acak
-                const swing = Math.random() * 40 - 20; // Goyangan horizontal kecil
+                const duration = 5000 + Math.random() * 5000;
+                const swing = Math.random() * 40 - 20;
 
                 snowFlake.animate([
                     { transform: 'translateY(0px) translateX(0px)' },
-                    { transform: `translateY(110vh) translateX(${swing}px)` } // Animasi jatuh ke bawah
+                    { transform: `translateY(110vh) translateX(${swing}px)` }
                 ], {
                     duration: duration,
                     easing: 'linear'
                 }).onfinish = () => {
                     snowFlake.remove();
                 };
-            }, 300); // Membuat salju baru setiap 300ms
+            }, 300);
         }
     </script>
 </body>
