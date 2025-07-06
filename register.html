@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Registration - Neumorphic</title>
+    <title>Regist page</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -70,7 +70,7 @@
         .input-group label { display: block; color: var(--text-light); font-size: 0.9rem; font-weight: 500; margin-bottom: 12px; padding-left: 10px; }
         .input-wrapper { position: relative; }
         .input-field {
-            width: 100%; padding: 18px 22px 18px 55px;
+            width: 100%; padding: 18px 55px;
             background: var(--bg-color); border: none;
             border-radius: 15px; color: var(--text-color);
             font-size: 1rem;
@@ -86,7 +86,8 @@
             color: var(--text-light); font-size: 16px; transition: all 0.2s ease-out;
         }
         .input-wrapper .icon-left { left: 22px; }
-        .input-wrapper .icon-right { right: 22px; left: auto; }
+        .input-wrapper .icon-right { right: 22px; left: auto; cursor: pointer;}
+        .input-wrapper .icon-right:hover { color: var(--primary); }
         .input-field:focus ~ .icon-left { color: var(--primary); }
 
         .btn {
@@ -109,9 +110,13 @@
         .back-link {
             text-align: center; margin-top: 30px;
             font-size: 0.95rem; color: var(--text-light);
-            text-decoration: none; font-weight: 600;
+            text-decoration: none;
         }
-        .back-link:hover { color: var(--primary); text-decoration: underline; }
+        .back-link:hover { text-decoration: underline; }
+        .back-link strong {
+            font-weight: 600;
+            color: var(--primary);
+        }
         
         /* --- Modal Styling --- */
         .feedback-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); z-index: 3000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
@@ -164,8 +169,8 @@
         <div class="box" id="registrationBox">
             <div class="header">
                 <div class="header-icon"><i class="fas fa-user-plus"></i></div>
-                <h1>Create your account</h1>
-                <p>Isi detail untuk mendaftar admin baru.</p>
+                <h1>Create Account</h1>
+                <p>Let's get started</p>
             </div>
             <form id="registerForm" onsubmit="event.preventDefault(); createAccount();">
                 <div class="input-group">
@@ -180,11 +185,20 @@
                     <div class="input-wrapper">
                         <input type="password" id="adminPass" class="input-field" placeholder="••••••••" required>
                         <i class="fas fa-key icon-left"></i>
+                        <i class="fas fa-eye icon-right" onclick="togglePasswordVisibility('adminPass', this)"></i>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="repeatPass">Repeat Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="repeatPass" class="input-field" placeholder="••••••••" required>
+                        <i class="fas fa-key icon-left"></i>
+                        <i class="fas fa-eye icon-right" onclick="togglePasswordVisibility('repeatPass', this)"></i>
                     </div>
                 </div>
                 <button type="submit" class="btn"><i class="fas fa-plus-circle"></i> Buat Akun</button>
             </form>
-            <a href="admin.html" class="back-link">Kembali ke Panel Admin</a>
+            <a href="admin.html" class="back-link">Already have an account? <strong>Sign in</strong></a>
         </div>
     </div>
     
@@ -231,8 +245,23 @@
         function createAccount() {
             const adminName = document.getElementById('adminName').value.trim();
             const adminPass = document.getElementById('adminPass').value;
+            const repeatPass = document.getElementById('repeatPass').value;
             const submitBtn = document.querySelector('#registerForm button');
-            if (!adminName || !adminPass) { return alert("Nama Admin dan Password harus diisi."); }
+
+            if (!adminName || !adminPass || !repeatPass) {
+                showFailureModal("Input Tidak Lengkap", "Nama Admin dan Password harus diisi.");
+                return;
+            }
+
+            if (adminPass.length < 3) {
+                showFailureModal("Password Terlalu Pendek", "Password minimal harus 3 karakter.");
+                return;
+            }
+            
+            if (adminPass !== repeatPass) {
+                showFailureModal("Password Tidak Cocok", "Password dan Repeat Password tidak sama.");
+                return;
+            }
 
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengecek...';
             submitBtn.disabled = true;
@@ -267,6 +296,19 @@
                     });
                 }
             });
+        }
+        
+        function togglePasswordVisibility(fieldId, icon) {
+            const field = document.getElementById(fieldId);
+            if (field.type === "password") {
+                field.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         }
         
         function showAccountModal(user, pass, newId) {
