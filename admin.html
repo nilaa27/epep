@@ -29,15 +29,22 @@
             margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
             -webkit-user-select: none; user-select: none;
-            touch-action: pan-y;
         }
 
+        /* PERBAIKAN 1: Melonggarkan aturan touch-action */
         body {
             background: var(--bg-color);
             min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
             color: var(--text-color);
             padding: 15px;
+            /* Memindahkan touch-action ke body agar tidak terlalu global */
+            touch-action: pan-y;
+        }
+        
+        /* Memastikan elemen yang bisa di-scroll punya touch-action yang benar */
+        .panel-form, textarea {
+            touch-action: auto;
         }
 
         .container {
@@ -110,6 +117,21 @@
         .input-wrapper .icon-right { right: 22px; cursor: pointer; }
         .input-wrapper .icon-right:hover { color: var(--primary); }
         .input-field:focus ~ .icon-left { color: var(--primary); }
+        
+        /* Textarea specific styles */
+        textarea.input-field {
+            min-height: 100px; /* Adjust as needed */
+            resize: vertical; /* Allow vertical resizing */
+            padding: 18px 22px; /* Adjust padding for textarea without left icon */
+            padding-left: 22px; /* Ensure no icon space if not needed for textarea */
+        }
+        /* For textareas, if an icon-left is present, adjust padding */
+        textarea.input-field + .icon-left {
+            left: 22px; /* Adjust left position for consistency */
+            top: 25px; /* Adjust vertical alignment for textarea */
+            transform: translateY(0); /* Remove translateY for consistent top alignment */
+        }
+
 
         .btn {
             width: 100%; padding: 18px;
@@ -224,22 +246,55 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .hidden { display: none; }
 
-        /* ===== PERBAIKAN UNTUK INPUT TANGGAL LAHIR ===== */
+        /* ===== PERBAIKAN UNTUK INPUT TANGGAL LAHIR (EFEK CEKUNGAN YANG LEBIH KUAT) ===== */
         input[type="date"].input-field {
-            position: relative;
-            /* Memastikan teks tanggal tidak terlalu ke kiri */
-            text-indent: 1px;
+            /* Memastikan padding kiri sama seperti input lain dengan ikon */
+            padding-left: 55px; 
+            /* Menerapkan efek cekungan yang sama */
+            box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light) !important; /* Tambahkan !important */
+            /* Mengatur ulang border bawaan yang mungkin menghalangi shadow */
+            border: none !important;
+            /* Memastikan background transparan agar shadow terlihat */
+            background-color: var(--bg-color) !important;
+            /* Memastikan tampilan diatur ulang */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        /* Styling saat input tanggal difokuskan */
+        input[type="date"].input-field:focus {
+            outline: none;
+            box-shadow: inset 9px 9px 18px var(--shadow-dark), inset -9px -9px 18px var(--shadow-light) !important; /* Tambahkan !important */
+        }
+
+        /* Memastikan ikon kalender berada di posisi yang benar */
+        .input-group .input-wrapper .icon-left {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 22px;
+            color: var(--text-light);
+            font-size: 16px;
+            transition: all 0.2s ease-out;
         }
 
         /* Menyembunyikan ikon kalender default dari browser Chrome/Edge */
         input[type="date"]::-webkit-calendar-picker-indicator {
-            display: none;
-            -webkit-appearance: none;
+            display: none !important; /* Pastikan benar-benar hilang */
+            -webkit-appearance: none !important;
         }
 
         /* Memberi jarak antara ikon kustom kita dan teks tanggal (dd/mm/yyyy) */
         input[type="date"]::-webkit-datetime-edit {
-            padding-left: 5px;
+            padding-left: 5px; 
+        }
+
+        /* Menyesuaikan posisi ikon kiri pada textarea (jika ada) */
+        textarea.input-field + .icon-left {
+            left: 22px; /* Sesuaikan posisi kiri */
+            top: 25px; /* Sesuaikan posisi vertikal untuk textarea */
+            transform: translateY(0); /* Hapus translateY untuk konsistensi */
         }
 
     </style>
@@ -276,13 +331,21 @@
                         <div class="layout-column">
                             <div class="panel-section">
                                 <div class="section-title"><i class="fas fa-birthday-cake"></i><span>Info Utama</span></div>
-                                <div class="input-group"><label for="birthdayNameInput">Nama</label><div class="input-wrapper"><input type="text" id="birthdayNameInput" class="input-field" required><i class="fas fa-user-edit icon-left"></i></div></div>
-                                <div class="input-group"><label for="birthDateInput">Tanggal Lahir</label><div class="input-wrapper"><input type="date" id="birthDateInput" class="input-field" required><i class="fas fa-calendar-alt icon-left"></i></div></div>
+                                <div class="input-group"><label for="birthdayNameInput">Nama</label><div class="input-wrapper"><i class="fas fa-user-edit icon-left"></i><input type="text" id="birthdayNameInput" class="input-field" required></div></div>
+                                <div class="input-group"><label for="birthDateInput">Tanggal Lahir</label><div class="input-wrapper"><i class="fas fa-calendar-alt icon-left"></i><input type="date" id="birthDateInput" class="input-field" required></div></div>
+                                <div class="input-group">
+                                    <label for="bestWishesInput">Harapan Terbaik</label>
+                                    <div class="input-wrapper"><textarea id="bestWishesInput" class="input-field" rows="4" placeholder="Masukkan harapan terbaik..."></textarea></div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="stayStrongQuoteInput">Jadilah Kuat (Quote)</label>
+                                    <div class="input-wrapper"><textarea id="stayStrongQuoteInput" class="input-field" rows="3" placeholder="Masukkan quote jadilah kuat..."></textarea></div>
+                                </div>
                             </div>
                             <div class="panel-section">
                                  <div class="section-title"><i class="fas fa-users"></i><span>Akses Tamu</span></div>
-                                 <div class="input-group"><label for="guestUserInput">Username Tamu</label><div class="input-wrapper"><input type="text" id="guestUserInput" class="input-field" required><i class="fas fa-user icon-left"></i></div></div>
-                                 <div class="input-group"><label for="guestPassInput">Password Tamu</label><div class="input-wrapper"><input type="text" id="guestPassInput" class="input-field" required><i class="fas fa-lock icon-left"></i></div></div>
+                                 <div class="input-group"><label for="guestUserInput">Username Tamu</label><div class="input-wrapper"><i class="fas fa-user icon-left"></i><input type="text" id="guestUserInput" class="input-field" required></div></div>
+                                 <div class="input-group"><label for="guestPassInput">Password Tamu</label><div class="input-wrapper"><i class="fas fa-lock icon-left"></i><input type="text" id="guestPassInput" class="input-field" required></div></div>
                             </div>
                         </div>
 
@@ -295,6 +358,10 @@
                                 <div class="section-title"><i class="fas fa-qrcode"></i><span>Kode QR</span></div>
                                 <div class="input-group"><label for="qrImageUrlInput">URL Gambar QR</label><div class="input-wrapper"><i class="fas fa-image icon-left"></i><input type="url" id="qrImageUrlInput" class="input-field" placeholder="https://..." required></div></div>
                                 <img id="qrPreviewImage" class="qr-preview-image" src="" alt="Pratinjau QR">
+                                <div class="input-group" style="margin-top: 20px;">
+                                    <label for="qrMessageInput">Pesan di bawah QR</label>
+                                    <div class="input-wrapper"><textarea id="qrMessageInput" class="input-field" rows="3" placeholder="Masukkan pesan di bawah QR code..."></textarea></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -310,10 +377,12 @@
     
     <div class="feedback-modal" id="feedbackModal"><div class="feedback-content"><div class="icon-container"><div class="loader" id="feedbackLoader"></div><i class="fas fa-check-circle icon success hidden" id="successIcon"></i><i class="fas fa-times-circle icon failure hidden" id="failureIcon"></i></div><h2 id="feedbackTitle">Mengecek...</h2><p id="feedbackMessage"></p></div></div>
     <script>
-        // JS Logic (Unchanged as it's already robust)
-        document.addEventListener('gesturestart', (e) => e.preventDefault());
-        document.addEventListener('touchmove', (e) => { if (e.scale !== 1) e.preventDefault(); }, { passive: false });
+        // PERBAIKAN 2: Menghapus listener pencegah zoom yang agresif
+        // Kode ini sekarang lebih aman untuk kompatibilitas lintas browser
+        // document.addEventListener('gesturestart', (e) => e.preventDefault()); -> Dihapus
+        // document.addEventListener('touchmove', (e) => { if (e.scale !== 1) e.preventDefault(); }, { passive: false }); -> Dihapus
         document.addEventListener('dblclick', (e) => e.preventDefault(), { passive: false });
+
 
         const firebaseConfig = {
             apiKey: "GANTI_DENGAN_API_KEY_ANDA",
@@ -372,6 +441,9 @@
                 document.getElementById('qrImageUrlInput').value = data.qrImageUrl || '';
                 document.getElementById('guestUserInput').value = data.guestUser || '';
                 document.getElementById('guestPassInput').value = data.guestPass || '';
+                document.getElementById('bestWishesInput').value = data.bestWishes || ''; // New
+                document.getElementById('stayStrongQuoteInput').value = data.stayStrongQuote || ''; // New
+                document.getElementById('qrMessageInput').value = data.qrMessage || ''; // New
                 document.getElementById('shareableLink').value = `${window.location.origin}/index.html?id=${currentAdminId}`;
                 updateQrPreview();
                 hideFeedback();
@@ -386,7 +458,10 @@
                 birthDate: document.getElementById('birthDateInput').value,
                 qrImageUrl: document.getElementById('qrImageUrlInput').value,
                 guestUser: document.getElementById('guestUserInput').value,
-                guestPass: document.getElementById('guestPassInput').value
+                guestPass: document.getElementById('guestPassInput').value,
+                bestWishes: document.getElementById('bestWishesInput').value, // New
+                stayStrongQuote: document.getElementById('stayStrongQuoteInput').value, // New
+                qrMessage: document.getElementById('qrMessageInput').value // New
             };
             database.ref('birthday_pages/' + currentAdminId).set(settings).then(() => {
                 showFeedback('success', 'Berhasil Disimpan!', 'Semua perubahan telah disimpan.');
