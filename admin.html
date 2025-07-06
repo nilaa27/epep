@@ -330,7 +330,7 @@
                 <div class="login-content">
                     <div class="header">
                         <div class="header-icon"><i class="fas fa-user-shield"></i></div>
-                        <h1>Admin panel</h1>
+                        <h1>Admin Panel</h1>
                         <p>Login for using panel</p>
                     </div>
                     <div class="input-group">
@@ -455,6 +455,8 @@
             document.getElementById('editForm').reset();
             document.getElementById('adminUser').value = '';
             document.getElementById('adminPass').value = '';
+            // Ganti URL untuk menghapus parameter super admin agar saat refresh tidak auto-login lagi
+            window.history.replaceState({}, document.title, window.location.pathname); 
             updateQrPreview();
         }
 
@@ -471,10 +473,8 @@
                 document.getElementById('bestWishesInput').value = data.bestWishes || '';
                 document.getElementById('stayStrongQuoteInput').value = data.stayStrongQuote || '';
                 document.getElementById('qrMessageInput').value = data.qrMessage || '';
-                // Memuat nomor WhatsApp target jika ada
                 document.getElementById('targetWhatsappNumber').value = data.targetWhatsappNumber || '';
 
-                // Link yang dibagikan akan mengarah ke halaman utama dengan ID admin sebagai parameter
                 document.getElementById('shareableLink').value = `${window.location.origin}/index.html?id=${currentAdminId}`;
                 updateQrPreview();
                 hideFeedback();
@@ -506,8 +506,6 @@
                 setTimeout(() => {
                     hideFeedback();
                     const shareableLink = document.getElementById('shareableLink').value;
-                    
-                    // --- PERUBAHAN DI SINI: Pesan WhatsApp yang lebih menarik ---
                     const messageText = `
 Halo ${birthdayName}! ðŸ‘‹
 
@@ -520,7 +518,7 @@ Untuk masuk, gunakan detail berikut ya:
 ðŸ‘¤ *Username:* ${guestUser}
 ðŸ”‘ *Password:* ${guestPass}
 
-Jangan lupa, kamu bisa login untuk melihat ucapan dan kado dari teman-temanmu! âœ¨`.trim(); // .trim() untuk menghapus spasi/baris kosong di awal/akhir
+Jangan lupa, kamu bisa login untuk melihat ucapan dan kado dari teman-temanmu! âœ¨`.trim();
 
                     Swal.fire({
                         title: 'Data Berhasil Disimpan!',
@@ -532,12 +530,8 @@ Jangan lupa, kamu bisa login untuk melihat ucapan dan kado dari teman-temanmu! â
                         denyButtonText: '<i class="fas fa-copy"></i> Salin Info & Link',
                         cancelButtonText: 'Selesai',
                         reverseButtons: true,
-                        customClass: {
-                            confirmButton: 'swal2-confirm-whatsapp',
-                            denyButton: 'swal2-deny-copy',
-                        }
                     }).then((result) => {
-                        if (result.isConfirmed) { // Kirim via WhatsApp
+                        if (result.isConfirmed) {
                             if (targetWhatsappNumber) {
                                 const whatsappUrl = `https://wa.me/${targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`;
                                 window.open(whatsappUrl, '_blank');
@@ -549,7 +543,7 @@ Jangan lupa, kamu bisa login untuk melihat ucapan dan kado dari teman-temanmu! â
                                     confirmButtonText: 'Oke'
                                 });
                             }
-                        } else if (result.isDenied) { // Salin Link & Info
+                        } else if (result.isDenied) {
                             navigator.clipboard.writeText(messageText)
                                 .then(() => {
                                     Swal.fire({
@@ -564,7 +558,7 @@ Jangan lupa, kamu bisa login untuk melihat ucapan dan kado dari teman-temanmu! â
                                 });
                         }
                     });
-                }, 2000); // Tunggu sebentar setelah feedback "Berhasil Disimpan!"
+                }, 1500);
             }).catch(e => { showFeedback('failure', 'Gagal Menyimpan', e.message); setTimeout(hideFeedback, 3000); });
         }
 
@@ -578,6 +572,22 @@ Jangan lupa, kamu bisa login untuk melihat ucapan dan kado dari teman-temanmu! â
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // --- LOGIKA AUTO-LOGIN SUPER ADMIN ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const isSuperAdminAccess = urlParams.get('super_admin_access') === 'true';
+            const adminIdFromUrl = urlParams.get('id');
+
+            if (isSuperAdminAccess && adminIdFromUrl) {
+                currentAdminId = adminIdFromUrl;
+                showFeedback('success', 'Akses Super Admin', 'Mengarahkan langsung ke panel kontrol...');
+                setTimeout(() => {
+                    hideFeedback();
+                    authContainer.classList.add('is-active');
+                    loadDataToForm();
+                }, 1500);
+            }
+            // --- AKHIR LOGIKA AUTO-LOGIN ---
+
             const togglePassword = document.getElementById('togglePassword');
             togglePassword.addEventListener('click', function() {
                 const passField = document.getElementById('adminPass');
