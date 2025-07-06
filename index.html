@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
     <style>
         :root {
             /* Dark Neumorphic Palette */
@@ -96,6 +97,7 @@
             transition: var(--transition-smooth);
         }
         .input-group input:focus { outline: none; box-shadow: inset 9px 9px 18px var(--shadow-dark), inset -9px -9px 18px var(--shadow-light); }
+        .input-group:focus-within .icon { color: var(--primary); }
         #togglePassword { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-light); }
         .login-box .btn { margin-top: 10px; }
 
@@ -127,18 +129,7 @@
         .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--primary); }
         .card-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
         .card-text { font-size: 1rem; line-height: 1.6; font-weight: 300; color: var(--text-light); white-space: pre-wrap; /* Preserve line breaks */ }
-        
-        /* FIX: Styling untuk tombol gift agar di tengah */
-        .gift-btn {
-            margin-top: 20px;
-            color: var(--success);
-            width: auto; /* Agar tidak mengambil lebar penuh */
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            display: inline-flex; /* Menggunakan inline-flex agar margin auto bisa bekerja */
-            margin-left: auto; /* Rata tengah secara horizontal */
-            margin-right: auto; /* Rata tengah secara horizontal */
-        }
+        .gift-btn { margin-top: 20px; color: var(--success); width: auto; padding: 15px 40px; font-size: 1.2rem;}
 
         /* Modals */
         .feedback-modal, .gift-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
@@ -180,6 +171,18 @@
         }
         .music-toggle i { font-size: 18px; }
 
+        /* Kustomisasi SweetAlert2 */
+        .swal2-popup {
+            background-color: var(--bg-color) !important;
+            border-radius: var(--border-radius-main) !important;
+            color: var(--text-color) !important;
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light) !important;
+        }
+        .swal2-title { color: var(--text-color) !important; }
+        .swal2-html-container { color: var(--text-light) !important; }
+        .swal2-confirm { background-color: var(--primary) !important; color: white !important; }
+        .swal2-icon.swal2-success .swal2-success-ring { border-color: var(--success) !important; }
+        .swal2-icon.swal2-error { border-color: var(--error) !important; }
     </style>
 </head>
 <body>
@@ -199,7 +202,7 @@
             </div>
             <div class="input-group">
                 <i class="fas fa-lock icon"></i>
-                <input type="password" id="password" placeholder="Password">
+                <input type="password" id="password" placeholder="••••••••">
                 <i class="fas fa-eye" id="togglePassword"></i>
             </div>
             <button class="btn" onclick="login()"><i class="fas fa-right-to-bracket"></i> Login</button>
@@ -208,7 +211,7 @@
     
     <div class="birthday-page-container" id="birthdayPage">
         <div class="birthday-content">
-            <h1 class="main-title">Happy Birthday, <span id="birthdayNameDisplay"></span></h1>
+            <h1 class="main-title">Happy Birthday, <span></span></h1>
             <div class="card-grid">
                 <div class="message-card"><i class="fas fa-calendar-check card-icon"></i><h2 class="card-title">Spesial Untukmu</h2><p class="card-text" id="ageDisplay"></p></div>
                 <div class="message-card"><i class="fas fa-star card-icon"></i><h2 class="card-title">Harapan Terbaik</h2><p class="card-text" id="bestWishesText"></p></div>
@@ -244,6 +247,7 @@
         </div>
     </div>
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <script>
         const firebaseConfig = { apiKey: "GANTI_DENGAN_API_KEY_ANDA", authDomain: "mayfa-fa284.firebaseapp.com", databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
@@ -263,33 +267,18 @@
               musicToggleBtn = document.getElementById('musicToggleBtn');
         
         // New elements for text content
-        const birthdayNameDisplay = document.getElementById('birthdayNameDisplay'); // Added ID to the span for direct manipulation
         const bestWishesText = document.getElementById('bestWishesText');
         const stayStrongQuoteText = document.getElementById('stayStrongQuoteText');
         const qrMessageText = document.getElementById('qrMessageText');
 
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.classList.add("no-scroll");
-            const urlParams = new URLSearchParams(window.location.search);
-            const pageId = urlParams.get('id');
-            if (!pageId) {
-                showErrorPage("Halaman Tidak Ditemukan", "Pastikan link yang Anda masukkan sudah benar dan lengkap.");
-                return;
-            }
-            database.ref('birthday_pages/' + pageId).on('value', (snapshot) => {
-                if (!snapshot.exists()) {
-                    showErrorPage("Konten Tidak Tersedia", "Halaman ini ada, namun kontennya belum diatur oleh pemilik.");
-                    return;
-                }
-                pageData = snapshot.val();
-                loginContainer.style.display = 'block';
-                birthdayPage.style.display = 'none';
-                errorPage.style.display = 'none';
-            }, (error) => {
-                showErrorPage("Gagal Terhubung", "Tidak dapat memuat data. Periksa koneksi internet Anda.");
-            });
-        });
+        // --- Utility function to get URL parameters ---
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
 
         function showErrorPage(title, message) {
             loginContainer.style.display = 'none';
@@ -297,37 +286,79 @@
             document.getElementById('errorTitle').textContent = title;
             document.getElementById('errorMessage').textContent = message;
             errorPage.style.display = 'block';
+            document.body.classList.remove("no-scroll"); // Allow scrolling on error page
         }
 
-        function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            if (username === pageData.guestUser && password === pageData.guestPass) {
-                showFeedback('loading', 'Login Berhasil!', 'Mempersiapkan keajaiban...');
-                setTimeout(() => {
+        // --- Perbaikan fungsi login utama ---
+        async function login() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const pageId = getUrlParameter('id'); // Dapatkan pageId dari URL
+
+            if (!username || !password) {
+                Swal.fire({ icon: 'warning', title: 'Input Tidak Lengkap', text: 'Mohon isi Username dan Password.' });
+                return;
+            }
+
+            if (!pageId) {
+                showErrorPage("Link Tidak Valid", "ID halaman tidak ditemukan di URL.");
+                return;
+            }
+
+            // Panggil fungsi performGuestLogin yang terpusat
+            await performGuestLogin(username, password, pageId);
+        }
+
+        // --- Fungsi inti untuk memverifikasi dan menampilkan halaman ---
+        async function performGuestLogin(username, password, pageId) {
+            showFeedback('loading', 'Mengecek Kredensial...', 'Harap tunggu sebentar.');
+
+            try {
+                const snapshot = await database.ref(`birthday_pages/${pageId}`).once('value');
+                const data = snapshot.val();
+
+                if (data && data.guestUser === username && data.guestPass === password) {
+                    pageData = data; // Simpan data yang dimuat ke variabel global pageData
+                    
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Login Berhasil!',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000, // Durasi lebih singkat agar transisi cepat
+                        timerProgressBar: true,
+                    });
+
                     loginContainer.style.display = "none";
                     birthdayPage.style.display = "flex";
                     document.body.classList.remove("no-scroll");
-                    // Menggunakan ID baru untuk span nama
-                    birthdayNameDisplay.textContent = pageData.birthdayName; 
-                    
+
+                    document.querySelector(".main-title span").textContent = pageData.birthdayName;
                     calculateAndDisplayAge(pageData.birthDate);
-                    // Set new text content, with fallback for empty values
-                    bestWishesText.textContent = pageData.bestWishes || 'semoga hal baik selalu beriringan denganmu, semoga semesta senantiasa berpihak padamu, semoga jalanmu untuk mencapai masa depan yang cerah di permudahkan, teruslah tumbuh, teruslah melangkah & berbahagia. aku akan selalu bangga atas setiap proses yang sudah kamu lalui. selamat berkelana, i will always support u from afar';
+                    bestWishesText.textContent = pageData.bestWishes || 'semoga hal baik selalu beriringan denganmu, semoga semesta senantiasa berpihak padamu, semoga jalanmu untuk mencapai masa depan yang cerah di permudahkan, teruslah tumbuh, teruslah melangkah & berbahagia . aku akan selalu bangga atas setiap proses yang sudah kamu lalui. selamat berkelana, i will always support u from afar';
                     stayStrongQuoteText.textContent = pageData.stayStrongQuote || '"untuk segala hal yang membuat mu patah. it\'s okay, just say: Allah itu baik"';
                     
                     initScrollAnimations();
                     startFullScreenConfetti();
                     hideFeedback();
-                }, 1500);
-            } else {
-                showFeedback('failure', 'Login Gagal', 'Username atau password salah.');
-                setTimeout(hideFeedback, 2500);
+                    return true; // Login berhasil
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Login Gagal', text: 'Username atau password salah.' });
+                    hideFeedback();
+                    return false; // Login gagal
+                }
+            } catch (error) {
+                console.error("Error during guest login:", error);
+                Swal.fire({ icon: 'error', title: 'Terjadi Kesalahan', text: 'Gagal login. Silakan coba lagi.' });
+                hideFeedback();
+                return false; // Error saat login
             }
         }
         
         function showFeedback(state, title, message = '') {
             const feedbackModal = document.getElementById('feedbackModal');
+            document.getElementById('feedbackLoader').style.display = (state === 'loading' ? 'block' : 'none');
             document.getElementById('feedbackTitle').textContent = title;
             document.getElementById('feedbackMessage').textContent = message;
             feedbackModal.style.display = 'flex';
@@ -354,24 +385,27 @@
         });
 
         function calculateAndDisplayAge(birthDate) {
-            // Perubahan yang diminta pada 2025-06-12
-            if (birthDate === '2005-09-28') {
-                const birthDateObj = new Date(birthDate);
-                const today = new Date();
-                let months = (today.getFullYear() - birthDateObj.getFullYear()) * 12;
-                months -= birthDateObj.getMonth();
-                months += today.getMonth();
-                if (today.getDate() < birthDateObj.getDate()) {
-                    months--;
-                }
-                const years = Math.floor(months / 12);
-                const remainingMonths = months % 12;
-                document.getElementById("ageDisplay").innerText = `sudah berapa lama kamu bertahan? yaitu, ${years} tahun ${remainingMonths} bulan. Selamat!`;
-            } else {
-                 const birthDateObj = new Date(birthDate), today = new Date(); let age = today.getFullYear() - birthDateObj.getFullYear(); const monthDiff = today.getMonth() - birthDateObj.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) { age--; }
-                document.getElementById("ageDisplay").innerText = `Hari ini usiamu genap ${age} tahun. Selamat!`;
+            // Mengikuti permintaan "sudah berapa lama kamu bertahan?" dan tanggal lahir 2005-09-28
+            const fixedBirthDate = '2005-09-28'; 
+            const birthDateObj = new Date(fixedBirthDate);
+            const today = new Date();
+            
+            let years = today.getFullYear() - birthDateObj.getFullYear();
+            let months = today.getMonth() - birthDateObj.getMonth();
+            let days = today.getDate() - birthDateObj.getDate();
+
+            if (days < 0) {
+                months--;
+                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate(); // Days in previous month
             }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const birthDateFormatted = birthDateObj.toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'});
+            
+            document.getElementById("ageDisplay").innerText = `Sudah berapa lama kamu bertahan? Yaitu, ${years} tahun, ${months} bulan, dan ${days} hari. Selamat!`;
         }
         
         function initScrollAnimations() {
@@ -401,7 +435,6 @@
             document.getElementById("giftCardName").textContent = pageData.birthdayName;
             const qrImg = document.getElementById("qrCodeImg");
             qrImg.src = pageData.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`Selamat Ulang Tahun ${pageData.birthdayName}!`)}`;
-            // Menampilkan pesan QR dari data Firebase, dengan fallback default
             qrMessageText.textContent = pageData.qrMessage || '"mungkin hadiahku ga seberapa semoga bermanfaat, dan selamat bertambah usia, dilancarkan disemua hal, dan menjadi pribadi yang lebih baik dari sebelum nya ✨"';
             
             createConfettiExplosion(150);
@@ -476,6 +509,55 @@
                 .onfinish = () => particle.remove();
             }, 300);
         }
+
+        // --- Initial Load Logic on DOMContentLoaded ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            document.body.classList.add("no-scroll"); // Pertahankan ini untuk mencegah scrolling sampai login
+            const urlParams = new URLSearchParams(window.location.search);
+            const pageId = urlParams.get('id');
+            const authParam = urlParams.get('auth'); // Parameter otentikasi dari super admin
+
+            if (!pageId) {
+                showErrorPage("Halaman Tidak Ditemukan", "Pastikan link yang Anda masukkan sudah benar dan lengkap.");
+                return;
+            }
+
+            // Muat data halaman terlebih dahulu untuk memastikan data tersedia
+            const snapshot = await database.ref('birthday_pages/' + pageId).once('value');
+            if (!snapshot.exists()) {
+                showErrorPage("Konten Tidak Tersedia", "Halaman ini ada, namun kontennya belum diatur oleh pemilik atau tidak ditemukan.");
+                return;
+            }
+            pageData = snapshot.val(); // Simpan data yang dimuat ke pageData
+
+            // Jika ada parameter 'auth', coba auto-login
+            if (authParam) {
+                try {
+                    const decoded = JSON.parse(atob(authParam)); // Dekode Base64
+                    const username = decoded.user;
+                    const password = decoded.pass;
+
+                    // Lakukan auto-login
+                    const loginSuccess = await performGuestLogin(username, password, pageId);
+                    if (!loginSuccess) {
+                        // Jika auto-login gagal, tampilkan form login manual
+                        Swal.fire({ icon: 'info', title: 'Akses Otomatis Gagal', text: 'Kredensial otomatis tidak valid. Silakan login manual.' });
+                        loginContainer.style.display = 'block';
+                        document.body.classList.remove("no-scroll"); // Izinkan scrolling di halaman login
+                    }
+                    // Jika loginSuccess true, performGuestLogin sudah mengatur tampilan
+                } catch (e) {
+                    console.error("Error decoding or parsing auth parameter:", e);
+                    Swal.fire({ icon: 'error', title: 'Link Tidak Valid', text: 'Terjadi kesalahan pada link akses otomatis.' });
+                    loginContainer.style.display = 'block'; // Tampilkan form login
+                    document.body.classList.remove("no-scroll"); // Izinkan scrolling di halaman login
+                }
+            } else {
+                // Jika tidak ada parameter 'auth', tampilkan form login manual
+                loginContainer.style.display = 'block';
+                document.body.classList.remove("no-scroll"); // Izinkan scrolling di halaman login
+            }
+        });
     </script>
 </body>
 </html>
