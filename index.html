@@ -96,7 +96,6 @@
             transition: var(--transition-smooth);
         }
         .input-group input:focus { outline: none; box-shadow: inset 9px 9px 18px var(--shadow-dark), inset -9px -9px 18px var(--shadow-light); }
-        .input-group:focus-within .icon { color: var(--primary); }
         #togglePassword { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-light); }
         .login-box .btn { margin-top: 10px; }
 
@@ -128,7 +127,18 @@
         .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--primary); }
         .card-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
         .card-text { font-size: 1rem; line-height: 1.6; font-weight: 300; color: var(--text-light); white-space: pre-wrap; /* Preserve line breaks */ }
-        .gift-btn { margin-top: 20px; color: var(--success); width: auto; padding: 15px 40px; font-size: 1.2rem;}
+        
+        /* FIX: Styling untuk tombol gift agar di tengah */
+        .gift-btn {
+            margin-top: 20px;
+            color: var(--success);
+            width: auto; /* Agar tidak mengambil lebar penuh */
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            display: inline-flex; /* Menggunakan inline-flex agar margin auto bisa bekerja */
+            margin-left: auto; /* Rata tengah secara horizontal */
+            margin-right: auto; /* Rata tengah secara horizontal */
+        }
 
         /* Modals */
         .feedback-modal, .gift-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
@@ -198,7 +208,7 @@
     
     <div class="birthday-page-container" id="birthdayPage">
         <div class="birthday-content">
-            <h1 class="main-title">Happy Birthday, <span></span></h1>
+            <h1 class="main-title">Happy Birthday, <span id="birthdayNameDisplay"></span></h1>
             <div class="card-grid">
                 <div class="message-card"><i class="fas fa-calendar-check card-icon"></i><h2 class="card-title">Spesial Untukmu</h2><p class="card-text" id="ageDisplay"></p></div>
                 <div class="message-card"><i class="fas fa-star card-icon"></i><h2 class="card-title">Harapan Terbaik</h2><p class="card-text" id="bestWishesText"></p></div>
@@ -253,6 +263,7 @@
               musicToggleBtn = document.getElementById('musicToggleBtn');
         
         // New elements for text content
+        const birthdayNameDisplay = document.getElementById('birthdayNameDisplay'); // Added ID to the span for direct manipulation
         const bestWishesText = document.getElementById('bestWishesText');
         const stayStrongQuoteText = document.getElementById('stayStrongQuoteText');
         const qrMessageText = document.getElementById('qrMessageText');
@@ -297,10 +308,12 @@
                     loginContainer.style.display = "none";
                     birthdayPage.style.display = "flex";
                     document.body.classList.remove("no-scroll");
-                    document.querySelector(".main-title span").textContent = pageData.birthdayName;
+                    // Menggunakan ID baru untuk span nama
+                    birthdayNameDisplay.textContent = pageData.birthdayName; 
+                    
                     calculateAndDisplayAge(pageData.birthDate);
-                    // Set new text content
-                    bestWishesText.textContent = pageData.bestWishes || 'semoga hal baik selalu beriringan denganmu, semoga semesta senantiasa berpihak padamu, semoga jalanmu untuk mencapai masa depan yang cerah di permudahkan, teruslah tumbuh, teruslah melangkah & berbahagia . aku akan selalu bangga atas setiap proses yang sudah kamu lalui. selamat berkelana, i will always support u from afar';
+                    // Set new text content, with fallback for empty values
+                    bestWishesText.textContent = pageData.bestWishes || 'semoga hal baik selalu beriringan denganmu, semoga semesta senantiasa berpihak padamu, semoga jalanmu untuk mencapai masa depan yang cerah di permudahkan, teruslah tumbuh, teruslah melangkah & berbahagia. aku akan selalu bangga atas setiap proses yang sudah kamu lalui. selamat berkelana, i will always support u from afar';
                     stayStrongQuoteText.textContent = pageData.stayStrongQuote || '"untuk segala hal yang membuat mu patah. it\'s okay, just say: Allah itu baik"';
                     
                     initScrollAnimations();
@@ -388,6 +401,7 @@
             document.getElementById("giftCardName").textContent = pageData.birthdayName;
             const qrImg = document.getElementById("qrCodeImg");
             qrImg.src = pageData.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`Selamat Ulang Tahun ${pageData.birthdayName}!`)}`;
+            // Menampilkan pesan QR dari data Firebase, dengan fallback default
             qrMessageText.textContent = pageData.qrMessage || '"mungkin hadiahku ga seberapa semoga bermanfaat, dan selamat bertambah usia, dilancarkan disemua hal, dan menjadi pribadi yang lebih baik dari sebelum nya ✨"';
             
             createConfettiExplosion(150);
