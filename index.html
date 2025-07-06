@@ -119,6 +119,7 @@
             filter: blur(5px);
             transform: perspective(800px) rotateY(var(--initial-rotation, -20deg)) scale(0.9);
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.8s ease-out, opacity 0.6s ease-out;
+            text-align: left; /* Default alignment for cards */
         }
         .message-card.is-visible {
             opacity: 1;
@@ -415,12 +416,17 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
                     } else {
-                        entry.target.classList.remove('is-visible');
+                        // Optional: remove class if you want the animation to re-trigger on scroll up
+                        // entry.target.classList.remove('is-visible');
                     }
                 });
             }, { root: null, rootMargin: '0px', threshold: 0.1 });
 
             cards.forEach((card, index) => {
+                // Set default alignment for all cards except the gift card
+                if (!card.querySelector('.gift-btn')) {
+                   card.style.textAlign = 'left';
+                }
                 card.style.setProperty('--initial-rotation', index % 2 === 0 ? '-20deg' : '20deg');
                 card.style.transitionDelay = `${index * 150}ms`;
                 observer.observe(card);
@@ -474,19 +480,32 @@
 
         function createConfettiExplosion(numberOfPieces) {
             const colors = ['var(--primary)', 'var(--success)', 'var(--text-color)', '#ffffff'];
+            const giftCardRect = giftCard.getBoundingClientRect();
+            const startX = giftCardRect.left + giftCardRect.width / 2;
+            const startY = giftCardRect.top + giftCardRect.height / 2;
+
             for (let i = 0; i < numberOfPieces; i++) {
                 const piece = document.createElement('div');
                 piece.classList.add('confetti-piece');
+                
+                // Position piece at the center of the gift card initially
+                piece.style.left = `${startX}px`;
+                piece.style.top = `${startY}px`;
+
                 piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 piece.style.width = `${Math.random() * 12 + 5}px`;
                 piece.style.height = `${piece.style.width * 0.6}px`;
+                
                 document.body.appendChild(piece);
-                const angle = Math.random() * 360, distance = Math.random() * (window.innerWidth / 2.5) + 50;
+                
+                const angle = Math.random() * 360;
+                const distance = Math.random() * (window.innerWidth / 3) + 50;
                 const x = Math.cos(angle * Math.PI / 180) * distance;
-                const y = Math.sin(angle * Math.PI / 180) * distance - (distance/2);
+                const y = Math.sin(angle * Math.PI / 180) * distance;
+
                 piece.animate([
-                    { transform: 'translate(-50%, -50%) rotate(0deg)', opacity: 1 },
-                    { transform: `translate(${x}px, ${y}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                    { transform: 'translate(-50%, -50%) rotate(0deg) scale(1)', opacity: 1 },
+                    { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${Math.random() * 720}deg) scale(0)`, opacity: 0 }
                 ], { duration: 1500 + Math.random() * 1000, easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)', fill: 'forwards' })
                 .onfinish = () => piece.remove();
             }
@@ -512,50 +531,45 @@
 
         // --- Initial Load Logic on DOMContentLoaded ---
         document.addEventListener('DOMContentLoaded', async () => {
-            document.body.classList.add("no-scroll"); // Pertahankan ini untuk mencegah scrolling sampai login
+            document.body.classList.add("no-scroll"); // Prevent scrolling until login
             const urlParams = new URLSearchParams(window.location.search);
             const pageId = urlParams.get('id');
-            const authParam = urlParams.get('auth'); // Parameter otentikasi dari super admin
+            const authParam = urlParams.get('auth'); // Authentication parameter from super admin
 
             if (!pageId) {
                 showErrorPage("Halaman Tidak Ditemukan", "Pastikan link yang Anda masukkan sudah benar dan lengkap.");
                 return;
             }
 
-            // Muat data halaman terlebih dahulu untuk memastikan data tersedia
-            const snapshot = await database.ref('birthday_pages/' + pageId).once('value');
-            if (!snapshot.exists()) {
-                showErrorPage("Konten Tidak Tersedia", "Halaman ini ada, namun kontennya belum diatur oleh pemilik atau tidak ditemukan.");
+            try {
+                const snapshot = await database.ref('birthday_pages/' + pageId).once('value');
+                if (!snapshot.exists()) {
+                    showErrorPage("Konten Tidak Tersedia", "Halaman ini tidak dapat ditemukan atau konten belum diatur.");
+                    return;
+                }
+                pageData = snapshot.val(); // Save loaded data to pageData
+            } catch (dbError) {
+                showErrorPage("Kesalahan Koneksi", "Tidak dapat mengambil data. Periksa koneksi internet Anda.");
                 return;
             }
-            pageData = snapshot.val(); // Simpan data yang dimuat ke pageData
 
-            // Jika ada parameter 'auth', coba auto-login
             if (authParam) {
                 try {
-                    const decoded = JSON.parse(atob(authParam)); // Dekode Base64
-                    const username = decoded.user;
-                    const password = decoded.pass;
-
-                    // Lakukan auto-login
-                    const loginSuccess = await performGuestLogin(username, password, pageId);
+                    const decoded = JSON.parse(atob(authParam)); // Decode Base64
+                    const loginSuccess = await performGuestLogin(decoded.user, decoded.pass, pageId);
                     if (!loginSuccess) {
-                        // Jika auto-login gagal, tampilkan form login manual
-                        Swal.fire({ icon: 'info', title: 'Akses Otomatis Gagal', text: 'Kredensial otomatis tidak valid. Silakan login manual.' });
+                        Swal.fire({ icon: 'info', title: 'Akses Otomatis Gagal', text: 'Silakan login secara manual.' });
                         loginContainer.style.display = 'block';
-                        document.body.classList.remove("no-scroll"); // Izinkan scrolling di halaman login
+                        document.body.classList.remove("no-scroll");
                     }
-                    // Jika loginSuccess true, performGuestLogin sudah mengatur tampilan
                 } catch (e) {
-                    console.error("Error decoding or parsing auth parameter:", e);
                     Swal.fire({ icon: 'error', title: 'Link Tidak Valid', text: 'Terjadi kesalahan pada link akses otomatis.' });
-                    loginContainer.style.display = 'block'; // Tampilkan form login
-                    document.body.classList.remove("no-scroll"); // Izinkan scrolling di halaman login
+                    loginContainer.style.display = 'block';
+                    document.body.classList.remove("no-scroll");
                 }
             } else {
-                // Jika tidak ada parameter 'auth', tampilkan form login manual
                 loginContainer.style.display = 'block';
-                document.body.classList.remove("no-scroll"); // Izinkan scrolling di halaman login
+                document.body.classList.remove("no-scroll");
             }
         });
     </script>
