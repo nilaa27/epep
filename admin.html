@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
     <style>
         :root {
             /* Dark Neumorphic Palette */
@@ -297,6 +298,29 @@
             transform: translateY(0); /* Hapus translateY untuk konsistensi */
         }
 
+        /* Kustomisasi SweetAlert2 */
+        .swal2-popup {
+            background-color: var(--bg-color) !important;
+            border-radius: 20px !important;
+            color: var(--text-color) !important;
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light) !important;
+        }
+        .swal2-title { color: var(--text-color) !important; }
+        .swal2-html-container { color: var(--text-light) !important; }
+        .swal2-confirm, .swal2-cancel, .swal2-deny {
+             box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light) !important;
+             border: none !important;
+             display: inline-flex;
+             align-items: center;
+             justify-content: center;
+             gap: 8px;
+        }
+        .swal2-confirm { background-color: var(--bg-color) !important; color: var(--primary) !important; }
+        .swal2-cancel { background-color: var(--bg-color) !important; color: var(--text-light) !important;}
+        .swal2-deny { background-color: var(--bg-color) !important; color: var(--warning) !important;}
+        .swal2-icon.swal2-success .swal2-success-ring { border-color: var(--success) !important; }
+        .swal2-icon.swal2-error { border-color: var(--error) !important; }
+        .swal2-icon.swal2-warning { border-color: #ffc107 !important; color: #ffc107 !important; } /* Sesuaikan dengan warna warning */
     </style>
 </head>
 <body>
@@ -346,6 +370,13 @@
                                  <div class="section-title"><i class="fas fa-users"></i><span>Akses Tamu</span></div>
                                  <div class="input-group"><label for="guestUserInput">Username Tamu</label><div class="input-wrapper"><i class="fas fa-user icon-left"></i><input type="text" id="guestUserInput" class="input-field" required></div></div>
                                  <div class="input-group"><label for="guestPassInput">Password Tamu</label><div class="input-wrapper"><i class="fas fa-lock icon-left"></i><input type="text" id="guestPassInput" class="input-field" required></div></div>
+                                 <div class="input-group">
+                                     <label for="targetWhatsappNumber">Nomor WhatsApp Target (opsional)</label>
+                                     <div class="input-wrapper">
+                                         <i class="fab fa-whatsapp icon-left"></i>
+                                         <input type="tel" id="targetWhatsappNumber" class="input-field" placeholder="6281xxxxxxxx" pattern="[0-9]{10,15}">
+                                     </div>
+                                 </div>
                             </div>
                         </div>
 
@@ -376,13 +407,9 @@
     </div>
     
     <div class="feedback-modal" id="feedbackModal"><div class="feedback-content"><div class="icon-container"><div class="loader" id="feedbackLoader"></div><i class="fas fa-check-circle icon success hidden" id="successIcon"></i><i class="fas fa-times-circle icon failure hidden" id="failureIcon"></i></div><h2 id="feedbackTitle">Mengecek...</h2><p id="feedbackMessage"></p></div></div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <script>
-        // PERBAIKAN 2: Menghapus listener pencegah zoom yang agresif
-        // Kode ini sekarang lebih aman untuk kompatibilitas lintas browser
-        // document.addEventListener('gesturestart', (e) => e.preventDefault()); -> Dihapus
-        // document.addEventListener('touchmove', (e) => { if (e.scale !== 1) e.preventDefault(); }, { passive: false }); -> Dihapus
         document.addEventListener('dblclick', (e) => e.preventDefault(), { passive: false });
-
 
         const firebaseConfig = {
             apiKey: "GANTI_DENGAN_API_KEY_ANDA",
@@ -441,9 +468,13 @@
                 document.getElementById('qrImageUrlInput').value = data.qrImageUrl || '';
                 document.getElementById('guestUserInput').value = data.guestUser || '';
                 document.getElementById('guestPassInput').value = data.guestPass || '';
-                document.getElementById('bestWishesInput').value = data.bestWishes || ''; // New
-                document.getElementById('stayStrongQuoteInput').value = data.stayStrongQuote || ''; // New
-                document.getElementById('qrMessageInput').value = data.qrMessage || ''; // New
+                document.getElementById('bestWishesInput').value = data.bestWishes || '';
+                document.getElementById('stayStrongQuoteInput').value = data.stayStrongQuote || '';
+                document.getElementById('qrMessageInput').value = data.qrMessage || '';
+                // Memuat nomor WhatsApp target jika ada
+                document.getElementById('targetWhatsappNumber').value = data.targetWhatsappNumber || '';
+
+                // Link yang dibagikan akan mengarah ke halaman utama dengan ID admin sebagai parameter
                 document.getElementById('shareableLink').value = `${window.location.origin}/index.html?id=${currentAdminId}`;
                 updateQrPreview();
                 hideFeedback();
@@ -453,19 +484,87 @@
         function saveData() {
             if (!currentAdminId) { showFeedback('failure', 'Error', 'Admin ID tidak ditemukan.'); setTimeout(hideFeedback, 2500); return; }
             showFeedback('loading', 'Menyimpan Perubahan...');
+            const birthdayName = document.getElementById('birthdayNameInput').value;
+            const guestUser = document.getElementById('guestUserInput').value;
+            const guestPass = document.getElementById('guestPassInput').value;
+            const targetWhatsappNumber = document.getElementById('targetWhatsappNumber').value.trim();
+
             const settings = {
-                birthdayName: document.getElementById('birthdayNameInput').value,
+                birthdayName: birthdayName,
                 birthDate: document.getElementById('birthDateInput').value,
                 qrImageUrl: document.getElementById('qrImageUrlInput').value,
-                guestUser: document.getElementById('guestUserInput').value,
-                guestPass: document.getElementById('guestPassInput').value,
-                bestWishes: document.getElementById('bestWishesInput').value, // New
-                stayStrongQuote: document.getElementById('stayStrongQuoteInput').value, // New
-                qrMessage: document.getElementById('qrMessageInput').value // New
+                guestUser: guestUser,
+                guestPass: guestPass,
+                bestWishes: document.getElementById('bestWishesInput').value,
+                stayStrongQuote: document.getElementById('stayStrongQuoteInput').value,
+                qrMessage: document.getElementById('qrMessageInput').value,
+                targetWhatsappNumber: targetWhatsappNumber
             };
+
             database.ref('birthday_pages/' + currentAdminId).set(settings).then(() => {
                 showFeedback('success', 'Berhasil Disimpan!', 'Semua perubahan telah disimpan.');
-                setTimeout(hideFeedback, 2000);
+                setTimeout(() => {
+                    hideFeedback();
+                    const shareableLink = document.getElementById('shareableLink').value;
+                    
+                    // --- PERUBAHAN DI SINI: Pesan WhatsApp yang lebih menarik ---
+                    const messageText = `
+Halo ${birthdayName}! 👋
+
+kamu punya kejutan spesial! 🎉 Sekarang kamu bisa mengakses halaman ulang tahunmu di link ini:
+
+🔗 *Link Login:*
+${shareableLink}
+
+Untuk masuk, gunakan detail berikut ya:
+👤 *Username:* ${guestUser}
+🔑 *Password:* ${guestPass}
+
+Jangan lupa, kamu bisa login untuk melihat ucapan dan kado dari teman-temanmu! ✨`.trim(); // .trim() untuk menghapus spasi/baris kosong di awal/akhir
+
+                    Swal.fire({
+                        title: 'Data Berhasil Disimpan!',
+                        html: 'Pilih tindakan selanjutnya:',
+                        icon: 'success',
+                        showCancelButton: true,
+                        showDenyButton: true,
+                        confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WhatsApp',
+                        denyButtonText: '<i class="fas fa-copy"></i> Salin Info & Link',
+                        cancelButtonText: 'Selesai',
+                        reverseButtons: true,
+                        customClass: {
+                            confirmButton: 'swal2-confirm-whatsapp',
+                            denyButton: 'swal2-deny-copy',
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) { // Kirim via WhatsApp
+                            if (targetWhatsappNumber) {
+                                const whatsappUrl = `https://wa.me/${targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`;
+                                window.open(whatsappUrl, '_blank');
+                            } else {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Nomor WhatsApp Kosong',
+                                    text: 'Nomor WhatsApp target tidak diisi. Silakan salin pesan secara manual atau tambahkan nomor WA.',
+                                    confirmButtonText: 'Oke'
+                                });
+                            }
+                        } else if (result.isDenied) { // Salin Link & Info
+                            navigator.clipboard.writeText(messageText)
+                                .then(() => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Disalin!',
+                                        text: 'Informasi login dan link telah disalin ke clipboard.',
+                                        toast: true, position: 'top-end', showConfirmButton: false, timer: 3000
+                                    });
+                                })
+                                .catch(err => {
+                                    Swal.fire({ icon: 'error', title: 'Gagal Menyalin', text: 'Gagal menyalin ke clipboard. Silakan salin manual.' });
+                                });
+                        }
+                    });
+                }, 2000); // Tunggu sebentar setelah feedback "Berhasil Disimpan!"
             }).catch(e => { showFeedback('failure', 'Gagal Menyimpan', e.message); setTimeout(hideFeedback, 3000); });
         }
 
