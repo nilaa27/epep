@@ -213,7 +213,7 @@
         <div class="birthday-content">
             <h1 class="main-title">Happy Birthday, <span></span></h1>
             <div class="card-grid">
-                <div class="message-card"><i class="fas fa-calendar-check card-icon"></i><h2 class="card-title">Spesial Untukmu</h2><p class="card-text" id="ageDisplay"></p></div>
+                <div class="message-card"><i class="fas fa-calendar-check card-icon"></i><h2 class="card-title">New Level Unlocked!</h2><p class="card-text" id="ageDisplay"></p></div>
                 <div class="message-card"><i class="fas fa-star card-icon"></i><h2 class="card-title">Harapan Terbaik</h2><p class="card-text" id="bestWishesText"></p></div>
                 <div class="message-card"><i class="fas fa-heart card-icon"></i><h2 class="card-title">Jadilah Kuat</h2><p class="card-text" id="stayStrongQuoteText"></p></div>
             </div>
@@ -385,7 +385,6 @@
         });
 
         function calculateAndDisplayAge(birthDate) {
-            // Mengikuti permintaan "sudah berapa lama kamu bertahan?" dan tanggal lahir 2005-09-28
             const fixedBirthDate = '2005-09-28'; 
             const birthDateObj = new Date(fixedBirthDate);
             const today = new Date();
@@ -396,16 +395,14 @@
 
             if (days < 0) {
                 months--;
-                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate(); // Days in previous month
+                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
             }
             if (months < 0) {
                 years--;
                 months += 12;
             }
-
-            const birthDateFormatted = birthDateObj.toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'});
             
-            document.getElementById("ageDisplay").innerText = `Sudah berapa lama kamu bertahan? Yaitu, ${years} tahun, ${months} bulan, dan ${days} hari. Selamat!`;
+            document.getElementById("ageDisplay").innerText = `Selamat! Kamu berhasil menyelesaikan misi selama ${years} tahun, ${months} bulan, dan ${days} hari untuk sampai di level ini. Semoga chapter barumu makin seru dan penuh kebahagiaan!`;
         }
         
         function initScrollAnimations() {
