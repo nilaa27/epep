@@ -147,8 +147,8 @@
         .data-item:last-child { margin-bottom: 0; }
         .data-item span { color: var(--text-light); font-size: 1rem; }
         .data-item strong { color: #fff; font-weight: 600; font-size: 1.1rem; }
-        .copy-icon { cursor: pointer; }
-        .copy-icon:hover { color: var(--primary); }
+        /* .copy-icon { cursor: pointer; } <-- Ini tidak lagi relevan tanpa input link --> */
+        /* .copy-icon:hover { color: var(--primary); } <-- Ini tidak lagi relevan tanpa input link --> */
 
         .feedback-actions { display: flex; gap: 15px; justify-content: center; margin-top: 10px; }
         .feedback-btn {
@@ -205,6 +205,7 @@
     <div class="feedback-modal" id="accountModal">
         <div class="feedback-content">
             <h2><i class="fas fa-check-circle"></i> Akun Dibuat!</h2>
+            <p>Silakan gunakan detail berikut untuk masuk ke panel admin Anda.</p>
             <div class="data-display">
                 <div class="data-item">
                     <span>Username:</span>
@@ -214,15 +215,7 @@
                     <span>Password:</span>
                      <strong id="displayPass"></strong>
                 </div>
-                <div class="input-group" style="margin-top: 25px; margin-bottom: 0;">
-                    <label for="shareLink">Link Unik Anda</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-link icon-left"></i>
-                        <input type="text" id="shareLink" class="input-field" style="padding-right: 50px; font-size: 0.9rem;" readonly>
-                        <i class="fas fa-copy icon-right copy-icon" onclick="copyShareLink(this)"></i>
-                    </div>
                 </div>
-            </div>
             <div class="feedback-actions">
                 <button class="btn feedback-btn btn-back" onclick="closeModal('accountModal')">Tutup</button>
                 <button class="btn feedback-btn btn-signin" onclick="goToAdmin()">Login</button>
@@ -274,20 +267,27 @@
                 } else {
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Membuat...';
                     const newAdminRef = database.ref('admins').push();
+                    const newAdminId = newAdminRef.key; // Dapatkan ID baru di sini
+
                     newAdminRef.set({ username: adminName, password: adminPass, createdAt: new Date().toISOString() })
                     .then(() => {
-                        const newAdminId = newAdminRef.key;
+                        // Data default untuk halaman ulang tahun, termasuk tanggal lahir yang diminta
                         const defaultPageData = {
-                            birthdayName: "Your Name",
-                            birthDate: "2000-01-01",
-                            guestUser: "guest",
-                            guestPass: "123",
-                            qrImageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.google.com"
+                            birthdayName: adminName, // Nama default adalah nama admin yang baru didaftarkan
+                            birthDate: "2005-09-28", // Tanggal lahir default yang Anda minta
+                            guestUser: "guest", // Default username tamu
+                            guestPass: "123", // Default password tamu
+                            qrImageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.google.com", // Contoh QR
+                            // Tambahkan field kosong lainnya jika dibutuhkan
+                            bestWishes: "",
+                            stayStrongQuote: "",
+                            qrMessage: "",
+                            targetWhatsappNumber: ""
                         };
                         return database.ref('birthday_pages/' + newAdminId).set(defaultPageData);
                     })
                     .then(() => {
-                        showAccountModal(adminName, adminPass, newAdminRef.key);
+                        showAccountModal(adminName, adminPass); // Tidak perlu lagi meneruskan newAdminId ke showAccountModal
                     }).catch(error => {
                         showFailureModal('Gagal Membuat Akun', error.message);
                     }).finally(() => {
@@ -311,12 +311,11 @@
             }
         }
         
-        function showAccountModal(user, pass, newId) {
+        // Fungsi showAccountModal tidak lagi memerlukan parameter newId
+        function showAccountModal(user, pass) {
             document.getElementById('displayUser').textContent = user;
             document.getElementById('displayPass').textContent = pass;
-            const shareLinkInput = document.getElementById('shareLink');
-            const fullLink = `${window.location.origin}/index.html?id=${newId}`;
-            shareLinkInput.value = fullLink;
+            // BAGIAN INI DIHAPUS: shareLinkInput
             const modal = document.getElementById('accountModal');
             modal.style.display = 'flex';
             setTimeout(() => modal.classList.add('visible'), 10);
@@ -348,6 +347,8 @@
 
         function goToAdmin() { window.location.href = 'admin.html'; }
         
+        // FUNGSI INI DIHAPUS: copyShareLink karena elemennya sudah tidak ada
+        /*
         function copyShareLink(copyIconElement) {
             const linkInput = document.getElementById('shareLink');
             navigator.clipboard.writeText(linkInput.value).then(() => {
@@ -361,6 +362,7 @@
                 alert('Gagal menyalin link!');
             });
         }
+        */
     </script>
 </body>
 </html>
