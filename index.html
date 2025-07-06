@@ -127,7 +127,7 @@
 
         .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--primary); }
         .card-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
-        .card-text { font-size: 1rem; line-height: 1.6; font-weight: 300; color: var(--text-light); }
+        .card-text { font-size: 1rem; line-height: 1.6; font-weight: 300; color: var(--text-light); white-space: pre-wrap; /* Preserve line breaks */ }
         .gift-btn { margin-top: 20px; color: var(--success); width: auto; padding: 15px 40px; font-size: 1.2rem;}
 
         /* Modals */
@@ -154,6 +154,7 @@
         }
         @keyframes fadeInCard-anim { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         .gift-card h2 { color: #333; }
+        .gift-card p { margin-top: 10px; color: #555; white-space: pre-wrap; /* Preserve line breaks */ }
         #qrCodeImg {
             width: 180px; height: 180px; margin: 15px auto;
             border-radius: 10px; border: 5px solid white;
@@ -200,8 +201,8 @@
             <h1 class="main-title">Happy Birthday, <span></span></h1>
             <div class="card-grid">
                 <div class="message-card"><i class="fas fa-calendar-check card-icon"></i><h2 class="card-title">Spesial Untukmu</h2><p class="card-text" id="ageDisplay"></p></div>
-                <div class="message-card"><i class="fas fa-star card-icon"></i><h2 class="card-title">Harapan Terbaik</h2><p class="card-text">semoga hal baik selalu beriringan denganmu, semoga semesta senantiasa berpihak padamu, semoga jalanmu untuk mencapai masa depan yang cerah di permudahkan, teruslah tumbuh, teruslah melangkah & berbahagia . aku akan selalu bangga atas setiap proses yang sudah kamu lalui. selamat berkelana, i will always support u from afar</p></div>
-                <div class="message-card"><i class="fas fa-heart card-icon"></i><h2 class="card-title">Jadilah Kuat</h2><p class="card-text">"untuk segala hal yang membuat mu patah. it's okay, just say: Allah itu baik"</p></div>
+                <div class="message-card"><i class="fas fa-star card-icon"></i><h2 class="card-title">Harapan Terbaik</h2><p class="card-text" id="bestWishesText"></p></div>
+                <div class="message-card"><i class="fas fa-heart card-icon"></i><h2 class="card-title">Jadilah Kuat</h2><p class="card-text" id="stayStrongQuoteText"></p></div>
             </div>
             <div class="message-card" style="margin-top: 30px;">
                 <h2 class="card-title">Ada Sesuatu Untukmu...</h2>
@@ -222,7 +223,7 @@
             <h2 style="font-weight: 600;">Hi, <span id="giftCardName"></span>!</h2>
             <p>Scan untuk klaim hadiahmu!</p>
             <img id="qrCodeImg" alt="QR Code Hadiah">
-            <p>"mungkin hadiahku ga seberapa semoga bermanfaat, dan selamat bertambah usia, dilancarkan disemua hal, dan menjadi pribadi yang lebih baik dari sebelum nya ✨"</p>
+            <p id="qrMessageText"></p>
         </div>
     </div>
     
@@ -251,6 +252,12 @@
               passwordInput = document.getElementById("password"),
               musicToggleBtn = document.getElementById('musicToggleBtn');
         
+        // New elements for text content
+        const bestWishesText = document.getElementById('bestWishesText');
+        const stayStrongQuoteText = document.getElementById('stayStrongQuoteText');
+        const qrMessageText = document.getElementById('qrMessageText');
+
+
         document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add("no-scroll");
             const urlParams = new URLSearchParams(window.location.search);
@@ -292,6 +299,10 @@
                     document.body.classList.remove("no-scroll");
                     document.querySelector(".main-title span").textContent = pageData.birthdayName;
                     calculateAndDisplayAge(pageData.birthDate);
+                    // Set new text content
+                    bestWishesText.textContent = pageData.bestWishes || 'semoga hal baik selalu beriringan denganmu, semoga semesta senantiasa berpihak padamu, semoga jalanmu untuk mencapai masa depan yang cerah di permudahkan, teruslah tumbuh, teruslah melangkah & berbahagia . aku akan selalu bangga atas setiap proses yang sudah kamu lalui. selamat berkelana, i will always support u from afar';
+                    stayStrongQuoteText.textContent = pageData.stayStrongQuote || '"untuk segala hal yang membuat mu patah. it\'s okay, just say: Allah itu baik"';
+                    
                     initScrollAnimations();
                     startFullScreenConfetti();
                     hideFeedback();
@@ -330,6 +341,7 @@
         });
 
         function calculateAndDisplayAge(birthDate) {
+            // Perubahan yang diminta pada 2025-06-12
             if (birthDate === '2005-09-28') {
                 const birthDateObj = new Date(birthDate);
                 const today = new Date();
@@ -376,6 +388,8 @@
             document.getElementById("giftCardName").textContent = pageData.birthdayName;
             const qrImg = document.getElementById("qrCodeImg");
             qrImg.src = pageData.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`Selamat Ulang Tahun ${pageData.birthdayName}!`)}`;
+            qrMessageText.textContent = pageData.qrMessage || '"mungkin hadiahku ga seberapa semoga bermanfaat, dan selamat bertambah usia, dilancarkan disemua hal, dan menjadi pribadi yang lebih baik dari sebelum nya ✨"';
+            
             createConfettiExplosion(150);
             setTimeout(() => {
                 startParticleFall();
