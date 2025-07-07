@@ -311,7 +311,7 @@
 
         // --- Fungsi inti untuk memverifikasi dan menampilkan halaman ---
         async function performGuestLogin(username, password, pageId) {
-            showFeedback('loading', 'Mengecek Kredensial...', 'Harap tunggu sebentar.');
+            showFeedback('loading', 'Verifikasi data...', 'Harap tunggu sebentar.');
 
             try {
                 const snapshot = await database.ref(`birthday_pages/${pageId}`).once('value');
