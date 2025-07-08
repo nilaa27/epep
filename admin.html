@@ -594,7 +594,7 @@
         // --- Load Data to Form ---
         function loadDataToForm() {
             if (!currentAdminId) return;
-            showFeedback('loading', 'Memuat Data...');
+            showFeedback('succes', 'login berhasil');
             database.ref('birthday_pages/' + currentAdminId).once('value').then(s => {
                 const data = s.val() || {};
                 document.getElementById('birthdayNameInput').value = data.birthdayName || '';
