@@ -38,7 +38,6 @@
         }
     }
 
-    /* --- ANIMASI IKON BARU --- */
     @keyframes swing-icon {
         15% { transform: rotate(15deg); }
         30% { transform: rotate(-10deg); }
@@ -47,7 +46,6 @@
         75% { transform: rotate(2deg); }
         100% { transform: rotate(0deg); }
     }
-    /* --- AKHIR ANIMASI IKON BARU --- */
 
     * {
         margin: 0;
@@ -61,10 +59,10 @@
         color: var(--text-color);
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start; /* MODIFIKASI: Mengubah dari 'center' ke 'flex-start' */
         min-height: 100vh;
         padding: 2rem;
-        overflow: hidden;
+        overflow-y: auto; /* MODIFIKASI: Mengizinkan scroll vertikal jika perlu */
     }
 
     .welcome-panel {
@@ -198,7 +196,6 @@
         overflow: hidden; 
     }
 
-    /* MODIFIKASI: Menambahkan transisi pada ikon di dalam tombol */
     .social-icons a i {
         transition: transform 0.3s ease;
     }
@@ -209,7 +206,6 @@
         box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
     }
     
-    /* MODIFIKASI: Memicu animasi pada ikon saat tombol di-hover */
     .social-icons a:hover i {
         animation: swing-icon 0.8s ease-out forwards;
     }
@@ -232,6 +228,27 @@
         to {
             transform: scale(2.5);
             opacity: 0;
+        }
+    }
+
+    /* --- BARU: Media Query untuk layar kecil (Mobile) --- */
+    @media (max-width: 520px) {
+        body {
+            padding: 1.5rem 1rem; /* Kurangi padding body */
+            align-items: flex-start; /* Pastikan panel mulai dari atas */
+        }
+
+        .welcome-panel {
+            padding: 25px; /* Kurangi padding di dalam panel */
+            margin-top: 1rem; /* Beri sedikit jarak dari atas */
+        }
+
+        h1 {
+            font-size: 2.5rem; /* Sedikit kecilkan judul */
+        }
+
+        p {
+            font-size: 1rem; /* Sedikit kecilkan paragraf */
         }
     }
 </style>
@@ -259,9 +276,9 @@
         <div class="support-section">
             <p class="support-title">Support Me</p>
             <div class="social-icons">
-                <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="#" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://instagram.com/off.xlord" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="github.com/" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.tiktok.com/@xlordduyy" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
     </div>
@@ -269,37 +286,30 @@
     <script>
         document.querySelectorAll('.social-icons a').forEach(icon => {
             icon.addEventListener('click', function(e) {
-                // Mencegah link terbuka jika href="#" agar tidak loncat ke atas halaman
                 if (this.getAttribute('href') === '#') {
                     e.preventDefault();
                 }
 
-                // Hapus riak yang ada sebelumnya
                 const existingRipple = this.querySelector('.ripple');
                 if (existingRipple) {
                     existingRipple.remove();
                 }
 
-                // Buat elemen riak baru
                 const circle = document.createElement('span');
                 const diameter = Math.max(this.clientWidth, this.clientHeight);
                 const radius = diameter / 2;
                 
-                // Atur posisi dan ukuran riak
                 circle.style.width = circle.style.height = `${diameter}px`;
-                // Hitung posisi klik relatif terhadap ikon
                 const rect = this.getBoundingClientRect();
                 circle.style.left = `${e.clientX - rect.left - radius}px`;
                 circle.style.top = `${e.clientY - rect.top - radius}px`;
                 circle.classList.add('ripple');
                 
-                // Tambahkan elemen riak ke dalam ikon
                 this.appendChild(circle);
 
-                // Hapus elemen riak setelah animasi selesai untuk menjaga DOM tetap bersih
                 setTimeout(() => {
                     circle.remove();
-                }, 600); // Sesuai dengan durasi animasi
+                }, 600);
             });
         });
     </script>
