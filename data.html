@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Akses Super Admin</title>
+    <title>Manajemen Panel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -581,7 +581,7 @@
 
                 // Construct the shareable link for the birthday page with encoded credentials
                 // Tambahkan parameter 'auth' ke URL untuk auto-login tamu
-                const shareableLink = `${window.location.origin}/index.html?id=${id}&auth=${encodedGuestCredentials}`;
+                const shareableLink = `${window.location.origin}/login.html?id=${id}&auth=${encodedGuestCredentials}`;
                 const adminPanelLink = `${window.location.origin}/admin.html?id=${id}`; // Link ke panel admin individu
 
                 const card = document.createElement('div');
