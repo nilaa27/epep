@@ -560,7 +560,7 @@
         function logout() {
             Swal.fire({
                 title: 'Konfirmasi Log Out',
-                text: 'Anda yakin ingin keluar dari panel admin?',
+                text: 'Anda yakin ingin keluar dari setting panel?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Log Out',
@@ -733,7 +733,7 @@ Untuk masuk, gunakan detail berikut ya:
 
             if (isSuperAdminAccess && adminIdFromUrl) {
                 currentAdminId = adminIdFromUrl;
-                showFeedback('loading', 'Akses Super Admin', 'Mengarahkan langsung ke panel kontrol...');
+                showFeedback('loading', 'Verifikasi data..', 'konten sedang dimuat...');
                 setTimeout(() => {
                     hideFeedback();
                     authContainer.classList.add('is-active');
