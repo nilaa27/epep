@@ -455,7 +455,7 @@
     <script>
         // Firebase Config (Replace with your actual API Key)
         const firebaseConfig = {
-            apiKey: "GANTI_DENGAN_API_KEY_ANDA",
+            apiKey: "GANTI_DENGAN_API_KEY_ANDA", // GANTI DENGAN API KEY FIREBASE ANDA
             authDomain: "mayfa-fa284.firebaseapp.com",
             databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
@@ -594,7 +594,7 @@
         // --- Load Data to Form ---
         function loadDataToForm() {
             if (!currentAdminId) return;
-            showFeedback('succes', 'login berhasil');
+            // showFeedback('succes', 'login berhasil'); // Baris ini sepertinya typo dan duplikasi, bisa dihapus atau dikomentari
             database.ref('birthday_pages/' + currentAdminId).once('value').then(s => {
                 const data = s.val() || {};
                 document.getElementById('birthdayNameInput').value = data.birthdayName || '';
@@ -733,11 +733,22 @@ Untuk masuk, gunakan detail berikut ya:
 
             if (isSuperAdminAccess && adminIdFromUrl) {
                 currentAdminId = adminIdFromUrl;
-                showFeedback('loading', 'Verifikasi data..', 'konten sedang dimuat...');
+                showFeedback('loading', 'Verifikasi data..', 'Mohon tungu sebentar.');
                 setTimeout(() => {
                     hideFeedback();
                     authContainer.classList.add('is-active');
                     loadDataToForm();
+                    // --- START MODIFIKASI: Tambahkan SweetAlert2 di sini untuk auto-login ---
+                    Swal.fire({
+                        icon: 'success', // Icon centang hijau
+                        title: 'Login Berhasil!', // Pesan untuk auto-login
+                        toast: true, // Tampilkan sebagai toast
+                        position: 'top-end', // Posisi di kanan atas
+                        showConfirmButton: false, // Tidak ada tombol konfirmasi
+                        timer: 3000, // Akan hilang otomatis setelah 3 detik
+                        timerProgressBar: true, // Menampilkan progress bar waktu
+                    });
+                    // --- END MODIFIKASI ---
                 }, 1500); // Give feedback time to display
             }
 
