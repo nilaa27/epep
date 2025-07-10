@@ -3,33 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>xlordcode - Birthday Wishes</title>
+    <title>xlordcode</title>
     
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E✨%3C/text%3E%3C/svg%3E">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
     :root {
-        /* Dark Neumorphic Palette */
+        /* Palet Neumorphic Gelap yang Disempurnakan */
         --bg-color: #2c2f36;
-        --shadow-dark: #202227;
-        --shadow-light: #383c45;
-        --text-color: #d1d5db;
-        --text-light: #8a91a0;
-        --primary: #5a7dff;
-        --pink: #ff69b4;
-        --transition-smooth: all 0.3s ease-in-out;
+        --shadow-dark: #212429;
+        --shadow-light: #373a43;
+        --text-color: #e0e5ec;
+        --text-light: #97a1b3;
+        --primary: #6d5bff;
+        --secondary: #ff69b4;
+        --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+        --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         --border-radius-main: 30px;
         --border-radius-inner: 15px;
     }
 
     /* --- Animasi --- */
-    @keyframes slideUpFadeIn {
-        from { opacity: 0; transform: translateY(20px); }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes blob-animation {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-40px) scale(1.1); }
     }
 
     /* --- Gaya Dasar --- */
@@ -44,22 +50,63 @@
         color: var(--text-color);
         display: flex;
         justify-content: center;
-        align-items: flex-start;
+        align-items: center;
         min-height: 100vh;
         padding: 2rem;
-        overflow-y: auto;
+        overflow: auto;
+        position: relative;
+    }
+
+    /* --- Latar Belakang Blob --- */
+    .background-blobs {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        overflow: hidden;
+    }
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.3;
+        animation: blob-animation 20s infinite alternate;
+    }
+    .blob.one {
+        width: 400px;
+        height: 400px;
+        top: -100px;
+        left: -150px;
+        background: var(--primary);
+    }
+    .blob.two {
+        width: 300px;
+        height: 300px;
+        bottom: -120px;
+        right: -100px;
+        background: var(--secondary);
+        animation-duration: 25s;
+        animation-delay: -5s;
     }
 
     /* --- Panel Utama (Neumorphic) --- */
     .welcome-panel {
         width: 100%;
-        max-width: 480px;
+        max-width: 500px;
         background: var(--bg-color);
         border-radius: var(--border-radius-main);
-        padding: 30px 40px 40px 40px;
+        padding: 40px 45px;
         text-align: center;
-        box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
-        animation: slideUpFadeIn 0.7s ease-out forwards;
+        box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light);
+        transition: var(--transition-smooth);
+        z-index: 1;
+        margin: 2rem 0; 
+    }
+    .welcome-panel:hover {
+        transform: translateY(-5px);
+        box-shadow: 20px 20px 40px var(--shadow-dark), -20px -20px 40px var(--shadow-light);
     }
 
     /* --- Header di dalam Panel --- */
@@ -67,76 +114,104 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 35px;
         padding-bottom: 20px;
         border-bottom: 1px solid var(--shadow-dark);
         box-shadow: 0 1px 0 var(--shadow-light);
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out 0.2s forwards;
     }
     .logo {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         text-decoration: none;
         color: var(--text-color);
         font-weight: 600;
         font-size: 1.1rem;
+        transition: color var(--transition-smooth);
     }
-    .logo img, .logo svg {
-        width: 28px;
-        height: 28px;
+    .logo img {
+        width: 30px;
+        height: 30px;
+        transition: transform 0.4s ease;
+    }
+    .logo:hover img {
+        transform: rotate(360deg);
     }
     .sign-in-link {
         color: var(--text-light);
         text-decoration: none;
         font-weight: 500;
         font-size: 0.9rem;
-        transition: color var(--transition-smooth);
+        transition: var(--transition-smooth);
         cursor: pointer;
     }
     .sign-in-link:hover {
-        color: var(--text-color);
+        color: var(--primary);
     }
 
     .panel-icon {
-        width: 90px;
-        height: 90px;
+        width: 100px;
+        height: 100px;
         background: var(--bg-color);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 25px;
-        font-size: 3rem;
-        color: var(--pink);
-        box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light);
+        font-size: 3.5rem;
+        color: var(--primary);
+        box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light);
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out 0.4s forwards;
     }
+    .panel-icon i {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
     h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 15px;
-        color: var(--text-color);
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 20px;
         line-height: 1.3;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out 0.6s forwards;
     }
     p {
         color: var(--text-light);
         font-size: 1.1rem;
-        line-height: 1.6;
-        margin-bottom: 35px;
+        line-height: 1.7;
+        margin-bottom: 40px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out 0.8s forwards;
     }
     .button-group {
         display: flex;
         flex-direction: column;
         gap: 20px;
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out 1s forwards;
     }
     .btn {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 12px;
-        padding: 16px;
+        padding: 18px;
         border-radius: var(--border-radius-inner);
         font-size: 1rem;
-        font-weight: 500;
+        font-weight: 600;
         text-decoration: none;
         cursor: pointer;
         border: none;
@@ -144,44 +219,125 @@
         transition: var(--transition-smooth);
         box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
     }
-    .btn.primary { color: var(--primary); }
-    .btn.primary:hover { transform: translateY(-2px); }
+    .btn.primary { 
+        color: var(--text-color);
+        background: var(--primary);
+        box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+    }
+    .btn.primary:hover { 
+        transform: translateY(-3px);
+        background: linear-gradient(135deg, #7b6aff, #6d5bff);
+        box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+    }
     .btn.secondary { color: var(--text-light); }
-    .btn.secondary:hover { color: var(--text-color); transform: translateY(-2px); }
+    .btn.secondary:hover { 
+        color: var(--text-color); 
+        transform: translateY(-3px); 
+        box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+    }
     .btn:active {
         transform: translateY(0);
         box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light);
     }
+    
+    .support-section {
+        margin-top: 40px;
+        padding-top: 25px;
+        border-top: 1px solid var(--shadow-dark);
+        /* box-shadow: 0 1px 0 var(--shadow-light); <-- PERBAIKAN: Baris ini dihapus */
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out 1.1s forwards;
+    }
+    .support-title {
+        color: var(--text-light);
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+    }
+    .social-icons a {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: var(--text-light);
+        background: var(--bg-color);
+        border-radius: 50%;
+        font-size: 1.2rem;
+        transition: var(--transition-smooth);
+        box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+    }
+    .social-icons a:hover {
+        color: var(--secondary);
+        box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        transform: translateY(2px);
+    }
+    
+    .panel-footer {
+        margin-top: 35px;
+        padding-top: 20px;
+        font-size: 0.8rem;
+        color: var(--text-light);
+        opacity: 0.7;
+        border-top: 1px solid var(--shadow-dark);
+        /* box-shadow: 0 1px 0 var(--shadow-light); <-- PERBAIKAN: Baris ini dihapus */
+        animation: fadeInUp 0.5s ease-out 1.2s forwards;
+    }
 
     @media (max-width: 520px) {
         body { padding: 1.5rem 1rem; align-items: flex-start; }
-        .welcome-panel { padding: 25px; margin-top: 1rem; }
-        .panel-header { margin-bottom: 25px; padding-bottom: 15px; }
-        h1 { font-size: 2.2rem; }
+        .welcome-panel { padding: 30px 25px; }
+        h1 { font-size: 2.3rem; }
         p { font-size: 1rem; }
+        .blob { filter: blur(60px); }
+        .blob.one { width: 300px; height: 300px; }
+        .blob.two { width: 250px; height: 250px; }
     }
 </style>
 </head>
 <body>
 
+    <div class="background-blobs">
+        <div class="blob one"></div>
+        <div class="blob two"></div>
+    </div>
+
     <div class="welcome-panel" id="landing-page">
         <header class="panel-header">
             <a href="#" class="logo">
-                <img src="/logoku.png" alt="Logo xlordcode">
-                <span>xlordcode</span>
+                <img src="/logoku.PNG" alt="Logo xlordcode"> <span>xlordcode</span>
             </a>
             <a href="register.html" class="sign-in-link">Sign In</a>
         </header>
 
-        <div class="panel-icon">🎉</div>
-        <h1>Create Magical Digital Wishes That Spark Joy</h1>
-        <p>Design beautiful, animated wishes and share them with your loved ones. No technical knowledge required.</p>
+        <div class="panel-icon">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <h1>Desain Ucapan Ultah, Cuma Modal Klik?</h1> <p>Animasi keren + desain elegan. Gak perlu ngoding, cukup klik dibawah!</p>
         
         <div class="button-group">
-            <a href="register.html" class="btn primary">Start Creating Wishes</a>
+            <a href="register.html" class="btn primary">Buat webmu sekarang!</a>
             <a href="demo.html" class="btn secondary"><i class="fas fa-eye"></i> Preview Demo</a>
         </div>
+        
+        <div class="support-section">
+            <p class="support-title">Support Me</p>
+            <div class="social-icons">
+                <a href="https://instagram.com/off.xlord" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://github.com/your-github" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.tiktok.com/@xlordduyy" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+        
+        <footer class="panel-footer">
+            &copy; 2025 xlordcode. All Rights Reserved.
+        </footer>
     </div>
-
-    </body>
+</body>
 </html>
