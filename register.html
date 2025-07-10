@@ -201,6 +201,29 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        // --- MODIFIED: Logika untuk akses otomatis ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const superAdminAccess = urlParams.get('super_admin_access');
+        const adminIdFromUrl = urlParams.get('id');
+
+        if (superAdminAccess === 'true' && adminIdFromUrl) {
+            currentAdminId = adminIdFromUrl;
+            authContainer.classList.add('is-active');
+            loadDataToForm();
+            // Menampilkan notifikasi yang diminta
+            Swal.fire({
+                icon: 'success',
+                title: 'Sukses login sebagai admin',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+            return; // Menghentikan eksekusi lebih lanjut agar tidak menampilkan form login
+        }
+        // --- Akhir Modifikasi ---
+
         showLoginView();
         loginTabBtn.addEventListener('click', showLoginView);
         registerTabBtn.addEventListener('click', showRegisterView);
@@ -255,9 +278,9 @@
                 mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
             } else {
                 const newAdminRef = database.ref('admins').push();
-                newAdminRef.set({ username: adminName, password: adminPass })
+                newAdminRef.set({ username: adminName, password: adminPass, createdAt: new Date().toISOString() })
                 .then(() => {
-                    const defaultData = { birthdayName: adminName, birthDate: "2005-09-28" };
+                    const defaultData = { birthdayName: adminName, birthDate: "2005-09-28", guestUser: "guest", guestPass: "123", qrImageUrl: "", bestWishes: "", stayStrongQuote: "", qrMessage: "", targetWhatsappNumber: "", puzzleWord1: 'ULTAH', puzzleWord2: 'KADO', puzzleWord3: 'DOA' };
                     return database.ref('birthday_pages/' + newAdminRef.key).set(defaultData);
                 })
                 .then(() => {
@@ -282,10 +305,8 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 currentAdminId = null;
-                authContainer.classList.remove('is-active');
-                document.getElementById('adminUser').value = '';
-                document.getElementById('adminPass').value = '';
-                setTimeout(showLoginView, 500);
+                // Redirect ke data.html agar bisa login kembali sebagai super admin jika perlu
+                window.location.href = 'data.html';
             }
         });
     }
@@ -296,7 +317,10 @@
             Swal.fire({ icon: 'success', title: `Selamat datang, ${adminName}!`, toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
         }
         mainActionBtn.disabled = false;
-        showLoginView();
+        if(!authContainer.classList.contains('is-active')) {
+             showLoginView();
+        }
+       
         database.ref('birthday_pages/' + currentAdminId).once('value').then(s => {
             const data = s.val() || {};
             document.getElementById('birthdayNameInput').value = data.birthdayName || '';
@@ -317,7 +341,7 @@
     }
 
     function saveData() { if (!currentAdminId) return; const birthdayName = document.getElementById('birthdayNameInput').value, guestUser = document.getElementById('guestUserInput').value, guestPass = document.getElementById('guestPassInput').value, targetWhatsappNumber = document.getElementById('targetWhatsappNumber').value.trim(); const settings = { birthdayName: birthdayName, birthDate: document.getElementById('birthDateInput').value, bestWishes: document.getElementById('bestWishesInput').value, stayStrongQuote: document.getElementById('stayStrongQuoteInput').value, guestUser: guestUser, guestPass: guestPass, targetWhatsappNumber: targetWhatsappNumber, puzzleWord1: document.getElementById('puzzleWord1').value.trim().toUpperCase(), puzzleWord2: document.getElementById('puzzleWord2').value.trim().toUpperCase(), puzzleWord3: document.getElementById('puzzleWord3').value.trim().toUpperCase(), qrImageUrl: document.getElementById('qrImageUrlInput').value, qrMessage: document.getElementById('qrMessageInput').value, }; database.ref('birthday_pages/' + currentAdminId).set(settings).then(() => { const shareableLink = document.getElementById('shareableLink').value; const messageText = `Halo *${birthdayName}*! 👋\n\nKamu punya kejutan spesial! 🎉 Sekarang kamu bisa mengakses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nUntuk masuk, gunakan detail berikut ya:\n👤 *Username:* ${guestUser}\n🔑 *Password:* ${guestPass}\n\n*Jangan lupa login, ada hadiah menunggumu!* ✨`.trim(); Swal.fire({ title: 'Data Berhasil Disimpan!', html: 'Pilih tindakan selanjutnya:', icon: 'success', showCancelButton: true, showDenyButton: true, confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WA', denyButtonText: '<i class="fas fa-copy"></i> Salin Info', cancelButtonText: 'Selesai', reverseButtons: true, }).then((result) => { if (result.isConfirmed) { if (targetWhatsappNumber) { window.open(`https://wa.me/${targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank'); } else { Swal.fire({ icon: 'info', title: 'Nomor WhatsApp Kosong', text: 'Nomor WhatsApp target belum diisi.' }); } } else if (result.isDenied) { navigator.clipboard.writeText(messageText).then(() => Swal.fire({ icon: 'success', title: 'Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 })); } }); }).catch(e => Swal.fire('Gagal Menyimpan', e.message, 'error')); }
-    function updateQrPreview() { const qrInput = document.getElementById('qrImageUrlInput'), qrImage = document.getElementById('qrPreviewImage'); try { new URL(qrInput.value.trim()); qrImage.src = qrInput.value.trim(); qrImage.style.display = 'block'; } catch (e) { qrImage.style.display = 'none'; qrImage.src = ""; } }
+    function updateQrPreview() { const qrInput = document.getElementById('qrImageUrlInput'), qrImage = document.getElementById('qrPreviewImage'); try { const url = new URL(qrInput.value.trim()); if(url.protocol === "http:" || url.protocol === "https:") { qrImage.src = url.href; qrImage.style.display = 'block'; } else { throw new Error(); } } catch (e) { qrImage.style.display = 'none'; qrImage.src = ""; } }
     function togglePasswordVisibility(fieldId, icon) { const field = document.getElementById(fieldId); field.type = field.type === "password" ? "text" : "password"; icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash'); }
     </script>
 </body>
