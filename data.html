@@ -418,7 +418,7 @@
 
         const SUPER_ADMIN_PASSWORD = "Xlord01"; // Make sure to change this to a strong password!
         let allAdmins = {}; 
-        let allBirthdayPages = {}; // New: Store all birthday page data
+        let allBirthdayPages = {};
 
         // DOM Elements
         const passwordModal = document.getElementById('passwordModal');
@@ -436,33 +436,31 @@
         const adminIdInput = document.getElementById('adminId');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
-        const modalBirthdayNameInput = document.getElementById('modalBirthdayName'); // New
-        const modalTargetWhatsappInput = document.getElementById('modalTargetWhatsapp'); // New
+        const modalBirthdayNameInput = document.getElementById('modalBirthdayName');
+        const modalTargetWhatsappInput = document.getElementById('modalTargetWhatsapp');
         
         const addAdminBtn = document.getElementById('addAdminBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const cancelModalBtn = document.getElementById('cancelModalBtn');
-        const logoutBtn = document.getElementById('logoutBtn'); // Dapatkan elemen tombol logout
+        const logoutBtn = document.getElementById('logoutBtn');
 
-        // Initial check for password display
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('superAdminPassword').focus();
-            createBackgroundDots(); // Create animated background dots
+            createBackgroundDots();
         });
 
-        // Function to create animated background dots
         function createBackgroundDots() {
             const backgroundDots = document.querySelector('.background-dots');
-            const numberOfDots = 30; // Adjust as needed
+            const numberOfDots = 30;
             for (let i = 0; i < numberOfDots; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'dot';
-                dot.style.width = `${Math.random() * 20 + 10}px`; // Random size between 10px and 30px
+                dot.style.width = `${Math.random() * 20 + 10}px`;
                 dot.style.height = dot.style.width;
                 dot.style.left = `${Math.random() * 100}vw`;
                 dot.style.top = `${Math.random() * 100}vh`;
-                dot.style.animationDelay = `${Math.random() * -10}s`; // Start at random points in animation
-                dot.style.animationDuration = `${Math.random() * 10 + 10}s`; // Random duration between 10s and 20s
+                dot.style.animationDelay = `${Math.random() * -10}s`;
+                dot.style.animationDuration = `${Math.random() * 10 + 10}s`;
                 backgroundDots.appendChild(dot);
             }
         }
@@ -474,78 +472,37 @@
             if (password === SUPER_ADMIN_PASSWORD) {
                 passwordModal.style.display = 'none';
                 mainContent.classList.remove('hidden');
-                // Ensure body's min-height is reset for the main content to allow scrolling if needed
                 document.body.style.minHeight = '100vh';
-                document.body.style.overflow = 'auto'; // Allow scrolling
-                // body diubah ke display: block agar konten utama bisa mengalir normal
+                document.body.style.overflow = 'auto';
                 document.body.style.display = 'block'; 
-                document.body.style.alignItems = 'flex-start'; // Align content to top
-                document.body.style.justifyContent = 'flex-start'; // Align content to top-left
-                document.body.style.padding = '2rem'; // Restore padding
+                document.body.style.alignItems = 'flex-start';
+                document.body.style.justifyContent = 'flex-start';
+                document.body.style.padding = '2rem';
                 
-                // For the mainContent, adjust its display for proper layout
                 mainContent.style.display = 'flex';
                 mainContent.style.flexDirection = 'column';
                 mainContent.style.alignItems = 'center';
-                mainContent.style.margin = 'auto'; // Centering it
+                mainContent.style.margin = 'auto';
 
                 Swal.fire({
                     icon: 'success', title: 'Akses Diberikan!',
                     toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true,
                 });
 
-                // --- START Real-time Listeners ---
                 loader.classList.remove('hidden');
                 userListContainer.classList.add('hidden');
 
-                // Listener for admins data
                 database.ref('admins').on('value', (snapshot) => {
                     allAdmins = snapshot.val() || {};
-                    // Only render if birthday_pages data is also loaded, or if admins become empty
-                    // Tambahan cek, jika searchInput ada isinya, panggil filter
                     if (Object.keys(allBirthdayPages).length > 0 || Object.keys(allAdmins).length === 0) {
-                        if (searchInput.value.trim() !== '') {
-                            const searchTerm = searchInput.value.toLowerCase();
-                            const filteredAdmins = Object.keys(allAdmins)
-                                .filter(key => allAdmins[key].username.toLowerCase().includes(searchTerm) || 
-                                                (allBirthdayPages[key] && allBirthdayPages[key].birthdayName && allBirthdayPages[key].birthdayName.toLowerCase().includes(searchTerm)))
-                                .reduce((obj, key) => {
-                                    obj[key] = allAdmins[key];
-                                    return obj;
-                                }, {});
-                            renderUsers(filteredAdmins);
-                        } else {
-                            renderUsers(allAdmins);
-                        }
-                        loader.classList.add('hidden');
-                        userListContainer.classList.remove('hidden');
+                        filterAndRender();
                     }
                 });
 
-                // Listener for birthday_pages data
                 database.ref('birthday_pages').on('value', (snapshot) => {
                     allBirthdayPages = snapshot.val() || {};
-                    // Only render if admins data is also loaded, or if birthday_pages become empty
-                    // Tambahan cek, jika searchInput ada isinya, panggil filter
-                    if (Object.keys(allAdmins).length > 0 || Object.keys(allBirthdayPages).length === 0) {
-                        if (searchInput.value.trim() !== '') {
-                            const searchTerm = searchInput.value.toLowerCase();
-                            const filteredAdmins = Object.keys(allAdmins)
-                                .filter(key => allAdmins[key].username.toLowerCase().includes(searchTerm) || 
-                                                (allBirthdayPages[key] && allBirthdayPages[key].birthdayName && allBirthdayPages[key].birthdayName.toLowerCase().includes(searchTerm)))
-                                .reduce((obj, key) => {
-                                    obj[key] = allAdmins[key];
-                                    return obj;
-                                }, {});
-                            renderUsers(filteredAdmins);
-                        } else {
-                            renderUsers(allAdmins);
-                        }
-                        loader.classList.add('hidden');
-                        userListContainer.classList.remove('hidden');
-                    }
+                    filterAndRender();
                 });
-                // --- END Real-time Listeners ---
 
             } else {
                 Swal.fire({ icon: 'error', title: 'Akses Ditolak!', text: 'Password yang kamu masukkan salah.' });
@@ -553,36 +510,40 @@
             }
         });
         
+        function filterAndRender() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const filteredAdmins = Object.keys(allAdmins)
+                .filter(key => {
+                    const adminUser = allAdmins[key]?.username?.toLowerCase() || '';
+                    const birthdayName = allBirthdayPages[key]?.birthdayName?.toLowerCase() || '';
+                    return adminUser.includes(searchTerm) || birthdayName.includes(searchTerm);
+                })
+                .reduce((obj, key) => {
+                    obj[key] = allAdmins[key];
+                    return obj;
+                }, {});
+            
+            renderUsers(searchTerm ? filteredAdmins : allAdmins);
+            loader.classList.add('hidden');
+            userListContainer.classList.remove('hidden');
+        }
+
         function renderUsers(adminsObject) {
             userList.innerHTML = '';
             const adminIds = Object.keys(adminsObject);
             
-            if (adminIds.length === 0) {
-                noDataMessage.classList.remove('hidden');
-                return;
-            }
-            
-            noDataMessage.classList.add('hidden');
+            noDataMessage.classList.toggle('hidden', adminIds.length > 0);
             
             adminIds.forEach(id => {
                 const admin = adminsObject[id];
-                const birthdayPageData = allBirthdayPages[id] || {}; // Get corresponding birthday page data
+                const birthdayPageData = allBirthdayPages[id] || {};
                 const date = admin.createdAt ? new Date(admin.createdAt) : new Date();
                 const formattedDate = date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
                 const firstLetter = admin.username ? admin.username.charAt(0).toUpperCase() : '?';
 
-                // Dapatkan username dan password tamu
-                const guestUser = birthdayPageData.guestUser || '';
-                const guestPass = birthdayPageData.guestPass || '';
-
-                // Encode kredensial tamu untuk URL
-                // Menggunakan btoa untuk encoding Base64 sederhana
-                const encodedGuestCredentials = btoa(JSON.stringify({ user: guestUser, pass: guestPass }));
-
-                // Construct the shareable link for the birthday page with encoded credentials
-                // Tambahkan parameter 'auth' ke URL untuk auto-login tamu
-                const shareableLink = `${window.location.origin}/login.html?id=${id}&auth=${encodedGuestCredentials}`;
-                const adminPanelLink = `${window.location.origin}/register.html?id=${id}`; // Link ke panel admin individu
+                // --- MODIFIED LINK ---
+                // Link untuk admin, bukan untuk tamu
+                const adminViewLink = `${window.location.origin}/login.html?id=${id}&super_admin_access=true`;
 
                 const card = document.createElement('div');
                 card.className = 'user-card neumorphic-panel';
@@ -623,7 +584,7 @@
                         <div>
                             <span class="label">Link Halaman:</span>
                             <span class="value">
-                                <a href="${shareableLink}" target="_blank" style="color: var(--primary); text-decoration: none;">
+                                <a href="${adminViewLink}" target="_blank" style="color: var(--primary); text-decoration: none;">
                                     Lihat Halaman <i class="fas fa-external-link-alt"></i>
                                 </a>
                             </span>
@@ -643,30 +604,13 @@
             });
         }
 
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            if (!searchTerm) {
-                renderUsers(allAdmins);
-                return;
-            }
-            
-            const filteredAdmins = Object.keys(allAdmins)
-                .filter(key => allAdmins[key].username.toLowerCase().includes(searchTerm) || 
-                                (allBirthdayPages[key] && allBirthdayPages[key].birthdayName && allBirthdayPages[key].birthdayName.toLowerCase().includes(searchTerm)))
-                .reduce((obj, key) => {
-                    obj[key] = allAdmins[key];
-                    return obj;
-                }, {});
-                
-            renderUsers(filteredAdmins);
-        });
+        searchInput.addEventListener('input', filterAndRender);
         
         function openModal(mode, adminId = null) {
             userForm.reset();
             if (mode === 'add') {
                 modalTitle.textContent = 'Tambah Admin Baru';
                 adminIdInput.value = '';
-                // Default values for new admin's birthday page in modal
                 modalBirthdayNameInput.value = '';
                 modalTargetWhatsappInput.value = '';
             } else {
@@ -676,7 +620,6 @@
                 const birthdayPageData = allBirthdayPages[adminId] || {};
                 usernameInput.value = admin.username;
                 passwordInput.value = admin.password;
-                // Load birthday page data into modal
                 modalBirthdayNameInput.value = birthdayPageData.birthdayName || '';
                 modalTargetWhatsappInput.value = birthdayPageData.targetWhatsappNumber || '';
             }
@@ -703,8 +646,8 @@
             const id = adminIdInput.value;
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
-            const birthdayName = modalBirthdayNameInput.value.trim(); // Get from modal
-            const targetWhatsappNumber = modalTargetWhatsappInput.value.trim(); // Get from modal
+            const birthdayName = modalBirthdayNameInput.value.trim();
+            const targetWhatsappNumber = modalTargetWhatsappInput.value.trim();
             
             if(!username || !password) {
                 Swal.fire({ icon: 'warning', title: 'Input Tidak Lengkap', text: 'Username dan Password wajib diisi.' });
@@ -718,7 +661,6 @@
                     targetWhatsappNumber: targetWhatsappNumber 
                 };
                 
-                // Perform multiple updates
                 Promise.all([
                     database.ref(`/admins/${id}`).update(adminUpdates),
                     database.ref(`/birthday_pages/${id}`).update(birthdayPageUpdates)
@@ -736,10 +678,9 @@
                     createdAt: new Date().toISOString()
                 };
                 
-                // Create a corresponding birthday page with more default fields
                 const defaultPageData = {
-                    birthdayName: birthdayName || username, // Use modal input or username as default
-                    birthDate: "2005-09-28", // As per user's request
+                    birthdayName: birthdayName || username,
+                    birthDate: "2005-09-28",
                     guestUser: "guest",
                     guestPass: "123",
                     qrImageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YourGiftLinkHere",
@@ -787,13 +728,12 @@
                 }
             });
         }
-
-        // New function to directly access an admin's panel (remains the same)
+        
+        // --- MODIFIED: Link ini sekarang akan membuka halaman `register.html` dengan parameter admin ---
         window.accessAdminPanel = (adminId) => {
             window.location.href = `register.html?super_admin_access=true&id=${adminId}`;
         }
 
-        // --- Event Listener untuk tombol Log Out ---
         logoutBtn.addEventListener('click', () => {
             Swal.fire({
                 title: 'Konfirmasi Log Out',
@@ -805,7 +745,6 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Unsubscribe dari Firebase listeners untuk menghindari memory leak
                     database.ref('admins').off('value');
                     database.ref('birthday_pages').off('value');
 
@@ -815,10 +754,10 @@
                         toast: true,
                         position: 'top-end',
                         showConfirmButton: false,
-                        timer: 1500, // Durasi lebih singkat karena akan redirect
+                        timer: 1500,
                         timerProgressBar: true,
-                        didClose: () => { // Fungsi ini akan dijalankan setelah SweetAlert tertutup
-                            window.location.href = 'data.html'; // Langsung redirect ke data.html
+                        didClose: () => {
+                            window.location.reload(); // Cukup refresh halaman untuk kembali ke login
                         }
                     });
                 }
