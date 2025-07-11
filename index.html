@@ -43,9 +43,22 @@
             color: var(--text-color);
             position: relative;
             overflow-x: hidden;
+            transition: background-color 0.5s ease;
         }
-        body.modal-active {
+        body.sidebar-open {
             overflow: hidden;
+        }
+        /* Overlay saat sidebar terbuka */
+        body.sidebar-open::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            backdrop-filter: blur(2px);
         }
 
         .background-blobs {
@@ -140,6 +153,119 @@
         .main-nav a { color: var(--text-light); text-decoration: none; font-weight: 500; transition: var(--transition-smooth); }
         .main-nav a:hover { color: var(--primary); }
         .sign-in-btn { padding: 12px 24px; }
+        
+        /** --- [ROMBAKAN TOTAL] Sidebar & Hamburger --- **/
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            justify-content: center;
+            align-items: center;
+            z-index: 1003;
+            background: transparent;
+            border: none;
+            transition: opacity 0.3s ease, transform 0.3s ease; /* Transisi untuk menghilang */
+        }
+        
+        /* Ikon hamburger disembunyikan saat sidebar terbuka */
+        body.sidebar-open .hamburger-menu {
+            opacity: 0;
+            transform: scale(0.7);
+            pointer-events: none;
+        }
+
+        .cake-icon {
+            position: relative;
+            width: 25px;
+            height: 19px;
+        }
+        .cake-icon::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+        }
+        .hamburger-menu .bar {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--text-color);
+            border-radius: 3px;
+            position: absolute;
+            left: 0;
+        }
+        .bar:nth-child(1) { top: 0; }
+        .bar:nth-child(2) { top: 8px; }
+        .bar:nth-child(3) { top: 16px; }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px; /* Lebarkan sedikit agar tombol X muat */
+            width: 300px;
+            height: 100%;
+            background: var(--bg-color);
+            box-shadow: -10px 0px 30px var(--shadow-dark);
+            z-index: 1002;
+            padding: 80px 30px 30px; /* Beri ruang di atas untuk tombol X */
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .sidebar.active {
+            right: 0;
+        }
+        
+        /* Tombol 'X' baru di dalam sidebar */
+        .close-sidebar-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2.5rem;
+            line-height: 1;
+            font-weight: 300;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .close-sidebar-btn:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+        .sidebar-nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 10px;
+            border-radius: var(--border-radius-inner);
+            transition: var(--transition-smooth);
+        }
+        .sidebar-nav a:hover {
+            color: var(--primary);
+            background: var(--shadow-dark);
+        }
+        .sidebar .btn.primary {
+            margin-top: auto;
+            width: 100%;
+        }
+        /** --- AKHIR ROMBAKAN --- **/
 
         /* --- Landing Page Sections --- */
         .landing-page { display: flex; flex-direction: column; align-items: center; gap: 6rem; width: 100%; padding: 150px 2rem 6rem; }
@@ -227,6 +353,8 @@
             .main-header { width: 100%; top: 0; border-radius: 0; }
             .header-container { border-radius: 0; padding: 15px 20px; }
             .main-nav { display: none; }
+            .sign-in-btn { display: none; }
+            .hamburger-menu { display: flex; }
             .landing-page { padding-top: 100px; gap: 4rem; }
             h1 { font-size: 2.3rem; }
             .section-title { font-size: 2rem; margin-bottom: 2.5rem; }
@@ -234,6 +362,9 @@
             .button-group { flex-direction: column; }
             .faq-question { font-size: 1rem; }
             .cta-content p { font-size: 1.1rem; }
+        }
+        @media (min-width: 769px) {
+            .hamburger-menu { display: none; }
         }
         @media (max-width: 520px) {
             .landing-page { padding: 80px 1rem 4rem; }
@@ -263,8 +394,28 @@
                 <a href="#contact">Kontak</a>
             </nav>
             <a href="register.html" class="btn primary sign-in-btn">Sign in</a>
+            
+            <div class="hamburger-menu" id="hamburger-menu">
+                <div class="cake-icon">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+
         </div>
     </header>
+
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar-btn" id="close-sidebar-btn">&times;</button>
+        <nav class="sidebar-nav">
+            <a href="#templates">Template</a>
+            <a href="#features">Fitur</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact">Kontak</a>
+        </nav>
+        <a href="register.html" class="btn primary">Sign in</a>
+    </div>
 
     <main class="landing-page">
         <section class="hero-section" id="hero">
@@ -378,14 +529,45 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // Inisialisasi AOS (Animate on Scroll) - Dibuat berulang
             AOS.init({
                 duration: 800,
-                once: false, // Animasi akan berulang setiap kali scroll
+                once: false,
                 offset: 150,
             });
 
-            // Logika untuk Confetti Berulang & Terkurung dengan Emoji
+            // --- [ROMBAKAN] Logika untuk Sidebar dengan Tombol X di Dalam ---
+            (() => {
+                const hamburger = document.getElementById('hamburger-menu');
+                const sidebar = document.getElementById('sidebar');
+                const navLinks = sidebar.querySelectorAll('a');
+                const closeBtn = document.getElementById('close-sidebar-btn'); // Ambil tombol X
+
+                const toggleSidebar = () => {
+                    // Hanya toggle kelas untuk memunculkan/menyembunyikan sidebar
+                    sidebar.classList.toggle('active');
+                    // Dan toggle kelas di body untuk overlay & no-scroll
+                    document.body.classList.toggle('sidebar-open');
+                };
+                
+                hamburger.addEventListener('click', toggleSidebar);
+                closeBtn.addEventListener('click', toggleSidebar); // Tombol X juga menjalankan fungsi yang sama
+                
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (sidebar.classList.contains('active')) {
+                           toggleSidebar();
+                        }
+                    });
+                });
+                
+                 document.addEventListener('click', (e) => {
+                    if (sidebar.classList.contains('active') && !sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                        toggleSidebar();
+                    }
+                });
+            })();
+
+
             (() => {
                 const birthdayCard = document.querySelector('.confetti-birthday');
                 const comingSoonCard = document.querySelector('.confetti-coming-soon');
@@ -451,10 +633,8 @@
                 if (comingSoonCard) confettiObserver.observe(comingSoonCard);
             })();
 
-            // Logika untuk Accordion FAQ
             (() => { document.querySelectorAll('.faq-item').forEach(item => { item.addEventListener('toggle', event => { if (event.target.open) { document.querySelectorAll('.faq-item').forEach(otherItem => { if (otherItem !== event.target) { otherItem.open = false; } }); } }); }); })();
             
-            // Logika untuk Modal Kontak
             (() => {
                 const openBtn = document.getElementById('open-contact-btn');
                 const modalOverlay = document.getElementById('contact-modal');
