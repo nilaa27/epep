@@ -3,301 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hi, welcome</title>
-    <link rel="shortcut icon" type="image/png" href="/favicon.PNG" />
+    <title>Hi, Welcome</title>
+    
+    <link rel="shortcut icon" type="image/png" href="favicon.PNG" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
     <style>
-    :root {
-        /* Palet Neumorphic Gelap yang Disempurnakan */
-        --bg-color: #2c2f36;
-        --shadow-dark: #212429;
-        --shadow-light: #373a43;
-        --text-color: #e0e5ec;
-        --text-light: #97a1b3;
-        --primary: #6d5bff;
-        --secondary: #ff69b4;
-        --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
-        --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        --border-radius-main: 30px;
-        --border-radius-inner: 15px;
-    }
+        /* --- Variabel & Gaya Dasar --- */
+        :root {
+            --bg-color: #2c2f36;
+            --shadow-dark: #212429;
+            --shadow-light: #373a43;
+            --text-color: #e0e5ec;
+            --text-light: #97a1b3;
+            --primary: #6d5bff;
+            --secondary: #ff69b4;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius-main: 30px;
+            --border-radius-inner: 15px;
+        }
 
-    /* --- Animasi --- */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes blob-animation {
-        0%, 100% { transform: translateY(0) scale(1); }
-        50% { transform: translateY(-40px) scale(1.1); }
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            position: relative;
+            overflow-x: hidden;
+        }
+        body.modal-active {
+            overflow: hidden;
+        }
 
-    /* --- Gaya Dasar --- */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
-    }
-    body {
-        background: var(--bg-color);
-        color: var(--text-color);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 2rem;
-        overflow: auto;
-        position: relative;
-    }
+        .background-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: blob-animation 20s infinite alternate;
+        }
+        .blob.one { width: 500px; height: 500px; top: -150px; left: -200px; background: var(--primary); }
+        .blob.two { width: 400px; height: 400px; bottom: -180px; right: -150px; background: var(--secondary); animation-duration: 25s; animation-delay: -5s; }
 
-    /* --- Latar Belakang Blob --- */
-    .background-blobs {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        overflow: hidden;
-    }
-    .blob {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.3;
-        animation: blob-animation 20s infinite alternate;
-    }
-    .blob.one {
-        width: 400px;
-        height: 400px;
-        top: -100px;
-        left: -150px;
-        background: var(--primary);
-    }
-    .blob.two {
-        width: 300px;
-        height: 300px;
-        bottom: -120px;
-        right: -100px;
-        background: var(--secondary);
-        animation-duration: 25s;
-        animation-delay: -5s;
-    }
+        /* --- Tombol Global --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 28px;
+            border-radius: var(--border-radius-inner);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            background: var(--bg-color);
+            transition: var(--transition-smooth);
+            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+        }
+        .btn.primary { 
+            color: #ffffff;
+            background: var(--primary);
+            box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+        }
+        .btn.primary:hover { 
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #7b6aff, #6d5bff);
+            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+        }
+        .btn.secondary { color: var(--text-light); }
+        .btn.secondary:hover { 
+            color: var(--text-color); 
+            transform: translateY(-3px); 
+            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+        }
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light);
+        }
+        .btn.disabled {
+            background: #41454e;
+            color: var(--text-light);
+            cursor: not-allowed;
+            box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+        }
+        .btn.disabled:hover { transform: none; box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); }
 
-    /* --- Panel Utama (Neumorphic) --- */
-    .welcome-panel {
-        width: 100%;
-        max-width: 500px;
-        background: var(--bg-color);
-        border-radius: var(--border-radius-main);
-        padding: 40px 45px;
-        text-align: center;
-        box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light);
-        transition: var(--transition-smooth);
-        z-index: 1;
-        margin: 2rem 0; 
-    }
-    .welcome-panel:hover {
-        transform: translateY(-5px);
-        box-shadow: 20px 20px 40px var(--shadow-dark), -20px -20px 40px var(--shadow-light);
-    }
+        /* --- Header / Navigasi --- */
+        .main-header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 980px;
+            z-index: 1000;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(44, 47, 54, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-main);
+            box-shadow: 10px 10px 25px var(--shadow-dark), -10px -10px 25px var(--shadow-light);
+            border: 1px solid var(--shadow-light);
+        }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-color); font-weight: 600; font-size: 1.1rem; }
+        .logo img { width: 30px; height: 30px; transition: transform 0.4s ease; }
+        .logo:hover img { transform: rotate(360deg); }
+        .main-nav { display: flex; gap: 30px; }
+        .main-nav a { color: var(--text-light); text-decoration: none; font-weight: 500; transition: var(--transition-smooth); }
+        .main-nav a:hover { color: var(--primary); }
+        .sign-in-btn { padding: 12px 24px; }
 
-    /* --- Header di dalam Panel --- */
-    .panel-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 35px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid var(--shadow-dark);
-        box-shadow: 0 1px 0 var(--shadow-light);
-        opacity: 0;
-        animation: fadeInUp 0.5s ease-out 0.2s forwards;
-    }
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        text-decoration: none;
-        color: var(--text-color);
-        font-weight: 600;
-        font-size: 1.1rem;
-        transition: color var(--transition-smooth);
-    }
-    .logo img {
-        width: 30px;
-        height: 30px;
-        transition: transform 0.4s ease;
-    }
-    .logo:hover img {
-        transform: rotate(360deg);
-    }
-    .sign-in-link {
-        color: var(--text-light);
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.9rem;
-        transition: var(--transition-smooth);
-        cursor: pointer;
-    }
-    .sign-in-link:hover {
-        color: var(--primary);
-    }
+        /* --- Landing Page Sections --- */
+        .landing-page { display: flex; flex-direction: column; align-items: center; gap: 6rem; width: 100%; padding: 150px 2rem 6rem; }
+        section { width: 100%; max-width: 980px; text-align: center; }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .panel-icon {
-        width: 100px;
-        height: 100px;
-        background: var(--bg-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 25px;
-        font-size: 3.5rem;
-        color: var(--primary);
-        box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light);
-        opacity: 0;
-        animation: fadeInUp 0.5s ease-out 0.4s forwards;
-    }
-    .panel-icon i {
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+        /* --- Hero Section --- */
+        .hero-section .welcome-panel { background: var(--bg-color); border-radius: var(--border-radius-main); padding: 40px 45px; box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light); max-width: 650px; margin: 0 auto; }
+        .panel-icon { width: 100px; height: 100px; background: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; font-size: 3.5rem; color: var(--primary); box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); }
+        .panel-icon i { background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 20px; line-height: 1.3; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: var(--text-light); font-size: 1.1rem; line-height: 1.7; margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .button-group { display: flex; justify-content: center; gap: 20px; }
 
-    h1 {
-        font-size: 2.8rem;
-        font-weight: 800;
-        margin-bottom: 20px;
-        line-height: 1.3;
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        opacity: 0;
-        animation: fadeInUp 0.5s ease-out 0.6s forwards;
-    }
-    p {
-        color: var(--text-light);
-        font-size: 1.1rem;
-        line-height: 1.7;
-        margin-bottom: 40px;
-        max-width: 400px;
-        margin-left: auto;
-        margin-right: auto;
-        opacity: 0;
-        animation: fadeInUp 0.5s ease-out 0.8s forwards;
-    }
-    .button-group {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        opacity: 0;
-        animation: fadeInUp 0.5s ease-out 1s forwards;
-    }
-    .btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        padding: 18px;
-        border-radius: var(--border-radius-inner);
-        font-size: 1rem;
-        font-weight: 600;
-        text-decoration: none;
-        cursor: pointer;
-        border: none;
-        background: var(--bg-color);
-        transition: var(--transition-smooth);
-        box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
-    }
-    .btn.primary { 
-        color: var(--text-color);
-        background: var(--primary);
-        box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
-    }
-    .btn.primary:hover { 
-        transform: translateY(-3px);
-        background: linear-gradient(135deg, #7b6aff, #6d5bff);
-        box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
-    }
-    .btn.secondary { color: var(--text-light); }
-    .btn.secondary:hover { 
-        color: var(--text-color); 
-        transform: translateY(-3px); 
-        box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
-    }
-    .btn:active {
-        transform: translateY(0);
-        box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light);
-    }
-    
-    .support-section {
-        margin-top: 40px;
-        padding-top: 25px;
-        border-top: 1px solid var(--shadow-dark);
-        /* box-shadow: 0 1px 0 var(--shadow-light); <-- PERBAIKAN: Baris ini dihapus */
-        opacity: 0;
-        animation: fadeInUp 0.5s ease-out 1.1s forwards;
-    }
-    .support-title {
-        color: var(--text-light);
-        margin-bottom: 20px;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-    .social-icons {
-        display: flex;
-        justify-content: center;
-        gap: 25px;
-    }
-    .social-icons a {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        color: var(--text-light);
-        background: var(--bg-color);
-        border-radius: 50%;
-        font-size: 1.2rem;
-        transition: var(--transition-smooth);
-        box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
-    }
-    .social-icons a:hover {
-        color: var(--secondary);
-        box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
-        transform: translateY(2px);
-    }
-    
-    .panel-footer {
-        margin-top: 35px;
-        padding-top: 20px;
-        font-size: 0.8rem;
-        color: var(--text-light);
-        opacity: 0.7;
-        border-top: 1px solid var(--shadow-dark);
-        /* box-shadow: 0 1px 0 var(--shadow-light); <-- PERBAIKAN: Baris ini dihapus */
-        animation: fadeInUp 0.5s ease-out 1.2s forwards;
-    }
+        /* --- How It Works & Templates Section --- */
+        .steps-container, .templates-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .templates-container { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+        .step-card, .template-card { background: var(--bg-color); padding: 35px 30px; border-radius: var(--border-radius-main); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); }
+        .template-card { position: relative; overflow: hidden; text-align: left; display: flex; flex-direction: column; }
+        .step-icon { font-size: 2.5rem; margin-bottom: 20px; color: var(--primary); }
+        .step-card h3 { font-size: 1.4rem; margin-bottom: 15px; color: var(--text-color); }
+        .step-card p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 0; color: var(--text-light); }
+        .template-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; position: relative; z-index: 2; }
+        .template-icon { font-size: 1.8rem; color: var(--primary); background: var(--bg-color); width: 50px; height: 50px; border-radius: var(--border-radius-inner); display: flex; align-items: center; justify-content: center; box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); flex-shrink: 0; }
+        .template-card h3 { font-size: 1.4rem; color: var(--text-color); font-weight: 600; }
+        .template-card p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; color: var(--text-light); text-align: left; position: relative; z-index: 2; }
+        .card-button-group { display: flex; flex-direction: column; gap: 15px; margin-top: auto; position: relative; z-index: 2; }
+        .card-button-group .btn { width: 100%; }
+        .confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        
+        /* --- Features, Testimonials, FAQ, CTA --- */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .feature-card { background: transparent; padding: 30px; border-radius: var(--border-radius-inner); box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); text-align: left; }
+        .feature-icon { font-size: 2rem; color: var(--secondary); margin-bottom: 20px; }
+        .feature-card h4 { font-size: 1.2rem; color: var(--text-color); margin-bottom: 10px; }
+        .feature-card p { font-size: 0.9rem; color: var(--text-light); margin-bottom: 0; line-height: 1.6; text-align: left; }
+        .testimonial-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .testimonial-card { background: var(--bg-color); padding: 30px; border-radius: var(--border-radius-main); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); border-left: 5px solid var(--primary); text-align: left; }
+        .testimonial-card p.quote { font-style: italic; color: var(--text-light); margin-bottom: 20px; font-size: 1rem; line-height: 1.7; text-align: left; }
+        .testimonial-card .author { font-weight: 600; color: var(--text-color); text-align: right; }
+        .faq-container { max-width: 768px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        .faq-item { background: var(--bg-color); border-radius: var(--border-radius-inner); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); overflow: hidden; }
+        .faq-item[open] { box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); }
+        .faq-question { padding: 20px 25px; font-weight: 600; font-size: 1.1rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question::-webkit-details-marker { display: none; }
+        .faq-arrow { color: var(--primary); font-size: 1.2rem; transition: transform 0.3s ease; }
+        .faq-item[open] .faq-arrow { transform: rotate(180deg); }
+        .faq-answer { padding: 0 25px 20px; color: var(--text-light); font-size: 1rem; line-height: 1.7; text-align: left; margin: 0; max-width: 100%; }
+        .cta-content { max-width: 600px; margin: 0 auto; background: transparent; padding: 40px 25px; }
+        .cta-content p { color: var(--text-light); font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px; max-width: 100%; font-weight: 500; }
 
-    @media (max-width: 520px) {
-        body { padding: 1.5rem 1rem; align-items: flex-start; }
-        .welcome-panel { padding: 30px 25px; }
-        h1 { font-size: 2.3rem; }
-        p { font-size: 1rem; }
-        .blob { filter: blur(60px); }
-        .blob.one { width: 300px; height: 300px; }
-        .blob.two { width: 250px; height: 250px; }
-    }
-</style>
+        /* --- Footer --- */
+        .main-footer { padding: 4rem 2rem 2rem; background: var(--bg-color); border-top: 1px solid var(--shadow-dark); box-shadow: 0 -5px 15px var(--shadow-dark); text-align: center; }
+        .support-section { margin-bottom: 3rem; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .support-title { color: var(--text-light); font-size: 1rem; font-weight: 500; letter-spacing: 0.5px; margin: 0; }
+        .social-icons { display: flex; justify-content: center; gap: 20px; }
+        .social-icons a { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--text-light); background: var(--bg-color); border-radius: 50%; font-size: 1.2rem; box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); transition: var(--transition-smooth); }
+        .social-icons a:hover { color: var(--secondary); box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); transform: translateY(2px); }
+        .footer-bottom { font-size: 0.8rem; color: var(--text-light); opacity: 0.7; }
+
+        /* --- Modal Kontak --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--bg-color); padding: 30px 35px; border-radius: var(--border-radius-main); box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative; max-width: 500px; width: 90%; text-align: left; }
+        .modal-content h2 { text-align: center; font-size: 1.8rem; margin-bottom: 10px; font-weight: 700; }
+        .modal-content p { text-align: center; max-width: 100%; margin-bottom: 30px; }
+        .modal-close-btn { position: absolute; top: 10px; right: 20px; background: none; border: none; font-size: 2.5rem; color: var(--text-light); cursor: pointer; line-height: 1; }
+        .contact-form .form-group { margin-bottom: 20px; }
+        .contact-form label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-color); }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 15px; border: 1px solid var(--shadow-dark); background: var(--shadow-dark); border-radius: var(--border-radius-inner); color: var(--text-color); font-size: 1rem; box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43; transition: all 0.2s ease; }
+        .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: var(--primary); box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43, 0 0 0 2px var(--primary); }
+        .contact-form textarea { resize: vertical; }
+        .contact-form .btn { width: 100%; }
+
+        /* --- Media Queries --- */
+        @media (max-width: 768px) {
+            .main-header { width: 100%; top: 0; border-radius: 0; }
+            .header-container { border-radius: 0; padding: 15px 20px; }
+            .main-nav { display: none; }
+            .landing-page { padding-top: 100px; gap: 4rem; }
+            h1 { font-size: 2.3rem; }
+            .section-title { font-size: 2rem; margin-bottom: 2.5rem; }
+            p { font-size: 1rem; }
+            .button-group { flex-direction: column; }
+            .faq-question { font-size: 1rem; }
+            .cta-content p { font-size: 1.1rem; }
+        }
+        @media (max-width: 520px) {
+            .landing-page { padding: 80px 1rem 4rem; }
+            .hero-section .welcome-panel { padding: 30px 25px; }
+            .blob { filter: blur(60px); }
+            .blob.one { width: 300px; height: 300px; }
+            .blob.two { width: 250px; height: 250px; }
+        }
+    </style>
 </head>
 <body>
 
@@ -306,25 +251,101 @@
         <div class="blob two"></div>
     </div>
 
-    <div class="welcome-panel" id="landing-page">
-        <header class="panel-header">
+    <header class="main-header">
+        <div class="header-container" data-aos="fade-down">
             <a href="#" class="logo">
-                <img src="/logoku.PNG" alt="Logo xlordcode"> <span>xlordcode</span>
+                <img src="logoku.PNG" alt="Logo xlordcode"> <span>xlordcode</span>
             </a>
-            <a href="register.html" class="sign-in-link">Sign In</a>
-        </header>
+            <nav class="main-nav">
+                <a href="#templates">Template</a>
+                <a href="#features">Fitur</a>
+                <a href="#faq">FAQ</a>
+                <a href="#contact">Kontak</a>
+            </nav>
+            <a href="register.html" class="btn primary sign-in-btn">Sign in</a>
+        </div>
+    </header>
 
-        <div class="panel-icon">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-        </div>
-        <h1>Desain Ucapan Ultah, Cuma Modal Klik?</h1> <p>Animasi keren + desain elegan. Gak perlu ngoding, cukup klik dibawah!</p>
+    <main class="landing-page">
+        <section class="hero-section" id="hero">
+            <div class="welcome-panel" data-aos="fade-up">
+                <div class="panel-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <h1>Desain Ucapan Ultah, Cuma Modal Klik?</h1>
+                <p>Animasi keren + desain elegan. Gak perlu ngoding, ciptakan website ucapan selamat ulang tahun yang personal dan berkesan dalam hitungan menit.</p>
+                <div class="button-group">
+                    <a href="register.html" class="btn primary">Mulai buat ucapan!<i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i></a>
+                    <a href="demo.html" class="btn secondary"><i class="fas fa-eye"></i> Lihat Demo</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works" id="how-it-works">
+            <h2 class="section-title" data-aos="fade-up">Hanya 3 Langkah Mudah</h2>
+            <div class="steps-container">
+                <div class="step-card" data-aos="fade-right" data-aos-delay="100"><div class="step-icon"><i class="fas fa-pencil-ruler"></i></div><h3>1. Pilih Desain</h3><p>Pilih dari berbagai template premium yang sudah kami siapkan khusus untukmu.</p></div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200"><div class="step-icon"><i class="fas fa-keyboard"></i></div><h3>2. Isi Data</h3><p>Tulis nama, ucapan, dan unggah foto terbaikmu untuk ditampilkan di website.</p></div>
+                <div class="step-card" data-aos="fade-left" data-aos-delay="300"><div class="step-icon"><i class="fas fa-share-alt"></i></div><h3>3. Bagikan Link</h3><p>Website-mu langsung jadi! Sebarkan ke teman dan keluarga lewat media sosial.</p></div>
+            </div>
+        </section>
         
-        <div class="button-group">
-            <a href="register.html" class="btn primary">Buat webmu sekarang!</a>
-            <a href="demo.html" class="btn secondary"><i class="fas fa-eye"></i> Preview Demo</a>
-        </div>
+        <section class="templates" id="templates">
+            <h2 class="section-title" data-aos="fade-up">Carefully crafted templates for every occasion</h2>
+            <div class="templates-container">
+                <div class="template-card confetti-birthday" data-aos="fade-right" data-aos-delay="100">
+                    <canvas class="confetti-canvas"></canvas>
+                    <div class="template-header"><div class="template-icon"><i class="fas fa-birthday-cake"></i></div><h3>Birthday Template</h3></div>
+                    <p>Create a delightful animated birthday wish with personalized messages, beautiful transitions, and charming animations. Perfect for making someone's special day even more memorable.</p>
+                    <div class="card-button-group"><a href="register.html" class="btn primary">Mulai buat ucapan!<i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i></a><a href="demo.html" class="btn secondary"><i class="fas fa-eye"></i> Preview demo template</a></div>
+                </div>
+                <div class="template-card confetti-coming-soon" data-aos="fade-left" data-aos-delay="200">
+                    <canvas class="confetti-canvas"></canvas>
+                    <div class="template-header"><div class="template-icon"><i class="fas fa-wand-sparkles"></i></div><h3>More Templates Coming Soon</h3></div>
+                    <p>We're working on more beautiful templates for different occasions. Stay tuned for anniversary wishes, congratulations cards, and many more exciting additions to our collection.</p>
+                    <p>Have a specific occasion or template idea in mind? I'd love to hear about it!</p>
+                    <div class="card-button-group"><a class="btn disabled"><i class="fas fa-gift"></i> Coming Soon</a><a href="#" class="btn secondary"><i class="fas fa-lightbulb"></i> Suggest Template</a></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <h2 class="section-title" data-aos="fade-up">Fitur Unggulan Kami</h2>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100"><div class="feature-icon"><i class="fas fa-palette"></i></div><h4>Template Premium</h4><p>Desain neumorphic yang sedang tren. Buat kesan pertama yang tak terlupakan.</p></div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200"><div class="feature-icon"><i class="fas fa-film"></i></div><h4>Animasi Halus</h4><p>Setiap elemen muncul dengan animasi yang membuat website lebih hidup dan dinamis.</p></div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300"><div class="feature-icon"><i class="fas fa-mobile-alt"></i></div><h4>Super Responsif</h4><p>Tampilan sempurna di semua perangkat, baik desktop, tablet, maupun mobile.</p></div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400"><div class="feature-icon"><i class="fas fa-music"></i></div><h4>Musik Latar Kustom</h4><p>Tambahkan lagu favorit untuk membuat suasana menjadi lebih spesial dan personal.</p></div>
+            </div>
+        </section>
         
-        <div class="support-section">
+        <section class="testimonials" id="testimonials">
+            <h2 class="section-title" data-aos="fade-up">Apa Kata Mereka?</h2>
+            <div class="testimonial-container">
+                <div class="testimonial-card" data-aos="fade-right" data-aos-delay="100"><p class="quote">"Gila, keren banget! Gak nyangka bikin web ucapan bisa secepat dan segampang ini. Hasilnya juga premium, temenku suka banget!"</p><div class="author">- Sarah, Pengguna</div></div>
+                <div class="testimonial-card" data-aos="fade-left" data-aos-delay="200"><p class="quote">"Desainnya itu lho, beda dari yang lain. Neumorphic-nya bikin keliatan mahal dan estetik. Recommended pokoknya!"</p><div class="author">- Budi, Desainer Grafis</div></div>
+            </div>
+        </section>
+
+        <section class="faq" id="faq">
+            <h2 class="section-title" data-aos="fade-up">Tanya Jawab Umum</h2>
+            <div class="faq-container" data-aos="fade-up" data-aos-delay="100">
+                <details class="faq-item"><summary class="faq-question">Apa sebenarnya xlordcode itu?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">xlordcode adalah platform yang memungkinkan Anda membuat website ucapan selamat ulang tahun digital dengan animasi dan desain personal secara mudah dan cepat, tanpa perlu keahlian coding.</p></details>
+                <details class="faq-item"><summary class="faq-question">Apakah layanan ini gratis?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Saat ini, kami menyediakan berbagai template dan fitur dasar yang dapat Anda gunakan secara gratis. Untuk fitur-fitur premium di masa depan, mungkin akan ada biaya tambahan, tapi akan selalu ada versi gratisnya!</p></details>
+                <details class="faq-item"><summary class="faq-question">Apakah saya perlu keahlian teknis?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Sama sekali tidak! Platform kami dirancang dengan antarmuka yang intuitif. Anda hanya perlu memilih template, mengisi data seperti nama dan ucapan, lalu website Anda langsung siap dibagikan.</p></details>
+                <details class="faq-item"><summary class="faq-question">Bagaimana cara membagikan website ucapan saya?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Setelah selesai membuat, Anda akan mendapatkan sebuah link unik. Cukup salin (copy) link tersebut dan tempel (paste) untuk dibagikan ke teman atau keluarga Anda melalui media sosial, aplikasi chat, atau email.</p></details>
+                <details class="faq-item"><summary class="faq-question">Bisakah saya mengedit ucapan setelah dibuat?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Tentu! Selama Anda menyimpan link editnya, Anda dapat masuk kembali dan melakukan perubahan pada teks, foto, atau bahkan musik latar kapan saja Anda mau.</p></details>
+            </div>
+        </section>
+
+        <section class="cta-section" id="contact">
+            <div class="cta-content" data-aos="fade-up">
+                <p>Masih ada pertanyaan? Punya ide fitur?<br>Menemukan bug?<br>Saya ingin sekali mendengar dari Anda!</p>
+                <a href="#" id="open-contact-btn" class="btn secondary"><i class="fas fa-comment-dots"></i> Hubungi saya</a>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="main-footer">
+         <div class="support-section">
             <p class="support-title">Support Me</p>
             <div class="social-icons">
                 <a href="https://instagram.com/off.xlord" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
@@ -332,10 +353,123 @@
                 <a href="https://www.tiktok.com/@xlordduyy" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
-        
-        <footer class="panel-footer">
+        <div class="footer-bottom">
             &copy; 2025 xlordcode. All Rights Reserved.
-        </footer>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="contact-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h2>Hubungi kami</h2>
+            <p>Punya pertanyaan atau masukan? Saya ingin sekali mendengarnya.</p>
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Pesan Anda telah diterima!'); this.reset();">
+                <div class="form-group"><label for="name">Nama</label><input type="text" id="name" name="name" placeholder="Nama kamu" required></div>
+                <div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" placeholder="email@anda.com" required></div>
+                <div class="form-group"><label for="message">Pesan</label><textarea id="message" name="message" rows="5" placeholder="Pesan Anda..." required></textarea></div>
+                <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+            </form>
+        </div>
     </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Inisialisasi AOS (Animate on Scroll) - Dibuat berulang
+            AOS.init({
+                duration: 800,
+                once: false, // Animasi akan berulang setiap kali scroll
+                offset: 150,
+            });
+
+            // Logika untuk Confetti Berulang & Terkurung dengan Emoji
+            (() => {
+                const birthdayCard = document.querySelector('.confetti-birthday');
+                const comingSoonCard = document.querySelector('.confetti-coming-soon');
+
+                let birthdayConfettiInstance = null;
+                if (birthdayCard) {
+                    const canvas = birthdayCard.querySelector('.confetti-canvas');
+                    if (canvas) {
+                        birthdayConfettiInstance = confetti.create(canvas, { resize: true, useWorker: true });
+                    }
+                }
+
+                let gentleConfettiInstance = null;
+                if (comingSoonCard) {
+                    const canvas = comingSoonCard.querySelector('.confetti-canvas');
+                    if(canvas) {
+                        gentleConfettiInstance = confetti.create(canvas, { resize: true, useWorker: true });
+                    }
+                }
+
+                function fireBirthdayExplosion() {
+                    if (!birthdayConfettiInstance) return;
+                    birthdayConfettiInstance({
+                        particleCount: 50,
+                        spread: 100,
+                        origin: { y: 0.6 },
+                        shapes: ['emoji'],
+                        shapeOptions: {
+                            emoji: {
+                                value: ['🎂', '🥳', '✨', '🎊']
+                            }
+                        },
+                        scalar: 1.5
+                    });
+                }
+
+                function fireGentleRain() {
+                    if (!gentleConfettiInstance) return;
+                    const end = Date.now() + (2 * 1000);
+                    const colors = ['#a8a8a8', '#cccccc', '#97a1b3'];
+                    (function frame() {
+                        gentleConfettiInstance({ particleCount: 2, angle: 270, spread: 55, origin: { x: Math.random() }, colors: colors, scalar: Math.random() + 0.5 });
+                        if (Date.now() < end) { requestAnimationFrame(frame); }
+                    }());
+                }
+
+                const observerOptions = { root: null, threshold: 0.5 };
+                const confettiObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            if (!entry.target.classList.contains('has-animated')) {
+                                if (entry.target.classList.contains('confetti-birthday')) { fireBirthdayExplosion(); } 
+                                else if (entry.target.classList.contains('confetti-coming-soon')) { fireGentleRain(); }
+                                entry.target.classList.add('has-animated');
+                            }
+                        } else {
+                            entry.target.classList.remove('has-animated');
+                        }
+                    });
+                }, observerOptions);
+                
+                if (birthdayCard) confettiObserver.observe(birthdayCard);
+                if (comingSoonCard) confettiObserver.observe(comingSoonCard);
+            })();
+
+            // Logika untuk Accordion FAQ
+            (() => { document.querySelectorAll('.faq-item').forEach(item => { item.addEventListener('toggle', event => { if (event.target.open) { document.querySelectorAll('.faq-item').forEach(otherItem => { if (otherItem !== event.target) { otherItem.open = false; } }); } }); }); })();
+            
+            // Logika untuk Modal Kontak
+            (() => {
+                const openBtn = document.getElementById('open-contact-btn');
+                const modalOverlay = document.getElementById('contact-modal');
+                const closeBtn = modalOverlay.querySelector('.modal-close-btn');
+                const contactForm = modalOverlay.querySelector('.contact-form');
+
+                const openModal = () => { modalOverlay.classList.add('active'); document.body.classList.add('modal-active'); };
+                const closeModal = () => { modalOverlay.classList.remove('active'); document.body.classList.remove('modal-active'); };
+
+                openBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+                closeBtn.addEventListener('click', closeModal);
+                modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) { closeModal(); } });
+                contactForm.addEventListener('submit', () => { setTimeout(() => { closeModal(); }, 500); });
+            })();
+        });
+    </script>
 </body>
 </html>
