@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neumorphic Slider Login & Panel</title>
+    <title>Regist page</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -342,12 +342,27 @@
             }
         });
 
-        adminPanelBox.addEventListener('click', function(event) {
-            if (event.target.id === 'copyLinkBtn' || event.target.parentElement.id === 'copyLinkBtn') {
-                const linkInput = document.getElementById('shareableLink');
-                navigator.clipboard.writeText(linkInput.value).then(() => Swal.fire({ icon: 'success', title: 'Link Tersalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }));
+        // --- FIX: Event listener untuk tombol salin ---
+        document.getElementById('copyLinkBtn').addEventListener('click', () => {
+            const linkInput = document.getElementById('shareableLink');
+            if (linkInput.value) {
+                navigator.clipboard.writeText(linkInput.value).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Link Berhasil Disalin!',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true
+                    });
+                }).catch(err => {
+                    console.error('Gagal menyalin:', err);
+                    Swal.fire('Oops!', 'Gagal menyalin link ke clipboard.', 'error');
+                });
             }
         });
+        
         adminPanelBox.addEventListener('input', function(event) {
             if (event.target.id === 'qrImageUrlInput') {
                 updateQrPreview();
