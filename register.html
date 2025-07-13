@@ -361,11 +361,16 @@
     function formatDateForDisplay(dateString) {
         if (!dateString) return "Pilih Tanggal";
         const date = new Date(dateString);
-        const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-        const adjustedDate = new Date(date.getTime() + userTimezoneOffset);
-        const day = adjustedDate.getDate();
-        const month = monthNames[adjustedDate.getMonth()];
-        const year = adjustedDate.getFullYear();
+        // Tanggal Lahir: 2005-09-28
+        // Perbaikan untuk memastikan tanggal yang ditampilkan benar di UTC +7 (WIB)
+        // Setahun = 31536000000 ms, sebulan = 2592000000 ms (rata-rata), sehari = 86400000 ms
+        // Perhitungan perbedaan zona waktu untuk tanggal di Indonesia
+        const offsetIndonesia = 7 * 60; // WIB (UTC+7) dalam menit
+        const localDate = new Date(date.getTime() + (date.getTimezoneOffset() + offsetIndonesia) * 60 * 1000);
+
+        const day = localDate.getDate();
+        const month = monthNames[localDate.getMonth()];
+        const year = localDate.getFullYear();
         return `${day} ${month} ${year}`;
     }
     realDateInput.addEventListener('change', () => { dateDisplayText.textContent = formatDateForDisplay(realDateInput.value); });
@@ -430,7 +435,22 @@
                 const newAdminRef = database.ref('admins').push();
                 newAdminRef.set({ username: adminName, password: adminPass, createdAt: new Date().toISOString() })
                 .then(() => {
-                    const defaultData = { birthdayName: adminName, birthDate: new Date().toISOString().split('T')[0], guestUser: "guest", guestPass: "123", qrImageUrl: "", bestWishes: "", stayStrongQuote: "", qrMessage: "", targetWhatsappNumber: "", puzzleWord1: 'ULTAH', puzzleWord2: 'KADO', puzzleWord3: 'DOA', musicUrl: 'mayfa.mp3', giftIconUrl: 'nir.gif' };
+                    const defaultData = { 
+                        birthdayName: adminName, 
+                        birthDate: "2005-09-28", // Diubah menjadi tanggal default yang diminta
+                        guestUser: "guest", 
+                        guestPass: "123", 
+                        qrImageUrl: "", 
+                        bestWishes: "", 
+                        stayStrongQuote: "", 
+                        qrMessage: "", 
+                        targetWhatsappNumber: "", 
+                        puzzleWord1: 'ULTAH', 
+                        puzzleWord2: 'KADO', 
+                        puzzleWord3: 'DOA', 
+                        musicUrl: 'mayfa.mp3', 
+                        giftIconUrl: 'nir.gif' 
+                    };
                     return database.ref('birthday_pages/' + newAdminRef.key).set(defaultData);
                 })
                 .then(() => { triggerConfetti(); Swal.fire('Akun Berhasil Dibuat!', 'Silakan login menggunakan akun baru Anda.', 'success'); showLoginView(); document.getElementById('adminUser').value = adminName; document.getElementById('adminPass').focus(); })
@@ -443,7 +463,14 @@
         Swal.fire({ title: 'Konfirmasi Log Out', text: 'Anda yakin ingin keluar dari setting panel?', icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Log Out', cancelButtonText: 'Batal', reverseButtons: true })
         .then((result) => {
             if (result.isConfirmed) {
-                musicPreviewPlayer.pause(); currentAdminId = null; authContainer.classList.remove('is-active'); document.getElementById('adminUser').value = ''; document.getElementById('adminPass').value = ''; showLoginView();
+                musicPreviewPlayer.pause(); 
+                currentAdminId = null; 
+                authContainer.classList.remove('is-active'); 
+                document.getElementById('adminUser').value = ''; 
+                document.getElementById('adminPass').value = ''; 
+                showLoginView();
+                // Mengarahkan ke halaman login.html setelah logout
+                window.location.href = 'register.html'; 
             }
         });
     }
@@ -504,6 +531,7 @@
 
         database.ref('birthday_pages/' + currentAdminId).update(settings).then(() => { 
             const shareableLink = document.getElementById('shareableLink').value; 
+            // Ubah "How long have we been together?" menjadi "sudah berapa lama kamu bertahan?"
             const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim(); 
             
             Swal.fire({ 
