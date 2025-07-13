@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Regist page</title>
+    <title>Setting Panel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -94,7 +94,7 @@
     /* --- Other Styles --- */
     .support-section { margin-top: 40px; padding-top: 25px; border-top: 1px solid var(--shadow-dark); text-align: center; font-size: 0.9rem; color: var(--text-muted); }
     
-    /* --- Admin Panel & Swals --- */
+    /* --- ADMIN PANEL --- */
     #adminPanelBox { display: none; }
     #auth-container.is-active #auth-box { display: none; }
     #auth-container.is-active #adminPanelBox { display: flex; flex-direction: column; width: 100%; height: 95vh; animation: zoomIn 0.6s ease-out; padding: 30px; background: var(--bg-color); border-radius: var(--radius-main); box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light); }
@@ -234,24 +234,24 @@
                             </div>
                         </div>
                         <div class="panel-section"><div class="section-title"><i class="fas fa-puzzle-piece"></i><span>Setting Game Kata</span></div><div class="input-group"><label for="puzzleWord1">Kata Tersembunyi 1</label><div class="input-wrapper"><i class="fas fa-font icon-left"></i><input type="text" id="puzzleWord1" class="input-field" placeholder="Contoh: ULTAH" maxlength="8" required></div></div><div class="input-group"><label for="puzzleWord2">Kata Tersembunyi 2</label><div class="input-wrapper"><i class="fas fa-font icon-left"></i><input type="text" id="puzzleWord2" class="input-field" placeholder="Contoh: KADO" maxlength="8" required></div></div><div class="input-group"><label for="puzzleWord3">Kata Tersembunyi 3</label><div class="input-wrapper"><i class="fas fa-font icon-left"></i><input type="text" id="puzzleWord3" class="input-field" placeholder="Contoh: DOA" maxlength="8" required></div></div></div>
-                        <div class="panel-section"><div class="section-title"><i class="fas fa-qrcode"></i><span>Kode QR</span></div><div class="input-group"><label for="qrImageUrlInput">URL Gambar QR</label><div class="input-wrapper"><i class="fas fa-image icon-left"></i><input type="url" id="qrImageUrlInput" class="input-field" placeholder="https://..." required></div></div><img id="qrPreviewImage" class="qr-preview-image" src="" alt="Pratinjau QR"><div class="input-group" style="margin-top: 20px;"><label for="qrMessageInput">Pesan di bawah QR</label><div class="input-wrapper"><textarea id="qrMessageInput" class="input-field" rows="3" placeholder="Masukkan pesan di bawah QR code..."></textarea></div></div></div>
+                        <div class="panel-section"><div class="section-title"><i class="fas fa-qrcode"></i><span>Kode QR</span></div><div class="input-group"><label for="qrImageUrlInput">URL Gambar QR</label><div class="input-wrapper"><i class="fas fa-image icon-left"></i><input type="url" id="qrImageUrlInput" class="input-field" placeholder="https://..."></div><img id="qrPreviewImage" class="qr-preview-image" src="" alt="Pratinjau QR"><div class="input-group" style="margin-top: 20px;"><label for="qrMessageInput">Pesan di bawah QR</label><div class="input-wrapper"><textarea id="qrMessageInput" class="input-field" rows="3" placeholder="Masukkan pesan di bawah QR code..."></textarea></div></div></div>
                         <div class="panel-section"><div class="section-title"><i class="fas fa-share-alt"></i><span>Link Publik</span></div><div class="input-group"><label for="shareableLink">Bagikan link ini</label><div class="input-wrapper"><i class="fas fa-link icon-left"></i><input type="text" id="shareableLink" class="input-field" readonly><i class="fas fa-copy icon-right" id="copyLinkBtn" title="Salin Link"></i></div></div></div>
                     </div>
                 </div>
             </form>
             <div class="panel-actions">
-                <button class="btn btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+                <button type="button" class="btn btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Log Out</button>
                 <button type="submit" form="editForm" class="btn btn-save"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
             </div>
         </div>
-        </div>
+    </div>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
     // --- START OF FULL SCRIPT ---
     
-    // ⚠️ PASTIKAN SUDAH MENGGANTI DENGAN KONFIGURASI FIREBASE ANDA
+    // ⚠️ PASTE YOUR FIREBASE CONFIGURATION OBJECT HERE
     const firebaseConfig = {
     apiKey: "AIzaSyCWl2CJqIr-u8lSHu8s4tgZ25UQIK2ivt0",
     authDomain: "mayfa-fa284.firebaseapp.com",
@@ -278,6 +278,33 @@
     const loginTabLabel = document.getElementById('login-tab-label');
     const registerTabLabel = document.getElementById('register-tab-label');
     
+    // ### LOGIKA UNTUK FITUR PANEL (MUSIK, KADO, DLL) DIKEMBALIKAN ###
+    const musicPreviewPlayer = document.getElementById('musicPreviewPlayer');
+    const musicTracks = [
+        { name: "Musik 1", path: "/musik/musik1.mp3" }, { name: "Musik 2", path: "/musik/musik2.mp3" },
+        { name: "Musik 3", path: "/musik/musik3.mp3" }, { name: "Musik 4", path: "/musik/musik4.mp3" },
+        { name: "Musik 5", path: "/musik/musik5.mp3" }, { name: "Default", path: "mayfa.mp3" }
+    ];
+    let currentMusicIndex = 0;
+    const musicDisplay = document.getElementById('music-display');
+    const prevMusicBtn = document.getElementById('prevMusicBtn');
+    const nextMusicBtn = document.getElementById('nextMusicBtn');
+    const previewBtn = document.getElementById('music-preview-btn');
+
+    const giftIcons = [
+        { name: "Kado Default", path: "nir.gif" }, { name: "Kado 1", path: "/img/gif1.gif" },
+        { name: "Kado 2", path: "/img/gif2.gif" }, { name: "Kado 3", path: "/img/gif3.gif" }
+    ];
+    let currentGiftIndex = 0;
+    const giftDisplay = document.getElementById('gift-display');
+    const giftPreviewImage = document.getElementById('gift-preview-image');
+    const prevGiftBtn = document.getElementById('prevGiftBtn');
+    const nextGiftBtn = document.getElementById('nextGiftBtn');
+
+    const realDateInput = document.getElementById('birthDateInput');
+    const dateDisplayText = document.getElementById('dateDisplayText');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+
     // --- UI Functions ---
     function showLoginView() { 
         sliderTabsContainer.classList.add('login-active'); 
@@ -293,6 +320,40 @@
         authFlipper.classList.add('is-flipped'); 
         mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang'; 
         setTimeout(() => { if (registerFormContent) authFlipper.style.height = `${registerFormContent.offsetHeight}px` }, 50); 
+    }
+    
+    function updateMusicDisplay() {
+        if (!musicDisplay) return;
+        musicDisplay.textContent = musicTracks[currentMusicIndex].name;
+        musicPreviewPlayer.src = musicTracks[currentMusicIndex].path;
+        previewBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
+    }
+    
+    function updateGiftDisplay() {
+        if (giftDisplay && giftPreviewImage) {
+            giftDisplay.textContent = giftIcons[currentGiftIndex].name;
+            giftPreviewImage.src = giftIcons[currentGiftIndex].path;
+        }
+    }
+
+    function updateQrPreview() { 
+        const qrInput = document.getElementById('qrImageUrlInput'), qrImage = document.getElementById('qrPreviewImage'); 
+        if(!qrInput || !qrImage) return;
+        try { 
+            const url = new URL(qrInput.value.trim()); 
+            if(url.protocol === "http:" || url.protocol === "https:") { qrImage.src = url.href; qrImage.style.display = 'block'; } 
+            else { throw new Error(); } 
+        } catch (e) { 
+            qrImage.style.display = 'none'; qrImage.src = ""; 
+        } 
+    }
+
+    function formatDateForDisplay(dateString) { 
+        if (!dateString) return "Pilih Tanggal"; 
+        const date = new Date(dateString); 
+        const offsetIndonesia = 7 * 60; 
+        const localDate = new Date(date.getTime() + (date.getTimezoneOffset() + offsetIndonesia) * 60 * 1000); 
+        return `${localDate.getDate()} ${monthNames[localDate.getMonth()]} ${localDate.getFullYear()}`; 
     }
 
     function togglePasswordVisibility(fieldId, icon) { const field = document.getElementById(fieldId); if(field) { field.type = field.type === "password" ? "text" : "password"; icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash'); } }
@@ -316,8 +377,17 @@
         registerTabLabel.addEventListener('click', showRegisterView);
         mainActionBtn.addEventListener('click', handleMainAction);
         document.getElementById('google-signin-btn').addEventListener('click', signInWithGoogle);
-        // Menambahkan kembali event listener untuk tombol salin
         document.getElementById('copyLinkBtn').addEventListener('click', copyShareableLink);
+
+        // ### EVENT LISTENER UNTUK FITUR PANEL (MUSIK, KADO, DLL) DIKEMBALIKAN ###
+        prevMusicBtn.addEventListener('click', () => { currentMusicIndex = (currentMusicIndex - 1 + musicTracks.length) % musicTracks.length; updateMusicDisplay(); });
+        nextMusicBtn.addEventListener('click', () => { currentMusicIndex = (currentMusicIndex + 1) % musicTracks.length; updateMusicDisplay(); });
+        previewBtn.addEventListener('click', () => { const icon = previewBtn.querySelector('i'); if (musicPreviewPlayer.paused) { musicPreviewPlayer.play().catch(e => console.error("Audio play failed", e)); icon.classList.replace('fa-play', 'fa-pause'); } else { musicPreviewPlayer.pause(); icon.classList.replace('fa-pause', 'fa-play'); } });
+        musicPreviewPlayer.onended = () => previewBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
+        prevGiftBtn.addEventListener('click', () => { currentGiftIndex = (currentGiftIndex - 1 + giftIcons.length) % giftIcons.length; updateGiftDisplay(); });
+        nextGiftBtn.addEventListener('click', () => { currentGiftIndex = (currentGiftIndex + 1) % giftIcons.length; updateGiftDisplay(); });
+        realDateInput.addEventListener('change', () => { dateDisplayText.textContent = formatDateForDisplay(realDateInput.value); });
+        document.getElementById('qrImageUrlInput').addEventListener('input', updateQrPreview);
     });
 
     function handleMainAction() {
@@ -441,11 +511,12 @@
             position: 'top-end',
             showConfirmButton: false,
             timer: 3000,
-            timerProgressBar: true
+            timerProgressBar: true,
+            didOpen: triggerConfetti
         });
         database.ref('birthday_pages/' + user.uid).once('value').then(s => {
             const data = s.val() || {};
-            // Fill form data...
+            // Fill form data
             document.getElementById('birthdayNameInput').value = data.birthdayName || '';
             document.getElementById('bestWishesInput').value = data.bestWishes || '';
             document.getElementById('stayStrongQuoteInput').value = data.stayStrongQuote || '';
@@ -458,22 +529,23 @@
             document.getElementById('puzzleWord3').value = data.puzzleWord3 || '';
             document.getElementById('qrImageUrlInput').value = data.qrImageUrl || '';
             document.getElementById('qrMessageInput').value = data.qrMessage || '';
-            const qrImage = document.getElementById('qrPreviewImage');
-            qrImage.src = data.qrImageUrl || '';
-            qrImage.style.display = data.qrImageUrl ? 'block' : 'none';
+            
+            updateQrPreview();
 
-            const realDateInput = document.getElementById('birthDateInput');
-            const dateDisplayText = document.getElementById('dateDisplayText');
-            const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
-            function formatDateForDisplay(dateString) { if (!dateString) return "Pilih Tanggal"; const date = new Date(dateString); const offsetIndonesia = 7 * 60; const localDate = new Date(date.getTime() + (date.getTimezoneOffset() + offsetIndonesia) * 60 * 1000); return `${localDate.getDate()} ${monthNames[localDate.getMonth()]} ${localDate.getFullYear()}`; }
-            if(realDateInput) realDateInput.addEventListener('change', () => { dateDisplayText.textContent = formatDateForDisplay(realDateInput.value); });
             realDateInput.value = data.birthDate || '';
             dateDisplayText.textContent = formatDateForDisplay(data.birthDate);
+            
+            const savedMusicPath = data.musicUrl || 'mayfa.mp3';
+            currentMusicIndex = Math.max(0, musicTracks.findIndex(track => track.path === savedMusicPath));
+            updateMusicDisplay();
+
+            const savedGiftPath = data.giftIconUrl || 'nir.gif';
+            currentGiftIndex = Math.max(0, giftIcons.findIndex(icon => icon.path === savedGiftPath));
+            updateGiftDisplay();
 
         }).catch(err => Swal.fire('Gagal Memuat Data', err.message, 'error'));
     }
 
-    // Menambahkan kembali fungsi untuk menyalin link
     function copyShareableLink() {
         const linkInput = document.getElementById('shareableLink');
         if (linkInput.value) {
@@ -501,6 +573,7 @@
             showCancelButton: true, confirmButtonText: 'Ya, Log Out', cancelButtonText: 'Batal', reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
+                musicPreviewPlayer.pause();
                 auth.signOut();
             }
         });
@@ -512,8 +585,24 @@
         const saveBtn = document.querySelector('.btn-save');
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-        // music and gift index logic would need to be re-added if those elements are used.
-        const settings = { birthdayName: document.getElementById('birthdayNameInput').value, birthDate: document.getElementById('birthDateInput').value, bestWishes: document.getElementById('bestWishesInput').value, stayStrongQuote: document.getElementById('stayStrongQuoteInput').value, guestUser: document.getElementById('guestUserInput').value, guestPass: document.getElementById('guestPassInput').value, targetWhatsappNumber: document.getElementById('targetWhatsappNumber').value.trim(), puzzleWord1: document.getElementById('puzzleWord1').value.trim().toUpperCase(), puzzleWord2: document.getElementById('puzzleWord2').value.trim().toUpperCase(), puzzleWord3: document.getElementById('puzzleWord3').value.trim().toUpperCase(), qrImageUrl: document.getElementById('qrImageUrlInput').value, qrMessage: document.getElementById('qrMessageInput').value };
+        
+        const settings = { 
+            birthdayName: document.getElementById('birthdayNameInput').value, 
+            birthDate: document.getElementById('birthDateInput').value,
+            bestWishes: document.getElementById('bestWishesInput').value, 
+            stayStrongQuote: document.getElementById('stayStrongQuoteInput').value, 
+            guestUser: document.getElementById('guestUserInput').value, 
+            guestPass: document.getElementById('guestPassInput').value, 
+            targetWhatsappNumber: document.getElementById('targetWhatsappNumber').value.trim(), 
+            puzzleWord1: document.getElementById('puzzleWord1').value.trim().toUpperCase(), 
+            puzzleWord2: document.getElementById('puzzleWord2').value.trim().toUpperCase(), 
+            puzzleWord3: document.getElementById('puzzleWord3').value.trim().toUpperCase(), 
+            qrImageUrl: document.getElementById('qrImageUrlInput').value, 
+            qrMessage: document.getElementById('qrMessageInput').value,
+            musicUrl: musicTracks[currentMusicIndex].path, // <-- Dikembalikan
+            giftIconUrl: giftIcons[currentGiftIndex].path   // <-- Dikembalikan
+        };
+        
         database.ref('birthday_pages/' + user.uid).update(settings).then(() => { 
             const shareableLink = document.getElementById('shareableLink').value; 
             const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim(); 
