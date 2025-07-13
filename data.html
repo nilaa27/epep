@@ -46,16 +46,29 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* Styling awal body untuk centering login modal */
         body {
             background-color: var(--bg-color);
             font-family: 'Poppins', sans-serif;
             color: var(--text-color);
-            display: flex; /* Kunci untuk centering awal */
-            justify-content: center; /* Kunci untuk centering awal */
-            align-items: center;     /* Kunci untuk centering awal */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
             padding: 2rem;
             overflow: hidden; /* Prevent scrollbar from background effects */
+            transition: all 0.5s ease-in-out; /* Tambahkan transisi untuk transisi mulus */
+        }
+
+        /* Class baru untuk body setelah login, yang memfasilitasi scrolling dan layout admin panel */
+        body.logged-in {
+            display: block; /* Mengembalikan ke display block */
+            overflow-y: auto; /* Memungkinkan scrolling */
+            min-height: auto; /* Mengatur ulang min-height jika perlu */
+            align-items: flex-start; /* Mengatur ulang alignment */
+            justify-content: flex-start; /* Mengatur ulang alignment */
+            padding-top: 2rem; /* Menjaga padding atas */
+            padding-bottom: 2rem; /* Menjaga padding bawah */
         }
 
         /* --- UTILITIES --- */
@@ -122,6 +135,7 @@
             max-width: 450px;
             animation: fadeIn 0.8s ease forwards;
             padding: 3rem; /* Increased padding for better spacing */
+            margin: auto; /* Pastikan centering vertikal jika body.logged-in aktif */
         }
         .login-container h1 {
             font-size: 2.2rem; /* Larger heading */
@@ -169,16 +183,15 @@
         }
 
         /* --- Main Content Styling (after login) --- */
-        /* Ensure the main container behaves like a regular flex item for centering */
         .container {
             width: 100%;
             max-width: 1200px;
             animation: fadeIn 0.5s ease forwards;
-            /* Added for proper centering after login */
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: auto; /* Center the container itself */
+            margin: 0 auto; /* Center the container itself horizontally */
+            padding: 0; /* Reset padding to avoid double padding with body */
         }
 
         .header { text-align: center; margin-bottom: 2rem; }
@@ -472,17 +485,9 @@
             if (password === SUPER_ADMIN_PASSWORD) {
                 passwordModal.style.display = 'none';
                 mainContent.classList.remove('hidden');
-                document.body.style.minHeight = '100vh';
-                document.body.style.overflow = 'auto';
-                document.body.style.display = 'block'; 
-                document.body.style.alignItems = 'flex-start';
-                document.body.style.justifyContent = 'flex-start';
-                document.body.style.padding = '2rem';
                 
-                mainContent.style.display = 'flex';
-                mainContent.style.flexDirection = 'column';
-                mainContent.style.alignItems = 'center';
-                mainContent.style.margin = 'auto';
+                // Tambahkan class 'logged-in' ke body
+                document.body.classList.add('logged-in');
 
                 Swal.fire({
                     icon: 'success', title: 'Akses Diberikan!',
@@ -567,7 +572,7 @@
                         </div>
                         <div>
                             <span class="label">Tgl Lahir Target:</span>
-                            <span class="value">${birthdayPageData.birthDate || 'N/A'}</span>
+                            <span class="value">${birthdayPageData.birthDate || '2005-09-28'}</span>
                         </div>
                         <div>
                             <span class="label">Username Tamu:</span>
@@ -611,8 +616,11 @@
             if (mode === 'add') {
                 modalTitle.textContent = 'Tambah Admin Baru';
                 adminIdInput.value = '';
+                // Set default values for new admin
                 modalBirthdayNameInput.value = '';
                 modalTargetWhatsappInput.value = '';
+                // Ensure default birthDate is applied if not manually set
+                // The default "2005-09-28" is already handled in renderUsers and save logic
             } else {
                 modalTitle.textContent = 'Edit Admin';
                 adminIdInput.value = adminId;
@@ -680,7 +688,7 @@
                 
                 const defaultPageData = {
                     birthdayName: birthdayName || username,
-                    birthDate: "2005-09-28",
+                    birthDate: "2005-09-28", // Tanggal lahir target default
                     guestUser: "guest",
                     guestPass: "123",
                     qrImageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YourGiftLinkHere",
@@ -745,8 +753,12 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Pastikan semua listener Firebase di-detach
                     database.ref('admins').off('value');
                     database.ref('birthday_pages').off('value');
+
+                    // Hapus class 'logged-in' dari body sebelum reload
+                    document.body.classList.remove('logged-in');
 
                     Swal.fire({
                         icon: 'info',
@@ -757,7 +769,8 @@
                         timer: 1500,
                         timerProgressBar: true,
                         didClose: () => {
-                            window.location.reload(); // Cukup refresh halaman untuk kembali ke login
+                            // Ini akan memuat ulang halaman ke kondisi awal (modal password terlihat)
+                            window.location.reload(); 
                         }
                     });
                 }
