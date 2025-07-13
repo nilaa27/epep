@@ -278,8 +278,8 @@
         }
         /* Style tambahan untuk gambar di dalam .panel-icon */
         .panel-icon img {
-            width: 250%;
-            height: 250%;
+            width: 100%;
+            height: 100%;
             object-fit: contain; /* Memastikan gambar pas di dalam lingkaran */
             border-radius: 50%; /* Jika gambar tidak bulat, ini akan membuatnya bulat */
         }
@@ -399,6 +399,33 @@
         .contact-form textarea { resize: vertical; }
         .contact-form .btn { width: 100%; }
 
+        /* --- Modal QRIS Spesifik --- */
+        .qris-modal .modal-content {
+            text-align: center;
+        }
+
+        .qris-modal .qris-image {
+            max-width: 250px;
+            height: auto;
+            margin: 20px auto;
+            border-radius: var(--border-radius-inner);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: block; /* Agar margin auto bekerja */
+        }
+
+        .qris-modal .download-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .qris-modal .download-link:hover {
+            color: var(--secondary);
+        }
+
         /* --- Media Queries --- */
         @media (max-width: 768px) {
             .main-header { width: 100%; top: 0; border-radius: 0; }
@@ -471,7 +498,7 @@
         <section class="hero-section" id="hero">
             <div class="welcome-panel" data-aos="fade-up">
                 <div class="panel-icon">
-                    <img src="/img/dor.gif" alt="Ikon Selamat Datang" style="width: 100%; height: 100%; object-fit: contain;">
+                    <img src="/img/dor.gif" alt="Ikon Selamat Datang">
                 </div>
                 <h1>Desain Ucapan Ultah, Cuma Modal Klik?</h1>
                 <p>Animasi keren + desain elegan. Gak perlu ngoding, ciptakan website ucapan selamat ulang tahun yang personal dan berkesan dalam hitungan menit.</p>
@@ -558,7 +585,7 @@
             <p class="support-title">Support Me</p>
             <div class="social-icons">
                 <a href="https://instagram.com/off.xlord" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://github.com/your-github" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" id="open-donate-btn" title="Donasi"><i class="fa-solid fa-qrcode"></i></a>
                 <a href="https://www.tiktok.com/@xlordduyy" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
@@ -580,6 +607,16 @@
             </form>
         </div>
     </div>
+
+    <div class="modal-overlay qris-modal" id="qris-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h2>Dukung Kami dengan Donasi</h2>
+            <p>Scan QRIS di bawah ini untuk mendukung pengembangan XlordVerse. Setiap donasi sangat berarti!</p>
+            <img src="/qris.jpg" alt="QRIS Code" class="qris-image"> <a href="img/qris.jpeg" download="qrisxlord.jpeg" class="download-link">Unduh QRIS</a>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     
@@ -711,6 +748,36 @@
                 closeBtn.addEventListener('click', closeModal);
                 modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) { closeModal(); } });
                 contactForm.addEventListener('submit', () => { setTimeout(() => { closeModal(); }, 500); });
+            })();
+
+            // Skrip baru untuk modal QRIS
+            (() => {
+                const openDonateBtn = document.getElementById('open-donate-btn');
+                const qrisModal = document.getElementById('qris-modal');
+                const closeQrisBtn = qrisModal.querySelector('.modal-close-btn');
+
+                const openQrisModal = () => {
+                    qrisModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    alert('Terima kasih sudah mendukung! Silakan scan QRIS atau unduh gambarnya.');
+                };
+
+                const closeQrisModal = () => {
+                    qrisModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                };
+
+                openDonateBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openQrisModal();
+                });
+
+                closeQrisBtn.addEventListener('click', closeQrisModal);
+                qrisModal.addEventListener('click', (e) => {
+                    if (e.target === qrisModal) {
+                        closeQrisModal();
+                    }
+                });
             })();
         });
     </script>
