@@ -137,7 +137,7 @@
     </style>
 </head>
 <body>
-    <audio id="background-music" loop><source src="mayfa.mp3"></source></audio>
+    <audio id="background-music" loop src="mayfa.mp3"></audio>
     <audio id="word-found-sound" src="https://assets.codepen.io/217233/chime.mp3"></audio>
     <audio id="confetti-sound" src="https://assets.codepen.io/217233/confetti.mp3"></audio>
     <button id="musicToggleBtn" class="btn music-toggle"><i class="fas fa-volume-off"></i></button>
@@ -229,6 +229,15 @@
               passwordInput = document.getElementById("password"),
               musicToggleBtn = document.getElementById('musicToggleBtn');
         
+        // --- DITAMBAHKAN: Fungsi untuk mengatur musik latar ---
+        function setBackgroundMusic(data) {
+            const musicPlayer = document.getElementById('background-music');
+            if (data && data.musicUrl) {
+                musicPlayer.src = data.musicUrl;
+            }
+            // Jika tidak ada data.musicUrl, audio akan menggunakan src default dari HTML ('mayfa.mp3')
+        }
+
         // --- LOGIN & DATA FETCHING ---
         function getUrlParameter(name) { name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]'); var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'); var results = regex.exec(location.search); return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' ')); }
         function showErrorPage(title, message) { loginContainer.style.display = 'none'; birthdayPage.style.display = 'none'; gameContainer.style.display = 'none'; document.getElementById('errorTitle').textContent = title; document.getElementById('errorMessage').textContent = message; errorPage.style.display = 'block'; document.body.classList.remove("no-scroll"); }
@@ -251,6 +260,7 @@
                 const snapshot = await database.ref(`birthday_pages/${pageId}`).once('value');
                 if (snapshot.exists()) {
                     pageData = snapshot.val();
+                    setBackgroundMusic(pageData); // <-- DIPANGGIL DI SINI
                     // Langsung tampilkan halaman ultah, tanpa game
                     loginContainer.style.display = "none";
                     gameContainer.style.display = 'none';
@@ -272,6 +282,7 @@
                 const data = snapshot.val();
                 if (data && data.guestUser === username && data.guestPass === password) {
                     pageData = data;
+                    setBackgroundMusic(pageData); // <-- DIPANGGIL DI SINI
                     await Swal.fire({ icon: 'success', title: 'Login Berhasil!', text: 'Selamat datang, ayo main game dulu!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2500, timerProgressBar: true, });
                     
                     loginContainer.style.animation = 'fadeOut 0.5s ease-out forwards';
@@ -574,6 +585,7 @@
                 }
                 
                 pageData = snapshot.val();
+                setBackgroundMusic(pageData); // <-- DIPANGGIL DI SINI
                 
                 if (authParam) {
                     const decoded = JSON.parse(atob(authParam));
