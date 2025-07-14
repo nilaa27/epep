@@ -253,15 +253,15 @@
     
     // ⚠️ PASTE YOUR FIREBASE CONFIGURATION OBJECT HERE
     const firebaseConfig = {
-    apiKey: "AIzaSyCWl2CJqIr-u8lSHu8s4tgZ25UQIK2ivt0",
-    authDomain: "mayfa-fa284.firebaseapp.com",
-    databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "mayfa - fa284 ",
-    storageBucket: "mayfa-fa284.firebasestorage.app",
-    storageBucket: "mayfa-fa284.firebasestorage.app",
-    messagingSenderId: "523290705179 ",
-    appId: "1:523290705179:web:b06ae4d8e6b08cf07b27be",
-};
+        apiKey: "AIzaSyCWl2CJqIr-u8lSHu8s4tgZ25UQIK2ivt0",
+        authDomain: "mayfa-fa284.firebaseapp.com",
+        databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "mayfa - fa284 ",
+        storageBucket: "mayfa-fa284.firebasestorage.app",
+        storageBucket: "mayfa-fa284.firebasestorage.app",
+        messagingSenderId: "523290705179 ",
+        appId: "1:523290705179:web:b06ae4d8e6b08cf07b27be",
+    };
 
     // --- Initialize Firebase ---
     firebase.initializeApp(firebaseConfig);
@@ -413,15 +413,36 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Registrasi Berhasil!',
-                        html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda dan klik link di dalamnya.`,
-                        confirmButtonText: 'Oke, Saya Mengerti'
+                        html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                            // Mulai memeriksa status verifikasi setiap 2 detik
+                            const verificationCheckInterval = setInterval(() => {
+                                auth.currentUser.reload().then(() => {
+                                    if (auth.currentUser.emailVerified) {
+                                        clearInterval(verificationCheckInterval);
+                                        // Memaksa state change untuk dideteksi oleh onAuthStateChanged
+                                        auth.onAuthStateChanged(verifiedUser => {
+                                            if (verifiedUser) {
+                                                Swal.close();
+                                                authContainer.classList.add('is-active');
+                                                loadDataToForm(verifiedUser);
+                                            }
+                                        });
+                                    }
+                                });
+                            }, 2500); // Check every 2.5 seconds
+                        }
                     });
                 });
                 return createDefaultUserData(user);
             })
             .then(() => {
-                showLoginView();
-                document.getElementById('loginEmail').value = email;
+                // Tidak perlu lagi memindahkan ke halaman login
+                // showLoginView();
+                // document.getElementById('loginEmail').value = email;
             })
             .catch(error => {
                 const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message;
@@ -456,6 +477,7 @@
                         }
                     });
                 }
+                // Login berhasil akan ditangani oleh onAuthStateChanged
             })
             .catch(error => {
                 Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error');
@@ -498,15 +520,39 @@
     }
     
     function createDefaultUserData(user) {
-        const defaultData = { birthdayName: user.displayName || user.email, birthDate: "2005-09-28", guestUser: "tamu", guestPass: "12345", qrImageUrl: "", bestWishes: "", stayStrongQuote: "", qrMessage: "", targetWhatsappNumber: "", puzzleWord1: 'ULTAH', puzzleWord2: 'KADO', puzzleWord3: 'DOA', musicUrl: 'mayfa.mp3', giftIconUrl: 'nir.gif' };
+        // Ambil nama dari display name, jika tidak ada, ambil dari email
+        const nameFromEmail = user.email.split('@')[0];
+        const defaultDisplayName = user.displayName || nameFromEmail;
+
+        const defaultData = { 
+            birthdayName: defaultDisplayName, 
+            birthDate: "2005-09-28", 
+            guestUser: "tamu", 
+            guestPass: "12345", 
+            qrImageUrl: "", 
+            bestWishes: "", 
+            stayStrongQuote: "", 
+            qrMessage: "", 
+            targetWhatsappNumber: "", 
+            puzzleWord1: 'ULTAH', 
+            puzzleWord2: 'KADO', 
+            puzzleWord3: 'DOA', 
+            musicUrl: 'mayfa.mp3', 
+            giftIconUrl: 'nir.gif' 
+        };
         return database.ref('birthday_pages/' + user.uid).set(defaultData);
     }
     
     function loadDataToForm(user) {
         if (!user) return;
+
+        // Logika baru untuk nama sambutan
+        const nameFromEmail = user.email.split('@')[0];
+        const welcomeName = user.displayName || nameFromEmail;
+        
         Swal.fire({ 
             icon: 'success', 
-            title: `Selamat Datang, ${user.displayName || 'Pengguna'}!`, 
+            title: `Selamat Datang, ${welcomeName}!`, // <-- Perubahan di sini
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
