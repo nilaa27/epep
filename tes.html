@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tes Koneksi Firebase Firestore</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f0f0; padding: 20px; }
+        #status { padding: 15px; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>Tes Koneksi ke Firebase Firestore</h1>
+    <p>Klik tombol di bawah untuk mencoba menulis data ke koleksi 'test_collection'.</p>
+    
+    <button id="testButton">Jalankan Tes Tulis</button>
+
+    <div id="status">Menunggu tes dijalankan...</div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script>
+        // --- PASTE KONFIGURASI FIREBASE ANDA DI SINI ---
+        const firebaseConfig = {
+    apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
+    authDomain: "proyek-xlord.firebaseapp.com",
+    URL basis data: "https://project-xlord-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "proyek-xlord",
+    penyimpananBucket: "project-xlord.firebasestorage.app",
+    messageSenderId: "847461816867",
+    appId: "1:847461816867:web:17071ba14ffe6a6099ef96",
+    ID pengukuran: "G-344KX3B197"
+};
+        // ----------------------------------------------------
+
+        try {
+            // Inisialisasi Firebase
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            console.log("Firebase berhasil diinisialisasi.");
+
+            const testButton = document.getElementById('testButton');
+            const statusDiv = document.getElementById('status');
+
+            testButton.addEventListener('click', async () => {
+                console.log("Tombol tes diklik. Mencoba menulis ke Firestore...");
+                statusDiv.textContent = 'Mengirim data ke Firestore...';
+                statusDiv.className = '';
+
+                try {
+                    const testCollection = db.collection('test_collection');
+                    const timestamp = new Date().toISOString();
+                    
+                    await testCollection.add({
+                        message: "Halo dari halaman tes!",
+                        timestamp: timestamp
+                    });
+
+                    console.log("SUKSES: Data berhasil ditulis ke Firestore!");
+                    statusDiv.textContent = `SUKSES! Data berhasil ditulis pada ${timestamp}. Cek koleksi 'test_collection' di Firebase Console Anda.`;
+                    statusDiv.className = 'success';
+
+                } catch (error) {
+                    console.error("GAGAL menulis ke Firestore:", error);
+                    statusDiv.textContent = `GAGAL! Terjadi error. Cek console (F12) untuk detail. Pesan: ${error.message}`;
+                    statusDiv.className = 'error';
+                }
+            });
+
+        } catch (initError) {
+            console.error("GAGAL menginisialisasi Firebase:", initError);
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = `GAGAL menginisialisasi Firebase. Pastikan firebaseConfig sudah benar. Pesan: ${initError.message}`;
+            statusDiv.className = 'error';
+        }
+    </script>
+</body>
+</html>
