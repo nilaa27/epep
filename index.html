@@ -25,6 +25,7 @@
             --text-light: #97a1b3;
             --primary: #6d5bff;
             --secondary: #ff69b4;
+            --star-color: #ffc107;
             --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
             --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --border-radius-main: 30px;
@@ -48,7 +49,7 @@
             position: relative;
             transition: background-color 0.5s ease;
         }
-        body.sidebar-open {
+        body.sidebar-open, body.modal-open {
             overflow: hidden;
         }
         
@@ -60,7 +61,6 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            /* [UPDATED] z-index diubah agar di belakang sidebar */
             z-index: 998; 
             backdrop-filter: blur(2px);
         }
@@ -111,9 +111,9 @@
         .btn.secondary { color: var(--text-light); }
         .btn.secondary:hover { color: var(--text-color); transform: translateY(-3px); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); }
         .btn:active { transform: translateY(0); box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light); }
-        .btn.disabled { background: #41454e; color: var(--text-light); cursor: not-allowed; box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); }
-        .btn.disabled:hover { transform: none; box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); }
-
+        .btn.disabled, .btn:disabled { background: #41454e; color: var(--text-light); cursor: not-allowed; box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); }
+        .btn.disabled:hover, .btn:disabled:hover { transform: none; box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); }
+        
         /* --- Header / Navigasi --- */
         .main-header { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 980px; z-index: 1000; }
         .header-container { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(44, 47, 54, 0.8); backdrop-filter: blur(10px); border-radius: var(--border-radius-main); box-shadow: 10px 10px 25px var(--shadow-dark), -10px -10px 25px var(--shadow-light); border: 1px solid var(--shadow-light); }
@@ -125,132 +125,35 @@
         .main-nav a:hover { color: var(--primary); }
         .sign-in-btn { padding: 12px 24px; }
         
-        /* --- Animasi Hamburger 3D --- */
         .hamburger-menu {
-            display: none;
-            cursor: pointer;
-            width: 48px;
-            height: 48px;
-            justify-content: center;
-            align-items: center;
-            z-index: 1003;
-            background: var(--bg-color);
-            border: none;
-            border-radius: 50%;
+            display: none; cursor: pointer; width: 48px; height: 48px;
+            justify-content: center; align-items: center; z-index: 1003;
+            background: var(--bg-color); border: none; border-radius: 50%;
             box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
-            transition: var(--transition-smooth);
-            perspective: 1000px; 
+            transition: var(--transition-smooth); perspective: 1000px; 
         }
-
-        .hamburger-menu:active {
-             box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
-        }
-
-        .cake-icon {
-            position: relative;
-            width: 25px;
-            height: 19px;
-            transform-style: preserve-3d;
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-        .cake-icon::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 5px;
-            height: 5px;
-            background-color: var(--text-color);
-            border-radius: 50%;
-            transition: opacity 0.3s ease;
-            box-shadow: 1px 1px 2px var(--shadow-dark);
-        }
-        .hamburger-menu .bar {
-            display: block;
-            width: 100%;
-            height: 3px;
-            background-color: var(--text-color);
-            border-radius: 3px;
-            position: absolute;
-            left: 0;
-            box-shadow: 1px 1px 2px var(--shadow-dark);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), 
-                        opacity 0.3s ease,
-                        box-shadow 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-        .bar:nth-child(1) { top: 0; }
-        .bar:nth-child(2) { top: 8px; }
-        .bar:nth-child(3) { top: 16px; }
-
-        body.sidebar-open .hamburger-menu {
-             box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
-        }
-        body.sidebar-open .cake-icon {
-            transform: rotateY(180deg);
-        }
+        .hamburger-menu:active { box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); }
+        .cake-icon { position: relative; width: 25px; height: 19px; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        .cake-icon::before { content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; background-color: var(--text-color); border-radius: 50%; transition: opacity 0.3s ease; box-shadow: 1px 1px 2px var(--shadow-dark); }
+        .hamburger-menu .bar { display: block; width: 100%; height: 3px; background-color: var(--text-color); border-radius: 3px; position: absolute; left: 0; box-shadow: 1px 1px 2px var(--shadow-dark); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease, box-shadow 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        .bar:nth-child(1) { top: 0; } .bar:nth-child(2) { top: 8px; } .bar:nth-child(3) { top: 16px; }
+        body.sidebar-open .hamburger-menu { box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); }
+        body.sidebar-open .cake-icon { transform: rotateY(180deg); }
         body.sidebar-open .cake-icon::before { opacity: 0; }
-        
-        body.sidebar-open .bar:nth-child(1) { 
-            transform: translateY(8px) rotate(45deg); 
-            box-shadow: -1px -1px 2px var(--shadow-dark);
-        }
+        body.sidebar-open .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); box-shadow: -1px -1px 2px var(--shadow-dark); }
         body.sidebar-open .bar:nth-child(2) { opacity: 0; }
-        
-        body.sidebar-open .bar:nth-child(3) { 
-            transform: translateY(-8px) rotate(-45deg); 
-            box-shadow: -1px 1px 2px var(--shadow-dark);
-        }
+        body.sidebar-open .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); box-shadow: -1px 1px 2px var(--shadow-dark); }
 
         .sidebar {
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 300px;
-            height: 100%;
-            background: var(--bg-color);
-            box-shadow: -10px 0px 30px var(--shadow-dark);
-            /* [UPDATED] z-index diubah agar di belakang header */
-            z-index: 999;
-            padding: 80px 30px 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+            background: var(--bg-color); box-shadow: -10px 0px 30px var(--shadow-dark);
+            z-index: 999; padding: 80px 30px 30px; display: flex; flex-direction: column;
+            gap: 25px; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         .sidebar.active { right: 0; }
-        
-        .close-sidebar-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-color);
-            border: none;
-            color: var(--text-light);
-            cursor: pointer;
-            width: 48px; 
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.8rem;
-            line-height: 1;
-            font-weight: 400;
-            box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
-            transition: var(--transition-smooth);
-        }
-        .close-sidebar-btn:hover {
-            color: var(--primary);
-            transform: rotate(90deg) scale(1.05); 
-            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
-        }
-        .close-sidebar-btn:active {
-            color: var(--primary);
-            transform: rotate(90deg) scale(1);
-            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
-        }
-
+        .close-sidebar-btn { position: absolute; top: 20px; right: 20px; background: var(--bg-color); border: none; color: var(--text-light); cursor: pointer; width: 48px;  height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; line-height: 1; font-weight: 400; box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); transition: var(--transition-smooth); }
+        .close-sidebar-btn:hover { color: var(--primary); transform: rotate(90deg) scale(1.05);  box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); }
+        .close-sidebar-btn:active { color: var(--primary); transform: rotate(90deg) scale(1); box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); }
         .sidebar-nav { display: flex; flex-direction: column; gap: 20px; text-align: center; }
         .sidebar-nav a { color: var(--text-light); text-decoration: none; font-size: 1.2rem; font-weight: 500; padding: 10px; border-radius: var(--border-radius-inner); transition: var(--transition-smooth); }
         .sidebar-nav a:hover { color: var(--primary); background: var(--shadow-dark); }
@@ -259,30 +162,13 @@
         /* --- Landing Page Sections --- */
         .landing-page { display: flex; flex-direction: column; align-items: center; gap: 6rem; width: 100%; padding: 150px 2rem 6rem; }
         section { width: 100%; max-width: 980px; text-align: center; }
-        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 3.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .section-subtitle { font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto 3.5rem; line-height: 1.7; }
 
         /* --- Hero Section --- */
         .hero-section .welcome-panel { background: var(--bg-color); border-radius: var(--border-radius-main); padding: 40px 45px; box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light); max-width: 650px; margin: 0 auto; }
-        .panel-icon { 
-            width: 100px; 
-            height: 100px; 
-            background: var(--bg-color); 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin: 0 auto 25px; 
-            font-size: 3.5rem; 
-            color: var(--primary); 
-            box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); 
-        }
-        /* Style tambahan untuk gambar di dalam .panel-icon */
-        .panel-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Memastikan gambar pas di dalam lingkaran */
-            border-radius: 50%; /* Jika gambar tidak bulat, ini akan membuatnya bulat */
-        }
+        .panel-icon { width: 100px; height: 100px; background: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; font-size: 3.5rem; color: var(--primary); box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); }
+        .panel-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
         .panel-icon i { background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 20px; line-height: 1.3; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         p { color: var(--text-light); font-size: 1.1rem; line-height: 1.7; margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
@@ -303,68 +189,17 @@
         .card-button-group { display: flex; flex-direction: column; gap: 15px; margin-top: auto; position: relative; z-index: 2; }
         .card-button-group .btn { width: 100%; }
         .confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        
-        /* --- Animasi Gelembung Modern untuk Kartu "Coming Soon" --- */
-        .bubbles-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            overflow: hidden;
-        }
+        .bubbles-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: hidden; }
+        @keyframes rise-and-wobble { 0% { transform: translateY(0) translateX(0); opacity: 0; } 10% { opacity: 0.7; } 50% { transform: translateY(-150px) translateX(20px); } 90% { opacity: 0.2; } 100% { transform: translateY(-300px) translateX(-20px); opacity: 0; } }
+        .bubble { position: absolute; bottom: -80px; border-radius: 50%; background: radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%); animation: rise-and-wobble linear infinite; }
+        .bubble:nth-child(1) { width: 25px; height: 25px; left: 10%; animation-duration: 15s; animation-delay: 0s; background-color: rgba(109, 91, 255, 0.2); } .bubble:nth-child(2) { width: 15px; height: 15px; left: 20%; animation-duration: 10s; animation-delay: 1.5s; background-color: rgba(255, 105, 180, 0.25); } .bubble:nth-child(3) { width: 40px; height: 40px; left: 35%; animation-duration: 20s; animation-delay: 3s; background-color: rgba(109, 91, 255, 0.15); } .bubble:nth-child(4) { width: 20px; height: 20px; left: 50%; animation-duration: 12s; animation-delay: 0.5s; background-color: rgba(255, 105, 180, 0.2); } .bubble:nth-child(5) { width: 30px; height: 30px; left: 70%; animation-duration: 18s; animation-delay: 5s; background-color: rgba(109, 91, 255, 0.2); } .bubble:nth-child(6) { width: 18px; height: 18px; left: 85%; animation-duration: 9s; animation-delay: 2s; background-color: rgba(255, 105, 180, 0.3); } .bubble:nth-child(7) { width: 22px; height: 22px; left: 90%; animation-duration: 14s; animation-delay: 6s; background-color: rgba(109, 91, 255, 0.1); } .bubble:nth-child(8) { width: 12px; height: 12px; left: 5%; animation-duration: 11s; animation-delay: 8s; background-color: rgba(255, 105, 180, 0.2); } .bubble:nth-child(9) { width: 35px; height: 35px; left: 55%; animation-duration: 22s; animation-delay: 9s; background-color: rgba(109, 91, 255, 0.25); } .bubble:nth-child(10) { width: 10px; height: 10px; left: 25%; animation-duration: 8s; animation-delay: 4s; background-color: rgba(255, 105, 180, 0.15); }
 
-        @keyframes rise-and-wobble {
-            0% {
-                transform: translateY(0) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.7;
-            }
-            50% {
-                transform: translateY(-150px) translateX(20px);
-            }
-            90% {
-                 opacity: 0.2;
-            }
-            100% {
-                transform: translateY(-300px) translateX(-20px);
-                opacity: 0;
-            }
-        }
-
-        .bubble {
-            position: absolute;
-            bottom: -80px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%);
-            animation: rise-and-wobble linear infinite;
-        }
-
-        .bubble:nth-child(1) { width: 25px; height: 25px; left: 10%; animation-duration: 15s; animation-delay: 0s; background-color: rgba(109, 91, 255, 0.2); }
-        .bubble:nth-child(2) { width: 15px; height: 15px; left: 20%; animation-duration: 10s; animation-delay: 1.5s; background-color: rgba(255, 105, 180, 0.25); }
-        .bubble:nth-child(3) { width: 40px; height: 40px; left: 35%; animation-duration: 20s; animation-delay: 3s; background-color: rgba(109, 91, 255, 0.15); }
-        .bubble:nth-child(4) { width: 20px; height: 20px; left: 50%; animation-duration: 12s; animation-delay: 0.5s; background-color: rgba(255, 105, 180, 0.2); }
-        .bubble:nth-child(5) { width: 30px; height: 30px; left: 70%; animation-duration: 18s; animation-delay: 5s; background-color: rgba(109, 91, 255, 0.2); }
-        .bubble:nth-child(6) { width: 18px; height: 18px; left: 85%; animation-duration: 9s; animation-delay: 2s; background-color: rgba(255, 105, 180, 0.3); }
-        .bubble:nth-child(7) { width: 22px; height: 22px; left: 90%; animation-duration: 14s; animation-delay: 6s; background-color: rgba(109, 91, 255, 0.1); }
-        .bubble:nth-child(8) { width: 12px; height: 12px; left: 5%; animation-duration: 11s; animation-delay: 8s; background-color: rgba(255, 105, 180, 0.2); }
-        .bubble:nth-child(9) { width: 35px; height: 35px; left: 55%; animation-duration: 22s; animation-delay: 9s; background-color: rgba(109, 91, 255, 0.25); }
-        .bubble:nth-child(10) { width: 10px; height: 10px; left: 25%; animation-duration: 8s; animation-delay: 4s; background-color: rgba(255, 105, 180, 0.15); }
-
-        /* --- Features, Testimonials, FAQ, CTA --- */
+        /* --- Features, FAQ, CTA --- */
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
         .feature-card { background: transparent; padding: 30px; border-radius: var(--border-radius-inner); box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); text-align: left; }
         .feature-icon { font-size: 2rem; color: var(--secondary); margin-bottom: 20px; }
         .feature-card h4 { font-size: 1.2rem; color: var(--text-color); margin-bottom: 10px; }
         .feature-card p { font-size: 0.9rem; color: var(--text-light); margin-bottom: 0; line-height: 1.6; text-align: left; }
-        .testimonial-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .testimonial-card { background: var(--bg-color); padding: 30px; border-radius: var(--border-radius-main); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); border-left: 5px solid var(--primary); text-align: left; }
-        .testimonial-card p.quote { font-style: italic; color: var(--text-light); margin-bottom: 20px; font-size: 1rem; line-height: 1.7; text-align: left; }
-        .testimonial-card .author { font-weight: 600; color: var(--text-color); text-align: right; }
         .faq-container { max-width: 768px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
         .faq-item { background: var(--bg-color); border-radius: var(--border-radius-inner); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); overflow: hidden; }
         .faq-item[open] { box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); }
@@ -375,6 +210,89 @@
         .faq-answer { padding: 0 25px 20px; color: var(--text-light); font-size: 1rem; line-height: 1.7; text-align: left; margin: 0; max-width: 100%; }
         .cta-content { max-width: 600px; margin: 0 auto; background: transparent; padding: 40px 25px; }
         .cta-content p { color: var(--text-light); font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px; max-width: 100%; font-weight: 500; }
+        
+        /* --- Testimonials Section Styles --- */
+        .testimonial-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 15px 20px; background: var(--bg-color); border-radius: var(--border-radius-inner); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); }
+        .testimonial-header h3 { font-size: 1.2rem; font-weight: 600; color: var(--text-color); display: flex; align-items: center; gap: 10px; margin: 0; }
+        .testimonial-header h3 i { color: var(--primary); }
+        .btn-add-testimonial { padding: 12px 20px; font-size: 0.9rem; background: var(--shadow-dark); color: var(--text-light); }
+        .btn-add-testimonial:hover { background: var(--shadow-dark); color: var(--primary); }
+
+        .testimonial-list {
+            max-height: 450px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding: 10px 15px 10px 5px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--shadow-dark);
+        }
+        .testimonial-list::-webkit-scrollbar { width: 8px; }
+        .testimonial-list::-webkit-scrollbar-track { background: var(--shadow-dark); border-radius: 10px; }
+        .testimonial-list::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 10px; }
+
+        .testimonial-card-new {
+            background: var(--bg-color);
+            padding: 30px 35px;
+            border-radius: var(--border-radius-main);
+            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+            text-align: left;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .testimonial-card-new:hover {
+            transform: translateY(-5px);
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+        }
+
+        .testimonial-card-new .quote-icon {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            font-size: 3rem;
+            color: var(--shadow-dark);
+            opacity: 0.9;
+        }
+        .testimonial-card-new .quote-text {
+            padding-left: 55px;
+            font-size: 1.05rem;
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+        .testimonial-rating {
+            padding-left: 55px;
+            margin-bottom: 25px;
+            color: var(--star-color);
+            font-size: 1.1rem;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-left: 55px;
+            margin-top: auto;
+        }
+        .author-initials {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+            flex-shrink: 0;
+            text-transform: uppercase;
+        }
+        .author-details .name { font-weight: 600; color: var(--text-color); }
+        .author-details .position { font-size: 0.9rem; color: var(--text-light); }
 
         /* --- Footer --- */
         .main-footer { padding: 4rem 2rem 2rem; background: var(--bg-color); border-top: 1px solid var(--shadow-dark); box-shadow: 0 -5px 15px var(--shadow-dark); text-align: center; }
@@ -385,46 +303,72 @@
         .social-icons a:hover { color: var(--secondary); box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); transform: translateY(2px); }
         .footer-bottom { font-size: 0.8rem; color: var(--text-light); opacity: 0.7; }
 
-        /* --- Modal Kontak --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        /* --- Modal Global --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; backdrop-filter: blur(5px); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { background: var(--bg-color); padding: 30px 35px; border-radius: var(--border-radius-main); box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative; max-width: 500px; width: 90%; text-align: left; }
         .modal-content h2 { text-align: center; font-size: 1.8rem; margin-bottom: 10px; font-weight: 700; }
-        .modal-content p { text-align: center; max-width: 100%; margin-bottom: 30px; }
+        .modal-content p.modal-subtitle { text-align: center; max-width: 100%; margin-bottom: 30px; font-size: 1rem; color: var(--text-light); line-height: 1.6; }
         .modal-close-btn { position: absolute; top: 10px; right: 20px; background: none; border: none; font-size: 2.5rem; color: var(--text-light); cursor: pointer; line-height: 1; }
-        .contact-form .form-group { margin-bottom: 20px; }
-        .contact-form label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-color); }
-        .contact-form input, .contact-form textarea { width: 100%; padding: 15px; border: 1px solid var(--shadow-dark); background: var(--shadow-dark); border-radius: var(--border-radius-inner); color: var(--text-color); font-size: 1rem; box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43; transition: all 0.2s ease; }
-        .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: var(--primary); box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43, 0 0 0 2px var(--primary); }
-        .contact-form textarea { resize: vertical; }
-        .contact-form .btn { width: 100%; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-color); }
+        .form-group input, .form-group textarea { width: 100%; padding: 15px; border: 1px solid var(--shadow-dark); background: var(--shadow-dark); border-radius: var(--border-radius-inner); color: var(--text-color); font-size: 1rem; box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43; transition: all 0.2s ease; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43, 0 0 0 2px var(--primary); }
+        .form-group textarea { resize: vertical; }
+        .modal-button-group { display: flex; gap: 15px; margin-top: 25px; }
+        .modal-button-group .btn { flex-grow: 1; }
+        
+        /* --- Toast Notification --- */
+        .toast-notification {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            padding: 16px 25px;
+            border-radius: var(--border-radius-inner);
+            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+            border-left: 5px solid var(--primary);
+            z-index: 2000;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .toast-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast-notification i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        .toast-notification p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-light);
+        }
+        
+        /* --- Star Rating Input Styles --- */
+        .star-rating-input { display: flex; gap: 10px; font-size: 1.8rem; cursor: pointer; }
+        .star-rating-input i { color: var(--shadow-light); transition: color 0.2s, transform 0.2s; }
+        .star-rating-input i:hover { transform: scale(1.2); }
+        .star-rating-input.rating-1 i:nth-child(-n+1),
+        .star-rating-input.rating-2 i:nth-child(-n+2),
+        .star-rating-input.rating-3 i:nth-child(-n+3),
+        .star-rating-input.rating-4 i:nth-child(-n+4),
+        .star-rating-input.rating-5 i:nth-child(-n+5) {
+            color: var(--star-color);
+        }
 
         /* --- Modal QRIS Spesifik --- */
-        .qris-modal .modal-content {
-            text-align: center;
-        }
-
-        .qris-modal .qris-image {
-            max-width: 250px;
-            height: auto;
-            margin: 20px auto;
-            border-radius: var(--border-radius-inner);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            display: block; /* Agar margin auto bekerja */
-        }
-
-        .qris-modal .download-link {
-            display: inline-block;
-            margin-top: 15px;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .qris-modal .download-link:hover {
-            color: var(--secondary);
-        }
+        .qris-modal .modal-content { text-align: center; }
+        .qris-modal .qris-image { max-width: 250px; height: auto; margin: 20px auto; border-radius: var(--border-radius-inner); box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: block; }
+        .qris-modal .download-link { display: inline-block; margin-top: 15px; color: var(--primary); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .qris-modal .download-link:hover { color: var(--secondary); }
 
         /* --- Media Queries --- */
         @media (max-width: 768px) {
@@ -434,21 +378,37 @@
             .hamburger-menu { display: flex; }
             .landing-page { padding-top: 100px; gap: 4rem; }
             h1 { font-size: 2.3rem; }
-            .section-title { font-size: 2rem; margin-bottom: 2.5rem; }
+            .section-title { font-size: 2rem; margin-bottom: 1rem; }
+            .section-subtitle { margin-bottom: 2.5rem; }
             p { font-size: 1rem; }
             .button-group { flex-direction: column; }
             .faq-question { font-size: 1rem; }
             .cta-content p { font-size: 1.1rem; }
+            .toast-notification {
+                top: 80px;
+                left: 50%;
+                transform: translate(-50%, -150%);
+                width: 90%;
+            }
+            .toast-notification.show {
+                transform: translate(-50%, 0);
+            }
         }
-        @media (min-width: 769px) {
-            .hamburger-menu { display: none; }
-        }
+        @media (min-width: 769px) { .hamburger-menu { display: none; } }
+        
         @media (max-width: 520px) {
             .landing-page { padding: 80px 1rem 4rem; }
             .hero-section .welcome-panel { padding: 30px 25px; }
             .blob { filter: blur(60px); }
             .blob.one { width: 300px; height: 300px; }
             .blob.two { width: 250px; height: 250px; }
+            
+            .testimonial-card-new { padding: 25px; }
+            .testimonial-card-new .quote-icon { font-size: 2.5rem; left: 20px; top: 20px; }
+            .testimonial-card-new .quote-text,
+            .testimonial-rating,
+            .testimonial-author { padding-left: 40px; }
+            .testimonial-card-new .quote-text { font-size: 1rem; }
         }
     </style>
 </head>
@@ -467,6 +427,7 @@
             <nav class="main-nav">
                 <a href="#templates">Template</a>
                 <a href="#features">Fitur</a>
+                <a href="#testimonials">Testimoni</a>
                 <a href="#faq">FAQ</a>
                 <a href="#contact">Kontak</a>
             </nav>
@@ -488,6 +449,7 @@
         <nav class="sidebar-nav">
             <a href="#templates">Template</a>
             <a href="#features">Fitur</a>
+            <a href="#testimonials">Testimoni</a>
             <a href="#faq">FAQ</a>
             <a href="#contact">Kontak</a>
         </nav>
@@ -519,7 +481,8 @@
         </section>
         
         <section class="templates" id="templates">
-            <h2 class="section-title" data-aos="fade-up">Template yang dirancang dengan cermat untuk setiap kesempatan</h2>
+            <h2 class="section-title" data-aos="fade-up">Template yang dirancang dengan cermat</h2>
+            <p class="section-subtitle">Untuk setiap momen dan kesempatan istimewa dalam hidup Anda.</p>
             <div class="templates-container">
                 <div class="template-card confetti-birthday" data-aos="fade-right" data-aos-delay="100">
                     <canvas class="confetti-canvas"></canvas>
@@ -553,12 +516,21 @@
             </div>
         </section>
         
-        <section class="testimonials" id="testimonials">
-            <h2 class="section-title" data-aos="fade-up">Apa Kata Mereka?</h2>
-            <div class="testimonial-container">
-                <div class="testimonial-card" data-aos="fade-right" data-aos-delay="100"><p class="quote">"Gila, keren banget! Gak nyangka bikin web ucapan bisa secepat dan segampang ini. Hasilnya juga premium, temenku suka banget!"</p><div class="author">- Sarah, Pengguna</div></div>
-                <div class="testimonial-card" data-aos="fade-left" data-aos-delay="200"><p class="quote">"Desainnya itu lho, beda dari yang lain. Neumorphic-nya bikin keliatan mahal dan estetik. Recommended pokoknya!"</p><div class="author">- Budi, Desainer Grafis</div></div>
+        <section class="testimoni" id="testimonials">
+            <h2 class="section-title" data-aos="fade-up">What People Say</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                Voices from clients, collaborators, and friends who have experienced my work.
+            </p>
+
+            <div class="testimonial-header" data-aos="fade-up" data-aos-delay="200">
+                <h3><i class="fas fa-comments"></i>Testimoni</h3>
+                <button class="btn btn-add-testimonial" id="add-testimonial-btn">
+                    <i class="fas fa-plus"></i> Add Testimoni
+                </button>
             </div>
+
+            <div class="testimonial-list" id="testimonial-list-container" data-aos="fade-up" data-aos-delay="300">
+                </div>
         </section>
 
         <section class="faq" id="faq">
@@ -597,13 +569,53 @@
     <div class="modal-overlay" id="contact-modal">
         <div class="modal-content">
             <button class="modal-close-btn">&times;</button>
-            <h2>Hubungi kami</h2>
-            <p>Punya pertanyaan atau masukan? Saya ingin sekali mendengarnya.</p>
-            <form class="contact-form" onsubmit="event.preventDefault(); alert('Pesan Anda telah diterima!'); this.reset();">
-                <div class="form-group"><label for="name">Nama</label><input type="text" id="name" name="name" placeholder="Nama kamu" required></div>
-                <div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" placeholder="email@anda.com" required></div>
-                <div class="form-group"><label for="message">Pesan</label><textarea id="message" name="message" rows="5" placeholder="Pesan Anda..." required></textarea></div>
-                <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+            <h2>Hubungi Saya</h2>
+            <p class="modal-subtitle">Punya pertanyaan atau masukan? Saya ingin sekali mendengarnya.</p>
+            <form class="contact-form" id="main-contact-form">
+                <div class="form-group"><label for="contact-name">Nama</label><input type="text" id="contact-name" name="name" placeholder="Nama kamu" required></div>
+                <div class="form-group"><label for="contact-email">E-mail</label><input type="email" id="contact-email" name="email" placeholder="email@anda.com" required></div>
+                <div class="form-group"><label for="contact-message">Pesan</label><textarea id="contact-message" name="message" rows="5" placeholder="Pesan Anda..." required></textarea></div>
+                <div class="modal-button-group">
+                    <button type="submit" class="btn primary" id="submit-contact-btn">Kirim Pesan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="testimonial-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h2>Share Your Testimonial</h2>
+            <p class="modal-subtitle">Tell us about your experience working with us.</p>
+            <form id="testimonial-form">
+                <div class="form-group">
+                    <label for="testimonial-name">Full Name</label>
+                    <input type="text" id="testimonial-name" placeholder="John Doe" required>
+                </div>
+                 <div class="form-group">
+                    <label for="testimonial-position">Position</label>
+                    <input type="text" id="testimonial-position" placeholder="CEO, Developer, Designer, etc." required>
+                </div>
+                <div class="form-group">
+                    <label for="testimonial-text">Testimonial</label>
+                    <textarea id="testimonial-text" rows="4" placeholder="Share your experience..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div class="star-rating-input" data-rating="0">
+                        <i class="fas fa-star" data-value="1"></i>
+                        <i class="fas fa-star" data-value="2"></i>
+                        <i class="fas fa-star" data-value="3"></i>
+                        <i class="fas fa-star" data-value="4"></i>
+                        <i class="fas fa-star" data-value="5"></i>
+                    </div>
+                </div>
+                <div class="modal-button-group">
+                    <button type="button" class="btn secondary" id="cancel-testimonial-btn">Cancel</button>
+                    <button type="submit" class="btn primary" id="submit-testimonial-btn">
+                        <i class="fa-solid fa-paper-plane"></i> Submit
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -612,15 +624,33 @@
         <div class="modal-content">
             <button class="modal-close-btn">&times;</button>
             <h2>Dukung Kami dengan Donasi</h2>
-            <p>Scan QRIS di bawah ini untuk mendukung pengembangan XlordVerse. Setiap donasi sangat berarti!</p>
-            <img src="/qris.jpg" alt="QRIS Code" class="qris-image"> <a href="img/qris.jpeg" download="qrisxlord.jpeg" class="download-link">Unduh QRIS</a>
+            <p class="modal-subtitle">Scan QRIS di bawah ini untuk mendukung pengembangan XlordVerse. Setiap donasi sangat berarti!</p>
+            <img src="/qris.jpg" alt="QRIS Code" class="qris-image"> <a href="/img/qris.jpeg" download="qrisxlord.jpeg" class="download-link">Unduh QRIS</a>
         </div>
     </div>
 
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
+        // PASTE KONFIGURASI FIREBASE ANDA DI SINI
+        const firebaseConfig = {
+          apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
+          authDomain: "proyek-xlord.firebaseapp.com",
+          projectId: "proyek-xlord",
+          storageBucket: "project-xlord.firebasestorage.app",
+          messagingSenderId: "847461816867",
+          appId: "1:847461816867:web:17071ba14ffe6a6099ef96"
+        };
+
+        // Inisialisasi Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const testimonialsCollection = db.collection('testimonials');
+
         document.addEventListener('DOMContentLoaded', () => {
 
             AOS.init({
@@ -629,6 +659,93 @@
                 offset: 150,
             });
 
+            // Muat testimoni dari Firestore saat halaman siap
+            loadTestimonials();
+            
+            // --- Custom Alert/Toast Function ---
+            function showCustomAlert(message) {
+                const oldToast = document.querySelector('.toast-notification');
+                if (oldToast) {
+                    oldToast.remove();
+                }
+
+                const toast = document.createElement('div');
+                toast.className = 'toast-notification';
+                toast.innerHTML = `<i class="fas fa-check-circle"></i><p>${message}</p>`;
+                
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 100);
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.addEventListener('transitionend', () => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, { once: true });
+                }, 4000);
+            }
+            
+            // --- General Modal Handler ---
+            const setupModal = (openBtnId, modalId, closeBtnSelector) => {
+                const openBtn = document.getElementById(openBtnId);
+                const modal = document.getElementById(modalId);
+                if (!openBtn || !modal) return;
+                
+                const closeBtn = modal.querySelector(closeBtnSelector);
+                
+                const open = (e) => {
+                    if (e) e.preventDefault();
+                    modal.classList.add('active');
+                    document.body.classList.add('modal-open');
+                };
+                const close = () => {
+                    modal.classList.remove('active');
+                    document.body.classList.remove('modal-open');
+                };
+                
+                openBtn.addEventListener('click', open);
+                closeBtn.addEventListener('click', close);
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) close();
+                });
+
+                return { open, close, modalElement: modal };
+            };
+
+            // Setup all modals
+            const contactModal = setupModal('open-contact-btn', 'contact-modal', '.modal-close-btn');
+            const qrisModal = setupModal('open-donate-btn', 'qris-modal', '.modal-close-btn');
+            const testimonialModal = setupModal('add-testimonial-btn', 'testimonial-modal', '.modal-close-btn');
+            
+            // --- Contact Form Logic ---
+            (() => {
+                const contactForm = document.getElementById('main-contact-form');
+                if (!contactForm) return;
+
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('contact-name').value;
+                    const email = document.getElementById('contact-email').value;
+                    const message = document.getElementById('contact-message').value;
+                    const adminEmail = 'emailadmin@contoh.com'; // GANTI DENGAN EMAIL ANDA
+                    const subject = `Pesan dari ${name} via Website`;
+                    const body = `Halo,\n\nNama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`;
+                    const mailtoLink = `mailto:${adminEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    window.location.href = mailtoLink;
+                    setTimeout(() => {
+                       contactModal.close();
+                       contactForm.reset();
+                    }, 500);
+                });
+            })();
+            
+            document.getElementById('cancel-testimonial-btn').addEventListener('click', testimonialModal.close);
+
+            // --- Sidebar Logic ---
             (() => {
                 const hamburger = document.getElementById('hamburger-menu');
                 const sidebar = document.getElementById('sidebar');
@@ -658,127 +775,172 @@
                 });
             })();
 
+            // --- Confetti Logic ---
             (() => {
                 const birthdayCard = document.querySelector('.confetti-birthday');
-                let birthdayConfettiInstance = null;
+                if (!birthdayCard) return;
+                const canvas = birthdayCard.querySelector('.confetti-canvas');
+                if (!canvas) return;
+
+                let birthdayConfettiInstance = confetti.create(canvas, { resize: true, useWorker: true });
                 let birthdayInterval = null; 
 
-                if (birthdayCard) {
-                    const canvas = birthdayCard.querySelector('.confetti-canvas');
-                    if (canvas) {
-                        birthdayConfettiInstance = confetti.create(canvas, { resize: true, useWorker: true });
-                    }
-                }
-
                 function fireBirthdayExplosion() {
-                    if (!birthdayConfettiInstance) return;
-
                     const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
                     const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary').trim();
-
-                    function fire(particleRatio, opts) {
-                        birthdayConfettiInstance(Object.assign({}, {
-                            origin: { y: 0.6, x: 0.5 }
-                        }, opts, {
-                            particleCount: Math.floor(200 * particleRatio)
-                        }));
-                    }
+                    const fire = (particleRatio, opts) => { birthdayConfettiInstance(Object.assign({}, { origin: { y: 0.6, x: 0.5 } }, opts, { particleCount: Math.floor(200 * particleRatio) })); };
                     
-                    fire(0.35, {
-                        spread: 45,
-                        startVelocity: 55,
-                        decay: 0.9,
-                        gravity: 1.2,
-                        scalar: 1.2,
-                        shapes: ['star'],
-                        colors: [primaryColor, secondaryColor, '#FFFFFF']
-                    });
-                    fire(0.25, {
-                        spread: 80,
-                        startVelocity: 35,
-                        decay: 0.91,
-                        gravity: 1.2,
-                        scalar: 0.8,
-                        shapes: ['circle'],
-                         colors: [primaryColor, secondaryColor, '#FFFFFF']
-                    });
-                    fire(0.4, {
-                        spread: 120,
-                        startVelocity: 50,
-                        decay: 0.92,
-                        gravity: 1.2,
-                        scalar: 1.5,
-                        shapes: ['emoji'],
-                        shapeOptions: {
-                            emoji: {
-                                value: ['🎂', '🥳', '✨', '🎊', '⭐']
-                            }
-                        }
-                    });
+                    fire(0.35, { spread: 45, startVelocity: 55, decay: 0.9, gravity: 1.2, scalar: 1.2, shapes: ['star'], colors: [primaryColor, secondaryColor, '#FFFFFF'] });
+                    fire(0.25, { spread: 80, startVelocity: 35, decay: 0.91, gravity: 1.2, scalar: 0.8, shapes: ['circle'], colors: [primaryColor, secondaryColor, '#FFFFFF'] });
+                    fire(0.4, { spread: 120, startVelocity: 50, decay: 0.92, gravity: 1.2, scalar: 1.5, shapes: ['emoji'], shapeOptions: { emoji: { value: ['🎂', '🥳', '✨', '🎊', '⭐'] } } });
                 }
 
-                const observerOptions = { root: null, threshold: 0.5 };
-                const confettiObserver = new IntersectionObserver((entries, observer) => {
+                const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
-                        if (entry.target.classList.contains('confetti-birthday')) {
-                            if (entry.isIntersecting) {
-                                fireBirthdayExplosion();
-                                if (birthdayInterval) clearInterval(birthdayInterval);
-                                birthdayInterval = setInterval(fireBirthdayExplosion, 3500);
-                            } else {
-                                clearInterval(birthdayInterval);
-                            }
+                        if (entry.isIntersecting) {
+                            fireBirthdayExplosion();
+                            if (birthdayInterval) clearInterval(birthdayInterval);
+                            birthdayInterval = setInterval(fireBirthdayExplosion, 3500);
+                        } else {
+                            clearInterval(birthdayInterval);
                         }
                     });
-                }, observerOptions);
+                }, { threshold: 0.5 });
                 
-                if (birthdayCard) confettiObserver.observe(birthdayCard);
+                observer.observe(birthdayCard);
             })();
 
+            // --- FAQ Logic ---
             (() => { document.querySelectorAll('.faq-item').forEach(item => { item.addEventListener('toggle', event => { if (event.target.open) { document.querySelectorAll('.faq-item').forEach(otherItem => { if (otherItem !== event.target) { otherItem.open = false; } }); } }); }); })();
             
+            // --- Testimonial Form Logic with Firebase ---
             (() => {
-                const openBtn = document.getElementById('open-contact-btn');
-                const modalOverlay = document.getElementById('contact-modal');
-                const closeBtn = modalOverlay.querySelector('.modal-close-btn');
-                const contactForm = modalOverlay.querySelector('.contact-form');
-                const openModal = () => { modalOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; };
-                const closeModal = () => { modalOverlay.classList.remove('active'); document.body.style.overflow = ''; };
-                openBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
-                closeBtn.addEventListener('click', closeModal);
-                modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) { closeModal(); } });
-                contactForm.addEventListener('submit', () => { setTimeout(() => { closeModal(); }, 500); });
-            })();
+                const form = document.getElementById('testimonial-form');
+                if (!form) return;
+                
+                const starContainer = form.querySelector('.star-rating-input');
+                const stars = starContainer.querySelectorAll('i');
+                const submitBtn = document.getElementById('submit-testimonial-btn');
+                const originalBtnHTML = submitBtn.innerHTML;
 
-            // Skrip baru untuk modal QRIS
-            (() => {
-                const openDonateBtn = document.getElementById('open-donate-btn');
-                const qrisModal = document.getElementById('qris-modal');
-                const closeQrisBtn = qrisModal.querySelector('.modal-close-btn');
+                stars.forEach(star => {
+                    star.addEventListener('mouseover', () => {
+                        const rating = star.dataset.value;
+                        starContainer.classList.remove('rating-1', 'rating-2', 'rating-3', 'rating-4', 'rating-5');
+                        starContainer.classList.add(`rating-${rating}`);
+                    });
 
-                const openQrisModal = () => {
-                    qrisModal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                    alert('Terima kasih sudah mendukung! Silakan scan QRIS atau unduh gambarnya.');
-                };
+                    star.addEventListener('mouseout', () => {
+                        const currentRating = starContainer.dataset.rating;
+                        starContainer.classList.remove('rating-1', 'rating-2', 'rating-3', 'rating-4', 'rating-5');
+                        if (currentRating > 0) {
+                            starContainer.classList.add(`rating-${currentRating}`);
+                        }
+                    });
 
-                const closeQrisModal = () => {
-                    qrisModal.classList.remove('active');
-                    document.body.style.overflow = '';
-                };
-
-                openDonateBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openQrisModal();
+                    star.addEventListener('click', () => {
+                        starContainer.dataset.rating = star.dataset.value;
+                    });
                 });
 
-                closeQrisBtn.addEventListener('click', closeQrisModal);
-                qrisModal.addEventListener('click', (e) => {
-                    if (e.target === qrisModal) {
-                        closeQrisModal();
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const name = document.getElementById('testimonial-name').value;
+                    const position = document.getElementById('testimonial-position').value;
+                    const text = document.getElementById('testimonial-text').value;
+                    const rating = parseInt(starContainer.dataset.rating) || 0;
+
+                    if (!name || !position || !text || rating === 0) {
+                        alert('Please fill all fields and provide a rating.');
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting...`;
+                    
+                    try {
+                        await testimonialsCollection.add({
+                            name: name,
+                            position: position,
+                            text: text,
+                            rating: rating,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        
+                        loadTestimonials();
+
+                        submitBtn.innerHTML = `<i class="fa-solid fa-check"></i> Submitted!`;
+
+                        // Panggil alert kustom di sini
+                        showCustomAlert(`Terimakasih ${name} atas testimoninya :)`);
+                        
+                        setTimeout(() => {
+                            testimonialModal.close();
+                            form.reset();
+                            starContainer.dataset.rating = 0;
+                            starContainer.classList.remove('rating-1', 'rating-2', 'rating-3', 'rating-4', 'rating-5');
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnHTML;
+                        }, 1200);
+
+                    } catch (error) {
+                        console.error("Error adding testimonial: ", error);
+                        alert("Failed to submit testimonial. Please try again.");
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHTML;
                     }
                 });
             })();
+            
+            // Fungsi untuk MEMUAT testimoni dari Firestore
+            async function loadTestimonials() {
+                const listContainer = document.getElementById('testimonial-list-container');
+                listContainer.innerHTML = ''; // Kosongkan kontainer
+
+                try {
+                    const querySnapshot = await testimonialsCollection.orderBy('createdAt', 'desc').get();
+                    
+                    if (querySnapshot.empty) {
+                        listContainer.innerHTML = '<p style="text-align:center; color: var(--text-light);">Belum ada testimoni. Jadilah yang pertama!</p>';
+                        return;
+                    }
+
+                    querySnapshot.forEach((doc) => {
+                        addTestimonialCardToDOM(doc.data());
+                    });
+                } catch (error) {
+                    console.error("Error loading testimonials: ", error);
+                    listContainer.innerHTML = '<p style="text-align:center; color: var(--text-light);">Gagal memuat testimoni saat ini.</p>';
+                }
+            }
+
+            // Fungsi untuk MENAMBAHKAN kartu testimoni ke DOM
+            function addTestimonialCardToDOM(data) {
+                const listContainer = document.getElementById('testimonial-list-container');
+                
+                const initials = data.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                let starsHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    starsHTML += `<i class="${i <= data.rating ? 'fas' : 'far'} fa-star"></i>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'testimonial-card-new';
+                card.innerHTML = `
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <p class="quote-text">${data.text}</p>
+                    <div class="testimonial-rating">${starsHTML}</div>
+                    <div class="testimonial-author">
+                        <div class="author-initials">${initials}</div>
+                        <div class="author-details">
+                            <div class="name">${data.name}</div>
+                            <div class="position">${data.position}</div>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            }
         });
     </script>
 </body>
