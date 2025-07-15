@@ -638,13 +638,15 @@
     <script>
         // PASTE KONFIGURASI FIREBASE ANDA DI SINI
         const firebaseConfig = {
-          apiKey: "AIzaSyCCaLXoaHFOuXRnHAvQzg9R0c1tfsTsTBU",
-          authDomain: "proyek-xlord.firebaseapp.com",
-          projectId: "proyek-xlord",
-          storageBucket: "project-xlord.firebasestorage.app",
-          messagingSenderId: "847461816867",
-          appId: "1:847461816867:web:17071ba14ffe6a6099ef96"
-        };
+    apiKey: "AIzaSyCWl2CJqIr-u8lSHu8s4tgZ25UQIK2ivt0",
+    authDomain: "mayfa-fa284.firebaseapp.com",
+    databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "mayfa-fa284",
+    storageBucket: "mayfa-fa284.firebasestorage.app",
+    storageBucket: "mayfa-fa284.firebasestorage.app",
+    messagingSenderId: "523290705179",
+    appId: "1:523290705179:web:b06ae4d8e6b08cf07b27be",
+};
 
         // Inisialisasi Firebase
         firebase.initializeApp(firebaseConfig);
@@ -731,7 +733,7 @@
                     const name = document.getElementById('contact-name').value;
                     const email = document.getElementById('contact-email').value;
                     const message = document.getElementById('contact-message').value;
-                    const adminEmail = 'emailadmin@contoh.com'; // GANTI DENGAN EMAIL ANDA
+                    const adminEmail = 'email@xlord.web.id'; // GANTI DENGAN EMAIL ANDA
                     const subject = `Pesan dari ${name} via Website`;
                     const body = `Halo,\n\nNama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`;
                     const mailtoLink = `mailto:${adminEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
