@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,20 +12,33 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
     <style>
         :root {
+            /* Default: Dark Mode */
             --bg-color: #2c2f36;
             --shadow-dark: #202227;
             --shadow-light: #383c45;
             --text-color: #d1d5db;
             --text-light: #8a91a0;
             --primary: #5a7dff;
+            --primary-dark: #4a6fe0;
             --success: #28a745;
-            --found: #ffc107; /* Warna untuk kata yang ditemukan */
+            --found: #ffc107;
             --transition-smooth: all 0.3s ease-in-out;
             --border-radius-main: 24px;
             --border-radius-inner: 15px;
         }
+
+        /* --- START: Perubahan Tema --- */
+        [data-theme="light"] {
+            --bg-color: #e4e9f2;
+            --shadow-dark: #c8d0db;
+            --shadow-light: #ffffff;
+            --text-color: #313848;
+            --text-light: #6c7990;
+        }
+        /* --- END: Perubahan Tema --- */
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--bg-color); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow: hidden; position: relative; color: var(--text-color); }
+        body { background: var(--bg-color); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow: hidden; position: relative; color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
         body.scroll-allowed { overflow: auto; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         @keyframes fadeOut { to { opacity: 0; transform: scale(0.95); } }
@@ -36,11 +49,11 @@
         .game-container h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); margin-bottom: 5px; }
         .game-container p { font-size: clamp(0.9rem, 3vw, 1rem); color: var(--text-light); margin-bottom: 25px; }
         #word-search-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; background: var(--bg-color); padding: 15px; border-radius: var(--border-radius-inner); box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light); margin-bottom: 25px; }
-        .letter-cell { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 600; background-color: var(--bg-color); border-radius: 8px; box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); cursor: pointer; transition: all 0.2s ease; color: var(--text-light); }
+        .letter-cell { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 600; background-color: var(--bg-color); border-radius: 8px; box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); cursor: pointer; transition: all 0.2s ease; color: var(--text-light); text-transform: uppercase;}
         .letter-cell.selected { background-color: var(--primary); color: white; box-shadow: none; }
         .letter-cell.found { background-color: var(--found); color: #333; font-weight: 700; box-shadow: none; }
         #words-to-find-container { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .word-item { font-size: 1.2rem; font-weight: 500; color: var(--text-light); position: relative; transition: color 0.3s ease; }
+        .word-item { font-size: 1.2rem; font-weight: 500; color: var(--text-light); position: relative; transition: color 0.3s ease; text-transform: uppercase; }
         .word-item.found { color: var(--text-color); }
         .word-item.found::after { content: ''; position: absolute; left: -5%; top: 55%; width: 110%; height: 3px; background-color: var(--found); transform: rotate(-5deg); animation: fadeIn 0.3s; }
         .birthday-page-container { display: none; flex-direction: column; align-items: center; padding-top: 8vh; padding-bottom: 8vh; width: 100%; max-width: 1000px; overflow-y: auto; height: 95vh; }
@@ -55,24 +68,32 @@
         .card-text { font-size: 1rem; line-height: 1.6; font-weight: 300; color: var(--text-light); white-space: pre-wrap; }
         .gift-section-card { margin-top: 30px; display: flex; flex-direction: column; align-items: center; }
         .btn { padding: 16px; background: var(--bg-color); border: none; border-radius: var(--border-radius-inner); color: var(--primary); font-size: 1.05rem; font-weight: 600; cursor: pointer; width: 100%; transition: var(--transition-smooth); box-shadow: 8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light); display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn:hover:not(:disabled) { transform: translateY(-2px); color: var(--primary-dark); }
+        .btn:hover:not(:disabled) { transform: translateY(-2px); }
         .btn:active:not(:disabled) { transform: translateY(0px); box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light); }
         .gift-btn { margin-top: 20px; color: var(--success); width: auto; padding: 15px 40px; font-size: 1.2rem; min-width: 200px; }
         .gift-btn:hover { color: #32c256; }
         .gift-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 15px; animation: fadeIn 0.3s ease-out forwards; }
         .gift-box { width: 250px; height: 250px; cursor: pointer; animation: wobble-gift 2s ease-in-out infinite alternate; }
         .gift-box img { width: 100%; height: 100%; object-fit: contain; }
-        .gift-card { display: none; background: var(--bg-color); border-radius: var(--border-radius-main); padding: 30px; text-align: center; width: 100%; max-width: 320px; box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--light); animation: fadeInCard-anim 0.5s ease-out forwards; color: var(--text-color); }
+        .gift-card { display: none; background: var(--bg-color); border-radius: var(--border-radius-main); padding: 30px; text-align: center; width: 100%; max-width: 320px; box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light); animation: fadeInCard-anim 0.5s ease-out forwards; color: var(--text-color); }
         #qrCodeImg { width: 180px; height: 180px; margin: 15px auto; border-radius: var(--border-radius-inner); background: var(--bg-color); padding: 8px; box-shadow: inset 5px 5px 15px var(--shadow-dark), inset -5px -5px 15px var(--shadow-light); object-fit: contain; }
         
-        /* --- Gaya untuk Tombol Restart --- */
         .restart-prompt { margin-top: 25px; border-top: 1px solid var(--shadow-light); padding-top: 20px; }
         .restart-prompt p { margin-bottom: 15px; font-size: 1rem; color: var(--text-light); }
         #restartBtn { font-size: 1rem; padding: 12px 25px; width: auto; color: var(--success); }
 
         .snow-particle, .confetti-piece { position: fixed; pointer-events: none; z-index: 2100; }
         .snow-particle { top: -10px; border-radius: 50%; z-index: 5; }
-        .music-toggle { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; z-index: 1000; padding: 0; border-radius: 50%; }
+
+        /* --- START: Perubahan Tombol Floating --- */
+        .floating-btn { position: fixed; width: 50px; height: 50px; z-index: 1000; padding: 0; border-radius: 50%; color: var(--text-light); }
+        .floating-btn:hover { color: var(--primary); }
+        .theme-toggle { top: 20px; left: 20px; }
+        .music-toggle { top: 20px; right: 20px; }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: none; }
+        [data-theme="light"] .theme-toggle .fa-moon { display: none; }
+        /* --- END: Perubahan Tombol Floating --- */
+        
         .swal2-popup { background-color: var(--bg-color) !important; border-radius: var(--border-radius-main) !important; color: var(--text-color) !important; box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light) !important; }
         .swal2-title { color: var(--text-color) !important; }
         .swal2-html-container { color: var(--text-light) !important; }
@@ -91,8 +112,9 @@
     <audio id="background-music" loop><source src="mayfa.mp3"></source></audio>
     <audio id="word-found-sound" src="https://assets.codepen.io/217233/chime.mp3"></audio>
     <audio id="confetti-sound" src="https://assets.codepen.io/217233/confetti.mp3"></audio>
-    <button id="musicToggleBtn" class="btn music-toggle"><i class="fas fa-volume-off"></i></button>
 
+    <button id="themeToggleBtn" class="btn floating-btn theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+    <button id="musicToggleBtn" class="btn floating-btn music-toggle"><i class="fas fa-volume-off"></i></button>
     <div class="game-container" id="gameContainer">
         <h1>Temukan Kata Tersembunyi</h1>
         <p>Tahan & seret untuk menghubungkan huruf dan temukan kata-kata spesial!</p>
@@ -144,6 +166,7 @@
         const gameContainer = document.getElementById("gameContainer");
         const birthdayPage = document.getElementById("birthdayPage");
         const musicToggleBtn = document.getElementById('musicToggleBtn');
+        const themeToggleBtn = document.getElementById('themeToggleBtn'); // <-- ELEMEN BARU
         const backgroundMusic = document.getElementById("background-music");
         const wordFoundSound = document.getElementById('word-found-sound');
         const confettiSound = document.getElementById('confetti-sound');
@@ -152,6 +175,20 @@
         const wordsToFind = ['I', 'LOVE', 'YOU', 'FROM', 'AFAR'];
         const gridSize = 10;
         let grid = [], foundWords = [];
+
+        // --- START: Perubahan Logika Tema ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+        // --- END: Perubahan Logika Tema ---
 
         function initWordSearch() {
             grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
@@ -175,13 +212,13 @@
 
         function placeWord(word, row, col, direction) {
             for (let i = 0; i < word.length; i++) {
-                if (direction === 'horizontal') {
-                    grid[row][col + i] = word[i];
-                } else if (direction === 'vertical') {
-                    // Corrected: use 'row' instead of 'r'
-                    grid[row + i][col] = word[i]; 
-                } else if (direction === 'diagonal-up') {
-                    grid[row - i][col + i] = word[i];
+                let r = row, c = col;
+                if (direction === 'horizontal') c += i;
+                else if (direction === 'vertical') r += i;
+                else if (direction === 'diagonal-up') { r -= i; c += i; }
+                
+                if (r >= 0 && r < gridSize && c >= 0 && c < gridSize) {
+                    grid[r][c] = word[i];
                 }
             }
         }
@@ -260,7 +297,8 @@
 
         function calculateAndDisplayAge(birthDate) {
             const birthDateObj = new Date(birthDate + 'T00:00:00');
-            const today = new Date();
+            // Menggunakan tanggal sekarang sebagai referensi
+            const today = new Date('2025-07-16T12:33:07'); 
             let years = today.getFullYear() - birthDateObj.getFullYear();
             let months = today.getMonth() - birthDateObj.getMonth();
             let days = today.getDate() - birthDateObj.getDate();
@@ -303,22 +341,21 @@
             giftCard.querySelector('#qrMessageText').textContent = pageData.qrMessage;
         }
         
-        // --- EFEK VISUAL BARU ---
         let snowfallInterval;
         function startSnowfallEffect() {
             if (snowfallInterval) clearInterval(snowfallInterval);
-            const colors = ['#FF6F61', '#FFD700', '#6A5ACD', '#7FFF00', '#00CED1', '#FF1493']; // Vibrant colors
+            const colors = ['#FF6F61', '#FFD700', '#6A5ACD', '#7FFF00', '#00CED1', '#FF1493'];
             snowfallInterval = setInterval(() => {
                 const particle = document.createElement('div');
                 particle.classList.add('snow-particle');
-                const size = Math.random() * 8 + 3; // Slightly larger for better visibility
+                const size = Math.random() * 8 + 3;
                 particle.style.cssText = `left: ${Math.random() * 100}vw; width: ${size}px; height: ${size}px; background-color: ${colors[Math.floor(Math.random() * colors.length)]}; opacity: ${Math.random() * 0.8 + 0.4};`;
                 document.body.appendChild(particle);
                 particle.animate([
                     { transform: 'translateY(0) translateX(0)', opacity: 0.8 },
                     { transform: `translateY(110vh) translateX(${Math.random() * 60 - 30}px)`, opacity: 0 }
                 ], { duration: 6000 + Math.random() * 8000, easing: 'linear' }).onfinish = () => particle.remove();
-            }, 150); // More frequent particles
+            }, 150);
         }
 
         function stopSnowfallEffect() {
@@ -329,43 +366,23 @@
         let confettiInterval; 
         function launchVideoConfetti() {
             confettiSound.play();
-
             const duration = 15 * 1000;
             const animationEnd = Date.now() + duration;
-            // --- PERUBAHAN DI SINI ---
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2100 };
             const colors = ["#FF6F61", "#FFD700", "#6A5ACD", "#7FFF00", "#00CED1", "#FF1493", "#FFFFFF", "#E0EFFF"];
 
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
             if (confettiInterval) clearInterval(confettiInterval);
-
             confettiInterval = setInterval(function() {
                 const timeLeft = animationEnd - Date.now();
-
-                if (timeLeft <= 0) {
-                    clearInterval(confettiInterval); 
-                    return;
-                }
-
+                if (timeLeft <= 0) return clearInterval(confettiInterval);
                 const particleCount = 50 * (timeLeft / duration);
-
-                confetti(Object.assign({}, defaults, {
-                    particleCount,
-                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-                    colors: colors
-                }));
-                confetti(Object.assign({}, defaults, {
-                    particleCount,
-                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-                    colors: colors
-                }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: colors }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: colors }));
             }, 250);
         }
         
-        // --- KONTROL MUSIK & DEMO ---
         musicToggleBtn.addEventListener('click', () => {
             const icon = musicToggleBtn.querySelector('i');
             if (backgroundMusic.paused) { 
@@ -451,8 +468,10 @@
             autoSolveGame();
         }
 
-        // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', startAutoDemo);
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme(); // <-- PANGGIL FUNGSI TEMA DI SINI
+            startAutoDemo();
+        });
         document.querySelector('.btn.gift-btn').addEventListener('click', openGift);
         document.querySelector('.gift-box').addEventListener('click', openCard);
         document.getElementById('restartBtn').addEventListener('click', (e) => {
