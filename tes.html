@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Modern Panel</title>
+    <title>XlordVerse - Panel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,50 +38,113 @@
         --text-muted: #666666;
     }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
     @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+    
     body { background: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; transition: var(--transition); }
+    
     .theme-toggle { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-color); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; transition: var(--transition); }
     .theme-toggle:hover { transform: scale(1.1); }
     .theme-toggle:active { box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); }
     .theme-toggle i { font-size: 1.2rem; color: var(--text-color); transition: var(--transition); }
     [data-theme="dark"] .fa-moon, [data-theme="light"] .fa-sun { display: none; }
-    #auth-container { width: 100%; max-width: 450px; transition: all 0.6s ease; perspective: 1500px; }
+    
+    #auth-container { width: 100%; max-width: 960px; transition: all 0.6s ease; perspective: 1500px; display: flex; }
     #auth-container.is-active { max-width: 1200px; min-height: 95vh; }
-    #auth-box { background: var(--bg-color); border-radius: var(--radius-main); box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light); padding: 40px; width: 100%; display: none; animation: slideIn 0.6s ease-out; }
-    #auth-container.loaded #auth-box { display: block; }
-    .brand-header { text-align: center; margin-bottom: 35px; animation: slideIn 0.8s ease-out; }
-    .brand-header img { width: 80px; height: 80px; border-radius: var(--radius-inner); margin: 0 auto 20px; padding: 10px; background: var(--bg-color); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); transition: var(--transition); }
-    .brand-header img:hover { transform: scale(1.05) rotate(5deg); }
-    .brand-header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; background: linear-gradient(90deg, var(--primary), var(--pink), var(--primary)); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientBG 4s linear infinite; }
+    
+    .auth-card {
+        display: flex;
+        width: 100%;
+        background: var(--bg-color);
+        border-radius: var(--radius-main);
+        box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light);
+        overflow: hidden;
+        animation: slideIn 0.6s ease-out;
+        display: none;
+    }
+    #auth-container.loaded .auth-card { display: flex; }
+
+    .auth-sidebar {
+        flex: 0 0 45%;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(238, 221, 255, 0.1), rgba(213, 229, 255, 0.1));
+        color: var(--text-color);
+        border-right: 1px solid var(--shadow-dark);
+    }
+    [data-theme="light"] .auth-sidebar {
+        background: linear-gradient(135deg, #f8f0ff, #e6f0ff);
+    }
+    .auth-sidebar img {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 25px;
+        animation: float 4s ease-in-out infinite;
+    }
+    .auth-sidebar h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+    .auth-sidebar p {
+        font-size: 1rem;
+        color: var(--text-muted);
+        max-width: 300px;
+    }
+
+    #auth-box {
+        flex: 1;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .brand-header { text-align: left; margin-bottom: 30px; }
+    .brand-header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; color: var(--text-color); }
     .brand-header p { color: var(--text-muted); font-size: 1rem; }
+    .brand-header img { display: none; }
+
     .slider-tabs { position: relative; padding: 5px; border-radius: var(--radius-inner); box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); margin-bottom: 25px; overflow: hidden; }
     .slider-tabs-track { display: flex; width: 100%; }
     .tab-label { flex: 1; text-align: center; padding: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; z-index: 2; transition: color 0.3s ease; }
     .slider-thumb { position: absolute; top: 5px; left: 5px; width: calc(50% - 5px); height: calc(100% - 10px); background: var(--bg-color); border-radius: 10px; box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); transition: transform 0.4s cubic-bezier(0.65, 0.05, 0.36, 1); z-index: 1; }
     .slider-tabs.register-active .slider-thumb { transform: translateX(100%); }
     .slider-tabs.login-active #login-tab-label, .slider-tabs.register-active #register-tab-label { color: var(--primary); }
+    
     #auth-flipper { position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.65, 0.05, 0.36, 1), height 0.4s cubic-bezier(0.65, 0.05, 0.36, 1); margin-bottom: 20px; }
     #auth-flipper.is-flipped { transform: rotateY(180deg); }
     .auth-form-side { position: absolute; top: 0; left: 0; width: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
     #register-form-content { transform: rotateY(180deg); }
+    
     .input-group { margin-bottom: 25px; text-align: left; }
     .input-group label { display: block; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; margin-bottom: 12px; padding-left: 5px; }
     .input-wrapper { position: relative; }
     .input-field, textarea.input-field { width: 100%; padding: 18px 22px 18px 55px; background: var(--bg-color); border: none; border-radius: var(--radius-inner); color: var(--text-color); font-size: 1rem; box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); transition: var(--transition); }
     textarea.input-field { padding: 18px 22px; resize: vertical; }
     .input-field:focus, textarea.input-field:focus { outline: none; box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light), 0 0 0 2px var(--primary); }
-    .input-wrapper .icon-left { position: absolute; top: 20px; left: 20px; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem; transition: var(--transition); }
+    .input-wrapper .icon-left { position: absolute; top: 50%; left: 20px; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem; transition: var(--transition); }
     textarea ~ .icon-left { top: 22px; }
     .input-wrapper .icon-right { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem; cursor: pointer; transition: var(--transition); }
     .input-field:focus ~ .icon-left { color: var(--primary); }
+
     .btn-primary { width: 100%; padding: 18px; background: var(--primary); border: none; border-radius: var(--radius-inner); color: white; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: var(--transition); box-shadow: 8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light); display: flex; align-items: center; justify-content: center; gap: 10px; }
     .btn-primary:hover:not(:disabled) { transform: translateY(-3px); background: var(--primary-dark); }
     .btn-primary:active:not(:disabled) { transform: translateY(0); box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); }
     .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+    
+    .terms-section { text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--text-muted); }
+    .terms-section a { color: var(--text-muted); text-decoration: underline; font-weight: 500; }
+    .terms-section a:hover { color: var(--primary); }
+
     .btn-google { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 16px; background: var(--bg-color); border: none; border-radius: var(--radius-inner); color: var(--text-color); font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); box-shadow: 8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light); margin-bottom: 20px; }
     .btn-google:hover { transform: translateY(-3px); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); }
     .btn-google:active { transform: translateY(0); box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light); }
@@ -90,9 +153,36 @@
     .auth-separator::before, .auth-separator::after { content: ''; flex: 1; border-bottom: 1px solid var(--shadow-dark); }
     .auth-separator:not(:empty)::before { margin-right: .5em; }
     .auth-separator:not(:empty)::after { margin-left: .5em; }
-    .support-section { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 30px; }
+    
+    .support-section { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 25px; border-top: 1px solid var(--shadow-dark); padding-top: 25px; }
+    .footer-nav { display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 15px; }
+    .footer-nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
+    .footer-nav a:hover { color: var(--primary); }
+    .footer-copyright { margin-bottom: 10px; }
+    .footer-creator .fa-heart { color: var(--pink); animation: pulse 1.5s ease-in-out infinite; display: inline-block; }
+
+    @media (max-width: 991px) {
+        #auth-container { max-width: 450px; }
+        .auth-card { flex-direction: column; }
+        .auth-sidebar { display: none; }
+        #auth-box { padding: 40px 30px; }
+        .brand-header { text-align: center; }
+        .brand-header img {
+            display: block;
+            width: 80px; height: 80px;
+            border-radius: var(--radius-inner);
+            margin: 0 auto 20px;
+            padding: 10px;
+            background: var(--bg-color);
+            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+            transition: var(--transition);
+        }
+    }
+    @media (max-width: 768px) { #auth-box { padding: 30px 20px; } .brand-header img { width: 70px; height: 70px; } }
+
+    /* Admin Panel styles (unchanged) */
     #adminPanelBox { display: none; flex-direction: column; width: 100%; height: 95vh; animation: slideIn 0.6s ease-out; padding: 30px; background: var(--bg-color); border-radius: var(--radius-main); box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light); }
-    #auth-container.is-active #auth-box { display: none; }
+    #auth-container.is-active .auth-card { display: none; }
     #auth-container.is-active #adminPanelBox { display: flex; }
     .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid var(--shadow-light); }
     .panel-header h1 { font-size: 1.8rem; display: flex; align-items: center; gap: 15px; }
@@ -134,13 +224,22 @@
     .image-upload-box { display: flex; justify-content: center; align-items: center; width: 100%; height: 120px; border: 2px dashed var(--text-muted); border-radius: var(--radius-inner); cursor: pointer; transition: var(--transition); color: var(--text-muted); background-color: var(--bg-color); box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light); margin-top: 10px; text-align: center; padding: 10px; }
     .image-upload-box:hover { border-color: var(--primary); color: var(--primary); }
     @media (max-width: 991px) { .panel-layout { display: flex; flex-direction: column; padding-right: 0; } .panel-actions { flex-direction: column-reverse; align-items: stretch; gap: 15px; } .btn { width: 100%; } }
-    @media (max-width: 768px) { #auth-box { padding: 30px 20px; } .brand-header img { width: 70px; height: 70px; } }
+
+    /* SweetAlert2 specific styles */
     .swal2-popup { background: var(--bg-color) !important; color: var(--text-color) !important; border-radius: var(--radius-main) !important; }
     .swal2-title { color: var(--text-color) !important; }
     .swal2-html-container { color: var(--text-muted) !important; }
     .swal2-confirm, .swal2-cancel, .swal2-deny { border: none !important; border-radius: var(--radius-inner) !important; font-weight: 600 !important; }
     .swal2-confirm { background: var(--primary) !important; color: #fff !important; }
     .swal2-cancel { background-color: var(--bg-color) !important; color: var(--text-muted) !important; }
+
+    /* NEW: Styles for the contact form popup */
+    .swal-contact-form { display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+    .swal-form-group { width: 100%; margin-bottom: 15px; }
+    .swal-form-group label { margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); display: block; }
+    .swal-form-group .swal2-input, .swal-form-group .swal2-textarea { width: 100% !important; margin: 0; background: var(--bg-color) !important; box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light) !important; border: none !important; border-radius: var(--radius-inner) !important; color: var(--text-color) !important; }
+    .swal-form-group .swal2-input:focus, .swal-form-group .swal2-textarea:focus { box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light), 0 0 0 2px var(--primary) !important; }
+    
     </style>
 </head>
 <body>
@@ -150,69 +249,91 @@
     </div>
 
     <div id="auth-container">
-        <div class="box" id="auth-box">
-            <div class="brand-header">
+        <div class="auth-card">
+            <div class="auth-sidebar">
                 <img src="/IMG_1551.png" alt="Logo">
-                <h1>Selamat Datang</h1>
-                <p id="auth-subtitle">Masuk untuk melanjutkan</p>
+                <h2>Let's get the party started!</h2>
+                <p>Create beautiful digital wishes and share them with your loved ones.</p>
             </div>
             
-            <div class="slider-tabs" id="slider-tabs-container">
-                <div class="slider-tabs-track">
-                    <span class="tab-label" id="login-tab-label">Login</span>
-                    <span class="tab-label" id="register-tab-label">Register</span>
+            <div id="auth-box">
+                <div class="brand-header">
+                    <img src="/IMG_1551.png" alt="Logo">
+                    <h1 id="form-title">Selamat datang!</h1>
+                    <p id="auth-subtitle">Masuk untuk melanjutkan</p>
                 </div>
-                <div class="slider-thumb"></div>
-            </div>
+                
+                <div class="slider-tabs" id="slider-tabs-container">
+                    <div class="slider-tabs-track">
+                        <span class="tab-label" id="login-tab-label">Login</span>
+                        <span class="tab-label" id="register-tab-label">Register</span>
+                    </div>
+                    <div class="slider-thumb"></div>
+                </div>
 
-            <button class="btn-google" id="google-signin-btn">
-                <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C42.021,35.596,44,30.138,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path></svg>
-                <span>Continue with Google</span>
-            </button>
-            
-            <div class="auth-separator">OR CONTINUE WITH</div>
+                <button class="btn-google" id="google-signin-btn">
+                    <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C42.021,35.596,44,30.138,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path></svg>
+                    <span>Continue with Google</span>
+                </button>
+                
+                <div class="auth-separator">OR CONTINUE WITH</div>
 
-            <div id="auth-flipper">
-                <div class="auth-form-side" id="login-form-content">
-                    <div class="input-group">
-                        <label for="loginEmail">Email</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-envelope icon-left"></i>
-                            <input type="email" id="loginEmail" class="input-field" placeholder="Ketik email Anda">
+                <div id="auth-flipper">
+                    <div class="auth-form-side" id="login-form-content">
+                        <div class="input-group">
+                            <label for="loginEmail">Email</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope icon-left"></i>
+                                <input type="email" id="loginEmail" class="input-field" placeholder="Ketik email Anda">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="loginPass">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-key icon-left"></i>
+                                <input type="password" id="loginPass" class="input-field" placeholder="••••••••••">
+                                <i class="fas fa-eye-slash icon-right" onclick="togglePasswordVisibility('loginPass', this)"></i>
+                            </div>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <label for="loginPass">Password</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-key icon-left"></i>
-                            <input type="password" id="loginPass" class="input-field" placeholder="••••••••••">
-                            <i class="fas fa-eye-slash icon-right" onclick="togglePasswordVisibility('loginPass', this)"></i>
+                    <div class="auth-form-side" id="register-form-content">
+                        <div class="input-group">
+                            <label for="registerEmail">Email</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope icon-left"></i>
+                                <input type="email" id="registerEmail" class="input-field" placeholder="Gunakan email aktif" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="registerPass">Password Baru</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-key icon-left"></i>
+                                <input type="password" id="registerPass" class="input-field" placeholder="Minimal 6 karakter" required>
+                                <i class="fas fa-eye-slash icon-right" onclick="togglePasswordVisibility('registerPass', this)"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="auth-form-side" id="register-form-content">
-                    <div class="input-group">
-                        <label for="registerEmail">Email</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-envelope icon-left"></i>
-                            <input type="email" id="registerEmail" class="input-field" placeholder="Gunakan email aktif" required>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="registerPass">Password Baru</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-key icon-left"></i>
-                            <input type="password" id="registerPass" class="input-field" placeholder="Minimal 6 karakter" required>
-                            <i class="fas fa-eye-slash icon-right" onclick="togglePasswordVisibility('registerPass', this)"></i>
-                        </div>
-                    </div>
+                
+                <button class="btn-primary" id="main-action-btn"><i class="fas fa-sign-in-alt"></i> Masuk</button>
+                
+                <div class="terms-section">
+                    <p>By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
                 </div>
-            </div>
-            
-            <button class="btn-primary" id="main-action-btn"><i class="fas fa-sign-in-alt"></i> Masuk</button>
-            
-            <div class="support-section">
-                <p>© 2025 xlordcode. All Rights Reserved.</p>
+                
+                <div class="support-section">
+                    <div class="footer-nav">
+                        <a href="index.html">Home</a>
+                        <a href="#">Dashboard</a>
+                        <a href="#" id="contact-link">Contact</a>
+                    </div>
+                    <p class="footer-copyright">
+                        © 2025 xlordcode. All rights reserved.
+                    </p>
+                    <p class="footer-creator">
+                        Made with <i class="fas fa-heart"></i> by Misbah
+                    </p>
+                </div>
             </div>
         </div>
         
@@ -372,22 +493,142 @@
     const giftIcons = [ { name: "Kado1", path: "nir.gif" }, { name: "Kado2", path: "/img/gif1.gif" }, { name: "Kado3", path: "/img/gif2.gif" }, { name: "Kado4", path: "/img/gif3.gif" } ];
     let currentGiftIndex = 0;
 
+    // --- PERBAIKAN DIMULAI DI SINI ---
+
+    // 1. Fungsi terpisah untuk menampilkan panel admin
+    function showAdminPanel(user) {
+        if (!user) return; // Pastikan user valid
+        authContainer.classList.add('is-active');
+        loadDataToForm(user);
+    }
+    
     // Core Functions
     themeToggle.addEventListener('click', () => { const currentTheme = document.documentElement.getAttribute('data-theme'); const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', newTheme); localStorage.setItem('theme', newTheme); });
     function initTheme() { const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', savedTheme); }
     function togglePasswordVisibility(fieldId, icon) { const field = document.getElementById(fieldId); if (field) { field.type = field.type === "password" ? "text" : "password"; icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash'); } }
-    function showLoginView() { sliderTabsContainer.classList.add('login-active'); sliderTabsContainer.classList.remove('register-active'); authFlipper.classList.remove('is-flipped'); mainActionBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk'; setTimeout(() => { const loginForm = document.getElementById('login-form-content'); if (loginForm) { authFlipper.style.height = `${loginForm.offsetHeight}px`; } }, 50); }
-    function showRegisterView() { sliderTabsContainer.classList.remove('login-active'); sliderTabsContainer.classList.add('register-active'); authFlipper.classList.add('is-flipped'); mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang'; setTimeout(() => { const registerForm = document.getElementById('register-form-content'); if (registerForm) { authFlipper.style.height = `${registerForm.offsetHeight}px`; } }, 50); }
+    
+    function showLoginView() { 
+        sliderTabsContainer.classList.add('login-active');
+        sliderTabsContainer.classList.remove('register-active');
+        authFlipper.classList.remove('is-flipped');
+        mainActionBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
+        document.getElementById('auth-subtitle').textContent = 'Masuk untuk melanjutkan';
+        document.getElementById('form-title').textContent = 'Selamat datang!';
+        
+        setTimeout(() => { 
+            const loginForm = document.getElementById('login-form-content');
+            if (loginForm) { authFlipper.style.height = `${loginForm.offsetHeight}px`; } 
+        }, 50); 
+    }
+    
+    function showRegisterView() { 
+        sliderTabsContainer.classList.remove('login-active');
+        sliderTabsContainer.classList.add('register-active');
+        authFlipper.classList.add('is-flipped');
+        mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
+        document.getElementById('auth-subtitle').textContent = 'Buat akun untuk memulai';
+        document.getElementById('form-title').textContent = 'Buat Akun Anda';
+
+        setTimeout(() => { 
+            const registerForm = document.getElementById('register-form-content');
+            if (registerForm) { authFlipper.style.height = `${registerForm.offsetHeight}px`; }
+        }, 50);
+    }
+    
+    function showContactForm() {
+        Swal.fire({
+            title: 'Hubungi Kami',
+            html: `
+            <div class="swal-contact-form">
+                <div class="swal-form-group">
+                    <label for="swal-name">Nama Anda</label>
+                    <input id="swal-name" class="swal2-input" placeholder="John Doe">
+                </div>
+                <div class="swal-form-group">
+                    <label for="swal-email">Email Anda</label>
+                    <input id="swal-email" type="email" class="swal2-input" placeholder="john.doe@example.com">
+                </div>
+                <div class="swal-form-group">
+                    <label for="swal-message">Pesan Anda</label>
+                    <textarea id="swal-message" class="swal2-textarea" placeholder="Tulis pesan Anda di sini..."></textarea>
+                </div>
+            </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Kirim Pesan',
+            cancelButtonText: 'Batal',
+            preConfirm: () => {
+                const name = document.getElementById('swal-name').value;
+                const email = document.getElementById('swal-email').value;
+                const message = document.getElementById('swal-message').value;
+                if (!name || !email || !message) {
+                    Swal.showValidationMessage(`Harap isi semua kolom`);
+                }
+                return { name: name, email: email, message: message };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log('Contact Form Data:', result.value);
+                Swal.fire(
+                    'Terkirim!',
+                    'Terima kasih telah menghubungi kami. Pesan Anda telah kami terima.',
+                    'success'
+                );
+            }
+        });
+    }
+
     function renderCarousels() { musicCarouselTrack.innerHTML = musicTracks.map((track, index) => `<div class="carousel-item" data-index="${index}"><i class="fas fa-music item-icon"></i><span class="item-name">${track.name}</span></div>`).join(''); giftCarouselTrack.innerHTML = giftIcons.map((gift, index) => `<div class="carousel-item" data-index="${index}"><img src="${gift.path}" alt="${gift.name}"><span class="item-name">${gift.name}</span></div>`).join(''); addCarouselListeners(); }
     function addCarouselListeners() { musicCarouselTrack.addEventListener('click', e => { const item = e.target.closest('.carousel-item'); if (item) { currentMusicIndex = parseInt(item.dataset.index); updateMusicSelection(); } }); giftCarouselTrack.addEventListener('click', e => { const item = e.target.closest('.carousel-item'); if (item) { currentGiftIndex = parseInt(item.dataset.index); updateGiftSelection(); } }); }
     function updateMusicSelection() { musicCarouselTrack.querySelectorAll('.carousel-item').forEach(item => { item.classList.toggle('active', parseInt(item.dataset.index) === currentMusicIndex); }); musicPreviewPlayer.src = musicTracks[currentMusicIndex].path; document.getElementById('music-preview-btn').querySelector('i').classList.replace('fa-pause', 'fa-play'); const activeItem = musicCarouselTrack.querySelector('.active'); if (activeItem) { activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } }
     function updateGiftSelection() { giftCarouselTrack.querySelectorAll('.carousel-item').forEach(item => { item.classList.toggle('active', parseInt(item.dataset.index) === currentGiftIndex); }); const activeItem = giftCarouselTrack.querySelector('.active'); if (activeItem) { activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } }
     function formatDateForDisplay(dateString) { if (!dateString) return "Pilih Tanggal"; const date = new Date(dateString); const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"]; return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`; }
-    function setButtonLoading(isLoading, text = '') { mainActionBtn.disabled = isLoading; document.getElementById('google-signin-btn').disabled = isLoading; if (isLoading) { mainActionBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text || 'Memproses...'}`; } else { if (sliderTabsContainer.classList.contains('register-active')) { mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang'; } else { mainActionBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk'; } } }
+    function setButtonLoading(isLoading, text = '') { mainActionBtn.disabled = isLoading; document.getElementById('google-signin-btn').disabled = isLoading; if (isLoading) { mainActionBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text || 'Memproses...'}`; } else { if (sliderTabsContainer.classList.contains('register-active')) { showRegisterView(); } else { showLoginView(); } } }
     function handleMainAction() { if (sliderTabsContainer.classList.contains('register-active')) { createAccount(); } else { loginWithEmail(); } }
-    function createAccount() { const email = document.getElementById('registerEmail').value.trim(); const password = document.getElementById('registerPass').value; if (!email || !password) { Swal.fire('Input Tidak Lengkap', 'Email dan password wajib diisi.', 'warning'); return; } if (password.length < 6) { Swal.fire('Password Terlalu Pendek', 'Password minimal harus 6 karakter.', 'warning'); return; } setButtonLoading(true, 'Membuat Akun...'); auth.createUserWithEmailAndPassword(email, password).then(userCredential => { const user = userCredential.user; return createDefaultUserData(user).then(() => { return user.sendEmailVerification().then(() => { Swal.fire({ icon: 'success', title: 'Registrasi Berhasil!', html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`, allowOutsideClick: false, showConfirmButton: false, willOpen: () => { Swal.showLoading(); const verificationCheckInterval = setInterval(() => { auth.currentUser.reload().then(() => { if (auth.currentUser.emailVerified) { clearInterval(verificationCheckInterval); Swal.close(); } }); }, 2500); } }); }); }); }).catch(error => { const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message; Swal.fire('Registrasi Gagal', message, 'error'); }).finally(() => setButtonLoading(false)); }
-    function loginWithEmail() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPass').value; if (!email || !password) { Swal.fire('Input Diperlukan', 'Email dan password harus diisi.', 'warning'); return; } setButtonLoading(true, 'Memverifikasi...'); auth.signInWithEmailAndPassword(email, password).then(userCredential => { if (!userCredential.user.emailVerified) { auth.signOut(); Swal.fire({ icon: 'warning', title: 'Email Belum Diverifikasi', html: `Silakan periksa email <b>${email}</b> dan klik link verifikasi.`, confirmButtonText: 'Kirim Ulang Email', showCancelButton: true, cancelButtonText: 'Tutup' }).then(result => { if (result.isConfirmed) { userCredential.user.sendEmailVerification().then(() => { Swal.fire('Terkirim!', 'Email verifikasi baru telah dikirim.', 'success'); }); } }); } }).catch(error => { Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error'); }).finally(() => setButtonLoading(false)); }
-    function signInWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); setButtonLoading(true, 'Membuka Google...'); auth.signInWithPopup(provider).then(result => { if (result.additionalUserInfo.isNewUser) { return createDefaultUserData(result.user); } }).catch(error => { if (error.code === 'auth/unauthorized-domain') { Swal.fire('Login Google Gagal', 'Domain aplikasi ini belum diizinkan. Pastikan Anda sudah menambahkan `localhost` dan `127.0.0.1` ke Authorized Domains di Firebase Console.', 'error'); } else if (error.code !== 'auth/popup-closed-by-user') { Swal.fire('Login Google Gagal', error.message, 'error'); } }).finally(() => setButtonLoading(false)); }
+    
+    function createAccount() { 
+        const email = document.getElementById('registerEmail').value.trim(); 
+        const password = document.getElementById('registerPass').value; 
+        if (!email || !password) { Swal.fire('Input Tidak Lengkap', 'Email dan password wajib diisi.', 'warning'); return; } 
+        if (password.length < 6) { Swal.fire('Password Terlalu Pendek', 'Password minimal harus 6 karakter.', 'warning'); return; } 
+        setButtonLoading(true, 'Membuat Akun...'); 
+        auth.createUserWithEmailAndPassword(email, password)
+            .then(userCredential => { 
+                const user = userCredential.user; 
+                return createDefaultUserData(user).then(() => { 
+                    return user.sendEmailVerification().then(() => { 
+                        Swal.fire({ 
+                            icon: 'success', 
+                            title: 'Registrasi Berhasil!', 
+                            html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`, 
+                            allowOutsideClick: false, 
+                            showConfirmButton: false, 
+                            willOpen: () => { 
+                                Swal.showLoading(); 
+                                const verificationCheckInterval = setInterval(() => { 
+                                    auth.currentUser.reload().then(() => { 
+                                        if (auth.currentUser.emailVerified) { 
+                                            clearInterval(verificationCheckInterval); 
+                                            Swal.close(); 
+                                            // 3. Panggil fungsi showAdminPanel setelah verifikasi berhasil
+                                            showAdminPanel(auth.currentUser);
+                                        } 
+                                    }); 
+                                }, 2500); 
+                            } 
+                        }); 
+                    }); 
+                }); 
+            })
+            .catch(error => { 
+                const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message; 
+                Swal.fire('Registrasi Gagal', message, 'error'); 
+            })
+            .finally(() => setButtonLoading(false)); 
+    }
+
+    function loginWithEmail() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPass').value; if (!email || !password) { Swal.fire('Input Diperlukan', 'Email dan password harus diisi.', 'warning'); return; } setButtonLoading(true, 'Memverifikasi...'); auth.signInWithEmailAndPassword(email, password).then(userCredential => { if (!userCredential.user.emailVerified) { auth.signOut(); Swal.fire({ icon: 'warning', title: 'Email Belum Diverifikasi', html: `Silakan periksa email <b>${email}</b> dan klik link verifikasi.`, confirmButtonText: 'Kirim Ulang Email', showCancelButton: true, cancelButtonText: 'Tutup' }).then(result => { if (result.isConfirmed) { userCredential.user.sendEmailVerification().then(() => { Swal.fire('Terkirim!', 'Email verifikasi baru telah dikirim.', 'success'); }); } }); } /* Jika login berhasil dan email sudah terverifikasi, onAuthStateChanged akan menanganinya */ }).catch(error => { Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error'); }).finally(() => setButtonLoading(false)); }
+    function signInWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); setButtonLoading(true, 'Membuka Google...'); auth.signInWithPopup(provider).then(result => { if (result.additionalUserInfo.isNewUser) { return createDefaultUserData(result.user); } /* Jika login berhasil, onAuthStateChanged akan menanganinya */ }).catch(error => { if (error.code === 'auth/unauthorized-domain') { Swal.fire('Login Google Gagal', 'Domain aplikasi ini belum diizinkan. Pastikan Anda sudah menambahkan `localhost` dan `127.0.0.1` ke Authorized Domains di Firebase Console.', 'error'); } else if (error.code !== 'auth/popup-closed-by-user') { Swal.fire('Login Google Gagal', error.message, 'error'); } }).finally(() => setButtonLoading(false)); }
     function createDefaultUserData(user) { const nameFromEmail = user.email.split('@')[0]; const defaultDisplayName = user.displayName || nameFromEmail; const defaultData = { birthdayName: defaultDisplayName, birthDate: "2005-09-28", guestUser: "tamu", guestPass: "12345", qrImageUrl: "", bestWishes: "", stayStrongQuote: "", qrMessage: "", targetWhatsappNumber: "", puzzleWord1: 'ULTAH', puzzleWord2: 'KADO', puzzleWord3: 'DOA', musicUrl: 'mayfa.mp3', giftIconUrl: 'nir.gif' }; return database.ref('birthday_pages/' + user.uid).set(defaultData); }
     function copyShareableLink() { const linkInput = document.getElementById('shareableLink'); if (linkInput.value) { navigator.clipboard.writeText(linkInput.value).then(() => { Swal.fire({ icon: 'success', title: 'Link Berhasil Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }); }).catch(err => { console.error('Gagal menyalin:', err); Swal.fire('Oops!', 'Gagal menyalin link.', 'error'); }); } }
     function logout() { Swal.fire({ title: 'Konfirmasi Log Out', text: 'Anda yakin ingin keluar?', icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Log Out', cancelButtonText: 'Batal', reverseButtons: true }).then((result) => { if (result.isConfirmed) { musicPreviewPlayer.pause(); auth.signOut(); } }); }
@@ -500,18 +741,21 @@
         initTheme();
         renderCarousels();
         
+        // 2. Modifikasi onAuthStateChanged untuk menggunakan fungsi baru
         auth.onAuthStateChanged(user => {
             if (user && user.emailVerified) {
-                authContainer.classList.add('is-active');
-                loadDataToForm(user);
+                showAdminPanel(user);
             } else {
                 authContainer.classList.remove('is-active');
                 document.getElementById('auth-container').classList.add('loaded');
-                if (!user) { showLoginView(); }
+                if (!user) { // Hanya tampilkan form login jika benar-benar sudah logout
+                    showLoginView();
+                }
+                // Jika user ada tapi belum verifikasi, biarkan di halaman login/register
+                // tanpa melakukan apa-apa, karena pop-up verifikasi akan muncul.
             }
         });
 
-        // Event Listeners
         loginTabLabel.addEventListener('click', showLoginView);
         registerTabLabel.addEventListener('click', showRegisterView);
         mainActionBtn.addEventListener('click', handleMainAction);
@@ -519,7 +763,11 @@
         document.getElementById('copyLinkBtn').addEventListener('click', copyShareableLink);
         document.getElementById('birthDateInput').addEventListener('change', () => { document.getElementById('dateDisplayText').textContent = formatDateForDisplay(document.getElementById('birthDateInput').value); });
         
-        // Music & Gift Controls
+        document.getElementById('contact-link').addEventListener('click', (event) => {
+            event.preventDefault();
+            showContactForm();
+        });
+
         document.getElementById('prevMusicBtn').addEventListener('click', () => { currentMusicIndex = (currentMusicIndex - 1 + musicTracks.length) % musicTracks.length; updateMusicSelection(); });
         document.getElementById('nextMusicBtn').addEventListener('click', () => { currentMusicIndex = (currentMusicIndex + 1) % musicTracks.length; updateMusicSelection(); });
         document.getElementById('music-preview-btn').addEventListener('click', () => { const icon = document.getElementById('music-preview-btn').querySelector('i'); if (musicPreviewPlayer.paused) { musicPreviewPlayer.play().catch(e => console.error("Audio play failed", e)); icon.classList.replace('fa-play', 'fa-pause'); } else { musicPreviewPlayer.pause(); icon.classList.replace('fa-pause', 'fa-play'); } });
@@ -527,7 +775,6 @@
         document.getElementById('prevGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex - 1 + giftIcons.length) % giftIcons.length; updateGiftSelection(); });
         document.getElementById('nextGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex + 1) % giftIcons.length; updateGiftSelection(); });
 
-        // --- QR UPLOAD LISTENER (VERSI SUPER INSTAN) ---
         const qrUploadInput = document.getElementById('qrImageUploadInput');
         const qrPreviewImage = document.getElementById('qrPreviewImage');
         const uploadBoxText = document.getElementById('uploadBoxText');
@@ -536,7 +783,6 @@
             const file = event.target.files[0];
             if (!file) { return; }
 
-            // 1. Tampilkan preview lokal dan langsung ubah teks ke pesan sukses.
             const reader = new FileReader();
             reader.onload = function(e) {
                 qrPreviewImage.src = e.target.result;
@@ -545,7 +791,6 @@
             };
             reader.readAsDataURL(file);
 
-            // 2. Lakukan proses upload ke Firebase di latar belakang.
             const user = auth.currentUser;
             if (!user) {
                 Swal.fire('Error', 'Anda harus login untuk mengunggah gambar.', 'error');
