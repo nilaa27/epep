@@ -506,79 +506,50 @@
     const pageFooter = document.querySelector('.page-footer');
     
     let newQrImageUrl = null;
-    let customMusic = null; // NEW: To store uploaded music info {name, path}
+    let customMusic = null; 
+    let currentMusicIndex = 0;
 
-    // Music and Gift Data
     const musicTracks = [ 
         { name: "Musik 1", path: "/musik/musik1.mp3" }, 
         { name: "Musik 2", path: "/musik/musik2.mp3" }, 
         { name: "Musik 3", path: "/musik/musik3.mp3" }, 
         { name: "Musik 4", path: "/musik/musik4.mp3" }, 
         { name: "Musik 5", path: "/musik/musik5.mp3" },
-        // NEW: Special object for upload button
         { name: "Upload Musik", type: "upload", icon: "fas fa-upload" }
     ];
-    let currentMusicIndex = 0; // Default to the first track
     const giftIcons = [ { name: "Kado1", path: "nir.gif" }, { name: "Kado2", path: "/img/gif1.gif" }, { name: "Kado3", path: "/img/gif2.gif" }, { name: "Kado4", path: "/img/gif3.gif" } ];
     let currentGiftIndex = 0;
 
-    function showAdminPanel(user) {
-        if (!user) return;
-        authContainer.classList.add('is-active');
-        pageFooter.style.display = 'none';
-        loadDataToForm(user);
-    }
-    
-    // Core Functions
+    function showAdminPanel(user) { if (!user) return; authContainer.classList.add('is-active'); pageFooter.style.display = 'none'; loadDataToForm(user); }
     themeToggle.addEventListener('click', () => { const currentTheme = document.documentElement.getAttribute('data-theme'); const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', newTheme); localStorage.setItem('theme', newTheme); });
     function initTheme() { const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.documentElement.setAttribute('data-theme', savedTheme); }
     function togglePasswordVisibility(fieldId, icon) { const field = document.getElementById(fieldId); if (field) { field.type = field.type === "password" ? "text" : "password"; icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash'); } }
-    
-    function showLoginView() { 
-        sliderTabsContainer.classList.add('login-active');
-        sliderTabsContainer.classList.remove('register-active');
-        authFlipper.classList.remove('is-flipped');
-        mainActionBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
-        document.getElementById('auth-subtitle').textContent = 'Masuk untuk melanjutkan';
-        document.getElementById('form-title').textContent = 'Selamat datang!';
-        setTimeout(() => { const loginForm = document.getElementById('login-form-content'); if (loginForm) { authFlipper.style.height = `${loginForm.offsetHeight}px`; } }, 50); 
-    }
-    
-    function showRegisterView() { 
-        sliderTabsContainer.classList.remove('login-active');
-        sliderTabsContainer.classList.add('register-active');
-        authFlipper.classList.add('is-flipped');
-        mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
-        document.getElementById('auth-subtitle').textContent = 'Buat akun untuk memulai';
-        document.getElementById('form-title').textContent = 'Buat Akun Anda';
-        setTimeout(() => { const registerForm = document.getElementById('register-form-content'); if (registerForm) { authFlipper.style.height = `${registerForm.offsetHeight}px`; } }, 50);
-    }
-    
-    function showContactForm() { Swal.fire({ title: 'Hubungi Kami', html: `<div class="swal-contact-form"><div class="swal-form-group"><label for="swal-name">Nama Anda</label><input id="swal-name" class="swal2-input" placeholder="John Doe"></div><div class="swal-form-group"><label for="swal-email">Email Anda</label><input id="swal-email" type="email" class="swal2-input" placeholder="john.doe@example.com"></div><div class="swal-form-group"><label for="swal-message">Pesan Anda</label><textarea id="swal-message" class="swal2-textarea" placeholder="Tulis pesan Anda di sini..."></textarea></div></div>`, showCancelButton: true, confirmButtonText: 'Kirim Pesan', cancelButtonText: 'Batal', preConfirm: () => { const name = document.getElementById('swal-name').value; const email = document.getElementById('swal-email').value; const message = document.getElementById('swal-message').value; if (!name || !email || !message) { Swal.showValidationMessage(`Harap isi semua kolom`); } return { name: name, email: email, message: message }; } }).then((result) => { if (result.isConfirmed) { console.log('Contact Form Data:', result.value); Swal.fire('Terkirim!', 'Terima kasih telah menghubungi kami. Pesan Anda telah kami terima.', 'success'); } }); }
+    function showLoginView() { sliderTabsContainer.classList.add('login-active'); sliderTabsContainer.classList.remove('register-active'); authFlipper.classList.remove('is-flipped'); mainActionBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk'; document.getElementById('auth-subtitle').textContent = 'Masuk untuk melanjutkan'; document.getElementById('form-title').textContent = 'Selamat datang!'; setTimeout(() => { const loginForm = document.getElementById('login-form-content'); if (loginForm) { authFlipper.style.height = `${loginForm.offsetHeight}px`; } }, 50); }
+    function showRegisterView() { sliderTabsContainer.classList.remove('login-active'); sliderTabsContainer.classList.add('register-active'); authFlipper.classList.add('is-flipped'); mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang'; document.getElementById('auth-subtitle').textContent = 'Buat akun untuk memulai'; document.getElementById('form-title').textContent = 'Buat Akun Anda'; setTimeout(() => { const registerForm = document.getElementById('register-form-content'); if (registerForm) { authFlipper.style.height = `${registerForm.offsetHeight}px`; } }, 50); }
+    function showContactForm() { Swal.fire({ title: 'Hubungi Kami', html: `<div class="swal-contact-form"><div class="swal-form-group"><label for="swal-name">Nama Anda</label><input id="swal-name" class="swal2-input" placeholder="John Doe"></div><div class="swal-form-group"><label for="swal-email">Email Anda</label><input id="swal-email" type="email" class="swal2-input" placeholder="john.doe@example.com"></div><div class="swal-form-group"><label for="swal-message">Pesan Anda</label><textarea id="swal-message" class="swal2-textarea" placeholder="Tulis pesan Anda di sini..."></textarea></div></div>`, showCancelButton: true, confirmButtonText: 'Kirim Pesan', cancelButtonText: 'Batal', preConfirm: () => { const name = document.getElementById('swal-name').value; const email = document.getElementById('swal-email').value; const message = document.getElementById('swal-message').value; if (!name || !email || !message) { Swal.showValidationMessage(`Harap isi semua kolom`); } return { name, email, message }; } }).then((result) => { if (result.isConfirmed) { Swal.fire('Terkirim!', 'Terima kasih telah menghubungi kami.', 'success'); } }); }
 
-    // MODIFIED: renderCarousels now handles the upload button
     function renderCarousels() { 
         musicCarouselTrack.innerHTML = musicTracks.map((track, index) => {
             const isUploadBtn = track.type === 'upload';
             const iconClass = isUploadBtn ? track.icon : 'fas fa-music';
-            return `<div class="carousel-item" data-index="${index}" ${isUploadBtn ? 'data-type="upload"' : ''}>
-                        <i class="${iconClass} item-icon"></i>
-                        <span class="item-name">${track.name}</span>
-                    </div>`;
+            return `<div class="carousel-item" data-index="${index}" ${isUploadBtn ? 'data-type="upload"' : ''}><i class="${iconClass} item-icon"></i><span class="item-name">${track.name}</span></div>`;
         }).join('');
         giftCarouselTrack.innerHTML = giftIcons.map((gift, index) => `<div class="carousel-item" data-index="${index}"><img src="${gift.path}" alt="${gift.name}"><span class="item-name">${gift.name}</span></div>`).join(''); 
         addCarouselListeners(); 
     }
 
-    // MODIFIED: addCarouselListeners now handles clicks on the upload button
     function addCarouselListeners() { 
         musicCarouselTrack.addEventListener('click', e => { 
             const item = e.target.closest('.carousel-item'); 
             if (item) {
                 if (item.dataset.type === 'upload') {
-                    document.getElementById('musicUploadInput').click();
+                    if (customMusic) {
+                        currentMusicIndex = -1; // Reactivate existing custom music
+                        updateMusicSelection();
+                    } else {
+                        document.getElementById('musicUploadInput').click(); // Prompt for new upload
+                    }
                 } else {
-                    customMusic = null; // Clear custom music selection
                     currentMusicIndex = parseInt(item.dataset.index); 
                     updateMusicSelection(); 
                 }
@@ -587,17 +558,21 @@
         giftCarouselTrack.addEventListener('click', e => { const item = e.target.closest('.carousel-item'); if (item) { currentGiftIndex = parseInt(item.dataset.index); updateGiftSelection(); } }); 
     }
 
-    // MODIFIED: updateMusicSelection now handles custom uploaded tracks
     function updateMusicSelection() {
         const musicItems = musicCarouselTrack.querySelectorAll('.carousel-item');
+        let activeItem = null;
+
         musicItems.forEach((item, index) => {
-            const isActive = customMusic ? item.dataset.type === 'upload' : index === currentMusicIndex;
+            const isCustomActive = currentMusicIndex === -1 && item.dataset.type === 'upload';
+            const isPresetActive = index === currentMusicIndex;
+            const isActive = isCustomActive || isPresetActive;
+            
             item.classList.toggle('active', isActive);
+            if (isActive) activeItem = item;
         });
 
-        const activeItem = musicCarouselTrack.querySelector('.active');
         if (activeItem) {
-            musicPreviewPlayer.src = customMusic ? customMusic.path : musicTracks[currentMusicIndex].path;
+            musicPreviewPlayer.src = currentMusicIndex === -1 ? customMusic.path : musicTracks[currentMusicIndex].path;
             activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
         document.getElementById('music-preview-btn').querySelector('i').classList.replace('fa-pause', 'fa-play');
@@ -610,21 +585,17 @@
     
     function createAccount() { const email = document.getElementById('registerEmail').value.trim(); const password = document.getElementById('registerPass').value; if (!email || !password) { Swal.fire('Input Tidak Lengkap', 'Email dan password wajib diisi.', 'warning'); return; } if (password.length < 6) { Swal.fire('Password Terlalu Pendek', 'Password minimal harus 6 karakter.', 'warning'); return; } setButtonLoading(true, 'Membuat Akun...'); auth.createUserWithEmailAndPassword(email, password).then(userCredential => { const user = userCredential.user; return createDefaultUserData(user).then(() => { return user.sendEmailVerification().then(() => { Swal.fire({ icon: 'success', title: 'Registrasi Berhasil!', html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`, allowOutsideClick: false, showConfirmButton: false, willOpen: () => { Swal.showLoading(); const verificationCheckInterval = setInterval(() => { auth.currentUser.reload().then(() => { if (auth.currentUser.emailVerified) { clearInterval(verificationCheckInterval); Swal.close(); showAdminPanel(auth.currentUser); } }); }, 2500); } }); }); }); }).catch(error => { const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message; Swal.fire('Registrasi Gagal', message, 'error'); }).finally(() => setButtonLoading(false)); }
     function loginWithEmail() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPass').value; if (!email || !password) { Swal.fire('Input Diperlukan', 'Email dan password harus diisi.', 'warning'); return; } setButtonLoading(true, 'Memverifikasi...'); auth.signInWithEmailAndPassword(email, password).then(userCredential => { if (!userCredential.user.emailVerified) { auth.signOut(); Swal.fire({ icon: 'warning', title: 'Email Belum Diverifikasi', html: `Silakan periksa email <b>${email}</b> dan klik link verifikasi.`, confirmButtonText: 'Kirim Ulang Email', showCancelButton: true, cancelButtonText: 'Tutup' }).then(result => { if (result.isConfirmed) { userCredential.user.sendEmailVerification().then(() => { Swal.fire('Terkirim!', 'Email verifikasi baru telah dikirim.', 'success'); }); } }); } }).catch(error => { Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error'); }).finally(() => setButtonLoading(false)); }
-    function signInWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); setButtonLoading(true, 'Membuka Google...'); auth.signInWithPopup(provider).then(result => { if (result.additionalUserInfo.isNewUser) { return createDefaultUserData(result.user); } }).catch(error => { if (error.code === 'auth/unauthorized-domain') { Swal.fire('Login Google Gagal', 'Domain aplikasi ini belum diizinkan. Pastikan Anda sudah menambahkan `localhost` dan `127.0.0.1` ke Authorized Domains di Firebase Console.', 'error'); } else if (error.code !== 'auth/popup-closed-by-user') { Swal.fire('Login Google Gagal', error.message, 'error'); } }).finally(() => setButtonLoading(false)); }
+    function signInWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); setButtonLoading(true, 'Membuka Google...'); auth.signInWithPopup(provider).then(result => { if (result.additionalUserInfo.isNewUser) { return createDefaultUserData(result.user); } }).catch(error => { if (error.code !== 'auth/popup-closed-by-user') { Swal.fire('Login Google Gagal', error.message, 'error'); } }).finally(() => setButtonLoading(false)); }
     function createDefaultUserData(user) { const nameFromEmail = user.email.split('@')[0]; const defaultDisplayName = user.displayName || nameFromEmail; const defaultData = { birthdayName: defaultDisplayName, birthDate: "2005-09-28", guestUser: "tamu", guestPass: "12345", qrImageUrl: "", bestWishes: "", stayStrongQuote: "", qrMessage: "", targetWhatsappNumber: "", puzzleWord1: 'ULTAH', puzzleWord2: 'KADO', puzzleWord3: 'DOA', musicUrl: musicTracks[0].path, giftIconUrl: giftIcons[0].path }; return database.ref('birthday_pages/' + user.uid).set(defaultData); }
-    function copyShareableLink() { const linkInput = document.getElementById('shareableLink'); if (linkInput.value) { navigator.clipboard.writeText(linkInput.value).then(() => { Swal.fire({ icon: 'success', title: 'Link Berhasil Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }); }).catch(err => { console.error('Gagal menyalin:', err); Swal.fire('Oops!', 'Gagal menyalin link.', 'error'); }); } }
+    function copyShareableLink() { const linkInput = document.getElementById('shareableLink'); if (linkInput.value) { navigator.clipboard.writeText(linkInput.value).then(() => { Swal.fire({ icon: 'success', title: 'Link Berhasil Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }); }); } }
     function logout() { Swal.fire({ title: 'Konfirmasi Log Out', text: 'Anda yakin ingin keluar?', icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Log Out', cancelButtonText: 'Batal', reverseButtons: true }).then((result) => { if (result.isConfirmed) { musicPreviewPlayer.pause(); auth.signOut(); } }); }
     
-    // MODIFIED: loadDataToForm now identifies custom music URLs
     function loadDataToForm(user) {
         if (!user) return;
-        const nameFromEmail = user.email.split('@')[0];
-        const welcomeName = user.displayName || nameFromEmail;
-        Swal.fire({ icon: 'success', title: `Selamat Datang, ${welcomeName}!`, toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true, didOpen: () => confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } }) });
+        Swal.fire({ icon: 'success', title: `Selamat Datang, ${user.displayName || user.email.split('@')[0]}!`, toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true, didOpen: () => confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } }) });
 
         database.ref('birthday_pages/' + user.uid).once('value').then(snapshot => {
             const data = snapshot.val() || {};
-            
             document.getElementById('birthdayNameInput').value = data.birthdayName || '';
             document.getElementById('bestWishesInput').value = data.bestWishes || '';
             document.getElementById('stayStrongQuoteInput').value = data.stayStrongQuote || '';
@@ -643,17 +614,14 @@
             document.getElementById('birthDateInput').value = data.birthDate || '';
             document.getElementById('dateDisplayText').textContent = formatDateForDisplay(data.birthDate);
             
-            // Music selection logic
             const savedMusicPath = data.musicUrl || musicTracks[0].path;
-            const preDefinedTrackIndex = musicTracks.findIndex(track => track.path === savedMusicPath);
+            const preDefinedTrackIndex = musicTracks.findIndex(track => track.path === savedMusicPath && track.type !== 'upload');
 
-            if (preDefinedTrackIndex !== -1 && musicTracks[preDefinedTrackIndex].type !== 'upload') {
-                customMusic = null;
+            if (preDefinedTrackIndex !== -1) {
                 currentMusicIndex = preDefinedTrackIndex;
             } else {
-                // It's a custom uploaded URL
-                customMusic = { name: 'Musik Unggahan', path: savedMusicPath };
-                currentMusicIndex = -1; // Indicate no pre-defined track is selected
+                customMusic = { name: 'Musik Pilihan', path: savedMusicPath };
+                currentMusicIndex = -1;
                 const uploadBtn = musicCarouselTrack.querySelector('[data-type="upload"]');
                 if(uploadBtn) {
                     uploadBtn.querySelector('.item-icon').className = 'fas fa-check-circle item-icon';
@@ -669,7 +637,6 @@
         }).catch(err => Swal.fire('Gagal Memuat Data', err.message, 'error'));
     }
 
-    // MODIFIED: saveData now checks for custom music
     function saveData() { 
         const user = auth.currentUser;
         if (!user) return;
@@ -678,6 +645,8 @@
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
         
+        const musicToSave = currentMusicIndex === -1 ? customMusic.path : musicTracks[currentMusicIndex].path;
+
         const settings = { 
             birthdayName: document.getElementById('birthdayNameInput').value, 
             birthDate: document.getElementById('birthDateInput').value,
@@ -691,27 +660,20 @@
             puzzleWord3: document.getElementById('puzzleWord3').value.trim().toUpperCase(), 
             qrImageUrl: newQrImageUrl || document.getElementById('qrPreviewImage').src,
             qrMessage: document.getElementById('qrMessageInput').value,
-            musicUrl: customMusic ? customMusic.path : musicTracks[currentMusicIndex].path,
+            musicUrl: musicToSave,
             giftIconUrl: giftIcons[currentGiftIndex].path
         };
         
         database.ref('birthday_pages/' + user.uid).update(settings).then(() => { newQrImageUrl = null; const shareableLink = document.getElementById('shareableLink').value; const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim(); Swal.fire({ title: 'Data Berhasil Disimpan!', html: 'Semua perubahan telah disimpan.<br>Pilih tindakan selanjutnya:', icon: 'success', showCancelButton: true, showDenyButton: true, confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WA', denyButtonText: '<i class="fas fa-copy"></i> Salin Info', cancelButtonText: 'Selesai', reverseButtons: true, }).then((result) => { if (result.isConfirmed) { if (settings.targetWhatsappNumber) { window.open(`https://wa.me/${settings.targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank'); } else { Swal.fire({ icon: 'info', title: 'Nomor WhatsApp Kosong', text: 'Nomor WhatsApp target belum diisi.' }); } } else if (result.isDenied) { navigator.clipboard.writeText(messageText).then(() => Swal.fire({ icon: 'success', title: 'Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 })); } }); }).catch(e => Swal.fire('Gagal Menyimpan', e.message, 'error')).finally(() => { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan'; });
     }
 
-    // Initialize the App
     document.addEventListener('DOMContentLoaded', () => {
         initTheme();
         renderCarousels();
         
         auth.onAuthStateChanged(user => {
-            if (user && user.emailVerified) {
-                showAdminPanel(user);
-            } else {
-                authContainer.classList.remove('is-active');
-                document.getElementById('auth-container').classList.add('loaded');
-                pageFooter.style.display = 'block';
-                if (!user) { showLoginView(); }
-            }
+            if (user && user.emailVerified) { showAdminPanel(user); } 
+            else { authContainer.classList.remove('is-active'); document.getElementById('auth-container').classList.add('loaded'); pageFooter.style.display = 'block'; if (!user) { showLoginView(); } }
         });
 
         loginTabLabel.addEventListener('click', showLoginView);
@@ -721,31 +683,28 @@
         document.getElementById('copyLinkBtn').addEventListener('click', copyShareableLink);
         document.getElementById('birthDateInput').addEventListener('change', () => { document.getElementById('dateDisplayText').textContent = formatDateForDisplay(document.getElementById('birthDateInput').value); });
         document.getElementById('contact-link').addEventListener('click', (event) => { event.preventDefault(); showContactForm(); });
-
-        document.getElementById('prevMusicBtn').addEventListener('click', () => { currentMusicIndex = (currentMusicIndex - 1 + musicTracks.length) % musicTracks.length; updateMusicSelection(); });
-        document.getElementById('nextMusicBtn').addEventListener('click', () => { currentMusicIndex = (currentMusicIndex + 1) % musicTracks.length; updateMusicSelection(); });
+        document.getElementById('prevMusicBtn').addEventListener('click', () => { if (currentMusicIndex > 0) { currentMusicIndex--; } else { currentMusicIndex = musicTracks.findIndex(t => t.type !== 'upload'); } updateMusicSelection(); });
+        document.getElementById('nextMusicBtn').addEventListener('click', () => { const lastPresetIndex = musicTracks.findIndex(t => t.type === 'upload') - 1; if (currentMusicIndex < lastPresetIndex) { currentMusicIndex++; } else { currentMusicIndex = 0; } updateMusicSelection(); });
         document.getElementById('music-preview-btn').addEventListener('click', () => { const icon = document.getElementById('music-preview-btn').querySelector('i'); if (musicPreviewPlayer.paused) { musicPreviewPlayer.play().catch(e => console.error("Audio play failed", e)); icon.classList.replace('fa-play', 'fa-pause'); } else { musicPreviewPlayer.pause(); icon.classList.replace('fa-pause', 'fa-play'); } });
         musicPreviewPlayer.onended = () => { document.getElementById('music-preview-btn').querySelector('i').classList.replace('fa-pause', 'fa-play'); };
         document.getElementById('prevGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex - 1 + giftIcons.length) % giftIcons.length; updateGiftSelection(); });
         document.getElementById('nextGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex + 1) % giftIcons.length; updateGiftSelection(); });
 
-        // NEW: Event listener for the music upload input
         document.getElementById('musicUploadInput').addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (!file) { return; }
-
             const user = auth.currentUser;
-            if (!user) {
-                Swal.fire('Error', 'Anda harus login untuk mengunggah musik.', 'error');
-                return;
-            }
+            if (!user) { Swal.fire('Error', 'Anda harus login untuk mengunggah musik.', 'error'); return; }
 
+            // Instant Preview
+            const localUrl = URL.createObjectURL(file);
+            customMusic = { name: file.name, path: localUrl };
+            currentMusicIndex = -1; 
+            updateMusicSelection();
+            
             const uploadBtn = musicCarouselTrack.querySelector('[data-type="upload"]');
             const icon = uploadBtn.querySelector('.item-icon');
             const name = uploadBtn.querySelector('.item-name');
-            const originalIconClass = icon.className;
-            const originalName = name.textContent;
-
             icon.className = 'fas fa-spinner fa-spin item-icon';
             name.textContent = 'Mengunggah...';
 
@@ -753,45 +712,39 @@
             const storageRef = storage.ref(filePath);
             const uploadTask = storageRef.put(file);
 
-            uploadTask.on('state_changed',
-                (snapshot) => { /* Optional: Handle progress */ },
+            uploadTask.on('state_changed', null, 
                 (error) => {
                     console.error("Upload Failed:", error);
-                    Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah musik.', 'error');
-                    icon.className = originalIconClass; // Reset on failure
-                    name.textContent = originalName;
+                    Swal.fire('Upload Gagal', 'Terjadi kesalahan.', 'error');
+                    icon.className = 'fas fa-upload item-icon';
+                    name.textContent = 'Upload Musik';
+                    customMusic = null; // Reset on failure
                 },
                 () => {
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                         console.log('Music uploaded:', downloadURL);
-                        customMusic = { name: file.name, path: downloadURL };
-                        currentMusicIndex = -1; // Unset pre-defined index
-                        
+                        customMusic.path = downloadURL; // Update path from local to firebase URL
                         icon.className = 'fas fa-check-circle item-icon';
                         name.textContent = file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name;
-                        updateMusicSelection(); // Visually select the new uploaded music
-                        Swal.fire('Sukses!', 'Musik Anda berhasil diunggah dan dipilih.', 'success');
+                        Swal.fire({icon: 'success', title: 'Upload Sukses!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000});
                     });
                 }
             );
         });
 
         const qrUploadInput = document.getElementById('qrImageUploadInput');
-        const qrPreviewImage = document.getElementById('qrPreviewImage');
-        const uploadBoxText = document.getElementById('uploadBoxText');
         qrUploadInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (!file) { return; }
             const reader = new FileReader();
-            reader.onload = function(e) { qrPreviewImage.src = e.target.result; qrPreviewImage.style.display = 'block'; uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Gambar berhasil dipilih!`; };
+            reader.onload = (e) => { document.getElementById('qrPreviewImage').src = e.target.result; document.getElementById('qrPreviewImage').style.display = 'block'; document.getElementById('uploadBoxText').innerHTML = `<i class="fas fa-check-circle"></i> Gambar dipilih!`; };
             reader.readAsDataURL(file);
             const user = auth.currentUser;
-            if (!user) { Swal.fire('Error', 'Anda harus login untuk mengunggah gambar.', 'error'); return; }
+            if (!user) { Swal.fire('Error', 'Anda harus login.', 'error'); return; }
             newQrImageUrl = null;
             const filePath = `qr_codes/${user.uid}/${Date.now()}-${file.name}`;
-            const storageRef = storage.ref(filePath);
-            const uploadTask = storageRef.put(file);
-            uploadTask.on('state_changed', (snapshot) => {}, (error) => { console.error("Upload Gagal:", error); Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah gambar.', 'error'); uploadBoxText.innerHTML = `<i class="fas fa-upload"></i> Klik atau jatuhkan file di sini`; qrPreviewImage.style.display = 'none'; }, () => { uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { console.log('File diunggah dan tersedia di', downloadURL); newQrImageUrl = downloadURL; uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Berhasil diunggah!`; }); });
+            const uploadTask = storage.ref(filePath).put(file);
+            uploadTask.on('state_changed', null, (error) => { Swal.fire('Upload Gagal', 'Terjadi kesalahan.', 'error'); }, () => { uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { newQrImageUrl = downloadURL; document.getElementById('uploadBoxText').innerHTML = `<i class="fas fa-check-circle"></i> Berhasil diunggah!`; }); });
         });
     });
     </script>
