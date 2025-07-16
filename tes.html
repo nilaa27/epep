@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Regist page</title>
+    <title>XlordVerse - Panel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -494,7 +494,7 @@
                 © 2025 xlordcode. All rights reserved.
             </p>
             <p class="footer-creator">
-                Made with <i class="fas fa-heart"></i> by Misbah
+                Made with <i class="fas fa-heart"></i> by Misb4
             </p>
         </div>
     </div>
@@ -525,8 +525,8 @@
     const storage = firebase.storage(); // Untuk QR Code
 
     // --- Konfigurasi Supabase (Untuk Unggah Musik) ---
-    const SUPABASE_URL = 'https://nzjbpacjssqagnpobqsx.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56amJwYWNqc3NxYWducG9icXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI2NzYzNzIsImV4cCI6MjA2ODI1MjM3Mn0.mW_KvkD8gTcdVY_OJbhkcMfR_wqf84J_-f3-DH_dqDM'; 
+    const SUPABASE_URL = 'https://qwixfwotqmknzzbdvynk.supabase.co'; 
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3aXhmd290cW1rbnp6YmR2eW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI2ODIyMzgsImV4cCI6MjA2ODI1ODIzOH0.qdtutb3H2e8zy-NZmu-m33TXJmnGrTPOnto0Z36Yc-Q'; 
     
     // PERBAIKAN: Nama variabel diubah menjadi 'supabaseClient'
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -835,7 +835,7 @@
                 // PERBAIKAN: Menggunakan 'supabaseClient'
                 const { data, error } = await supabaseClient
                     .storage
-                    .from('music-upload') // Ganti nama bucket jika perlu
+                    .from('music-uploads') // Ganti nama bucket jika perlu
                     .upload(filePath, file);
 
                 if (error) { throw error; }
@@ -843,7 +843,7 @@
                 // PERBAIKAN: Menggunakan 'supabaseClient'
                 const { data: publicUrlData } = supabaseClient
                     .storage
-                    .from('music-upload') // Ganti nama bucket jika perlu
+                    .from('music-uploads') // Ganti nama bucket jika perlu
                     .getPublicUrl(filePath);
 
                 if (customMusic) {
