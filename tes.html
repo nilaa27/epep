@@ -45,7 +45,7 @@
     
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
     
-    body { background: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; transition: var(--transition); }
+    body { background: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; transition: var(--transition); }
     
     .theme-toggle { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-color); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; transition: var(--transition); }
     .theme-toggle:hover { transform: scale(1.1); }
@@ -53,7 +53,7 @@
     .theme-toggle i { font-size: 1.2rem; color: var(--text-color); transition: var(--transition); }
     [data-theme="dark"] .fa-moon, [data-theme="light"] .fa-sun { display: none; }
     
-    #auth-container { width: 100%; max-width: 960px; transition: all 0.6s ease; perspective: 1500px; display: flex; }
+    #auth-container { width: 100%; max-width: 960px; transition: all 0.6s ease; perspective: 1500px; display: flex; flex-shrink: 0; }
     #auth-container.is-active { max-width: 1200px; min-height: 95vh; }
     
     .auth-card {
@@ -142,7 +142,7 @@
     .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
     
     .terms-section { text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--text-muted); }
-    .terms-section a { color: var(--text-muted); text-decoration: underline; font-weight: 500; }
+    .terms-section a { color: var(--text-muted); text-decoration: underline; font-weight: 500; transition: var(--transition); }
     .terms-section a:hover { color: var(--primary); }
 
     .btn-google { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 16px; background: var(--bg-color); border: none; border-radius: var(--radius-inner); color: var(--text-color); font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); box-shadow: 8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light); margin-bottom: 20px; }
@@ -154,13 +154,6 @@
     .auth-separator:not(:empty)::before { margin-right: .5em; }
     .auth-separator:not(:empty)::after { margin-left: .5em; }
     
-    .support-section { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 25px; border-top: 1px solid var(--shadow-dark); padding-top: 25px; }
-    .footer-nav { display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 15px; }
-    .footer-nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
-    .footer-nav a:hover { color: var(--primary); }
-    .footer-copyright { margin-bottom: 10px; }
-    .footer-creator .fa-heart { color: var(--pink); animation: pulse 1.5s ease-in-out infinite; display: inline-block; }
-
     @media (max-width: 991px) {
         #auth-container { max-width: 450px; }
         .auth-card { flex-direction: column; }
@@ -180,7 +173,7 @@
     }
     @media (max-width: 768px) { #auth-box { padding: 30px 20px; } .brand-header img { width: 70px; height: 70px; } }
 
-    /* Admin Panel styles (unchanged) */
+    /* Admin Panel styles */
     #adminPanelBox { display: none; flex-direction: column; width: 100%; height: 95vh; animation: slideIn 0.6s ease-out; padding: 30px; background: var(--bg-color); border-radius: var(--radius-main); box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light); }
     #auth-container.is-active .auth-card { display: none; }
     #auth-container.is-active #adminPanelBox { display: flex; }
@@ -204,7 +197,7 @@
     .carousel-item.active { box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light), 0 0 0 3px var(--primary); color: var(--primary); }
     .carousel-item img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 8px; }
     .carousel-item .item-icon { font-size: 2rem; margin-bottom: 10px; }
-    .carousel-item .item-name { font-size: 0.85rem; font-weight: 500; }
+    .carousel-item .item-name { font-size: 0.85rem; font-weight: 500; word-break: break-all; }
     .carousel-controls { display: flex; align-items: center; justify-content: center; gap: 20px; }
     .carousel-nav-btn { background: var(--bg-color); border: none; border-radius: 50%; color: var(--text-muted); width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; font-size: 1rem; cursor: pointer; transition: var(--transition); box-shadow: 7px 7px 14px var(--shadow-dark), -7px -7px 14px var(--shadow-light); }
     .carousel-nav-btn:hover { color: var(--primary); }
@@ -233,12 +226,34 @@
     .swal2-confirm { background: var(--primary) !important; color: #fff !important; }
     .swal2-cancel { background-color: var(--bg-color) !important; color: var(--text-muted) !important; }
 
-    /* NEW: Styles for the contact form popup */
+    /* SweetAlert2 Contact Form styles */
     .swal-contact-form { display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
     .swal-form-group { width: 100%; margin-bottom: 15px; }
     .swal-form-group label { margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); display: block; }
     .swal-form-group .swal2-input, .swal-form-group .swal2-textarea { width: 100% !important; margin: 0; background: var(--bg-color) !important; box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light) !important; border: none !important; border-radius: var(--radius-inner) !important; color: var(--text-color) !important; }
     .swal-form-group .swal2-input:focus, .swal-form-group .swal2-textarea:focus { box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light), 0 0 0 2px var(--primary) !important; }
+
+    /* Styles for the separated page footer */
+    .page-footer {
+        width: 100%;
+        max-width: 450px;
+        margin: 20px auto 0 auto;
+        padding: 10px 20px;
+        text-align: center;
+        display: none;
+        animation: slideIn 0.6s ease-out;
+    }
+    .page-footer .support-section {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        border-top: 1px solid var(--shadow-dark);
+        padding-top: 20px;
+    }
+    .footer-nav { display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 15px; }
+    .footer-nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
+    .footer-nav a:hover { color: var(--primary); }
+    .footer-copyright { margin-bottom: 10px; }
+    .footer-creator .fa-heart { color: var(--pink); animation: pulse 1.5s ease-in-out infinite; display: inline-block; }
     
     </style>
 </head>
@@ -320,20 +335,7 @@
                 <div class="terms-section">
                     <p>By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
                 </div>
-                
-                <div class="support-section">
-                    <div class="footer-nav">
-                        <a href="index.html">Home</a>
-                        <a href="#">Dashboard</a>
-                        <a href="#" id="contact-link">Contact</a>
-                    </div>
-                    <p class="footer-copyright">
-                        © 2025 xlordcode. All rights reserved.
-                    </p>
-                    <p class="footer-creator">
-                        Made with <i class="fas fa-heart"></i> by Misbah
-                    </p>
-                </div>
+
             </div>
         </div>
         
@@ -450,7 +452,24 @@
             </div>
         </div>
     </div>
-
+    
+    <div class="page-footer">
+        <div class="support-section">
+            <div class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="#">Dashboard</a>
+                <a href="#" id="contact-link">Contact</a>
+            </div>
+            <p class="footer-copyright">
+                © 2025 xlordcode. All rights reserved.
+            </p>
+            <p class="footer-creator">
+                Made with <i class="fas fa-heart"></i> by Misbah
+            </p>
+        </div>
+    </div>
+    
+    <input type="file" id="musicUploadInput" accept="audio/mp3,audio/mpeg" style="display: none;" />
     <audio id="musicPreviewPlayer"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
@@ -484,21 +503,29 @@
     const musicCarouselTrack = document.getElementById('music-carousel-track');
     const giftCarouselTrack = document.getElementById('gift-carousel-track');
     const musicPreviewPlayer = document.getElementById('musicPreviewPlayer');
+    const pageFooter = document.querySelector('.page-footer');
     
     let newQrImageUrl = null;
+    let customMusic = null; // NEW: To store uploaded music info {name, path}
 
     // Music and Gift Data
-    const musicTracks = [ { name: "musik 1", path: "/musik/musik1.mp3" }, { name: "musik 2", path: "/musik/musik2.mp3" }, { name: "musik 3", path: "/musik/musik3.mp3" }, { name: "musik 4", path: "/musik/musik4.mp3" }, { name: "musik 5", path: "/musik/musik5.mp3" }, { name: "musik default", path: "mayfa.mp3" } ];
-    let currentMusicIndex = musicTracks.length - 1;
+    const musicTracks = [ 
+        { name: "Musik 1", path: "/musik/musik1.mp3" }, 
+        { name: "Musik 2", path: "/musik/musik2.mp3" }, 
+        { name: "Musik 3", path: "/musik/musik3.mp3" }, 
+        { name: "Musik 4", path: "/musik/musik4.mp3" }, 
+        { name: "Musik 5", path: "/musik/musik5.mp3" },
+        // NEW: Special object for upload button
+        { name: "Upload Musik", type: "upload", icon: "fas fa-upload" }
+    ];
+    let currentMusicIndex = 0; // Default to the first track
     const giftIcons = [ { name: "Kado1", path: "nir.gif" }, { name: "Kado2", path: "/img/gif1.gif" }, { name: "Kado3", path: "/img/gif2.gif" }, { name: "Kado4", path: "/img/gif3.gif" } ];
     let currentGiftIndex = 0;
 
-    // --- PERBAIKAN DIMULAI DI SINI ---
-
-    // 1. Fungsi terpisah untuk menampilkan panel admin
     function showAdminPanel(user) {
-        if (!user) return; // Pastikan user valid
+        if (!user) return;
         authContainer.classList.add('is-active');
+        pageFooter.style.display = 'none';
         loadDataToForm(user);
     }
     
@@ -514,11 +541,7 @@
         mainActionBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
         document.getElementById('auth-subtitle').textContent = 'Masuk untuk melanjutkan';
         document.getElementById('form-title').textContent = 'Selamat datang!';
-        
-        setTimeout(() => { 
-            const loginForm = document.getElementById('login-form-content');
-            if (loginForm) { authFlipper.style.height = `${loginForm.offsetHeight}px`; } 
-        }, 50); 
+        setTimeout(() => { const loginForm = document.getElementById('login-form-content'); if (loginForm) { authFlipper.style.height = `${loginForm.offsetHeight}px`; } }, 50); 
     }
     
     function showRegisterView() { 
@@ -528,111 +551,71 @@
         mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
         document.getElementById('auth-subtitle').textContent = 'Buat akun untuk memulai';
         document.getElementById('form-title').textContent = 'Buat Akun Anda';
-
-        setTimeout(() => { 
-            const registerForm = document.getElementById('register-form-content');
-            if (registerForm) { authFlipper.style.height = `${registerForm.offsetHeight}px`; }
-        }, 50);
+        setTimeout(() => { const registerForm = document.getElementById('register-form-content'); if (registerForm) { authFlipper.style.height = `${registerForm.offsetHeight}px`; } }, 50);
     }
     
-    function showContactForm() {
-        Swal.fire({
-            title: 'Hubungi Kami',
-            html: `
-            <div class="swal-contact-form">
-                <div class="swal-form-group">
-                    <label for="swal-name">Nama Anda</label>
-                    <input id="swal-name" class="swal2-input" placeholder="John Doe">
-                </div>
-                <div class="swal-form-group">
-                    <label for="swal-email">Email Anda</label>
-                    <input id="swal-email" type="email" class="swal2-input" placeholder="john.doe@example.com">
-                </div>
-                <div class="swal-form-group">
-                    <label for="swal-message">Pesan Anda</label>
-                    <textarea id="swal-message" class="swal2-textarea" placeholder="Tulis pesan Anda di sini..."></textarea>
-                </div>
-            </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Kirim Pesan',
-            cancelButtonText: 'Batal',
-            preConfirm: () => {
-                const name = document.getElementById('swal-name').value;
-                const email = document.getElementById('swal-email').value;
-                const message = document.getElementById('swal-message').value;
-                if (!name || !email || !message) {
-                    Swal.showValidationMessage(`Harap isi semua kolom`);
-                }
-                return { name: name, email: email, message: message };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log('Contact Form Data:', result.value);
-                Swal.fire(
-                    'Terkirim!',
-                    'Terima kasih telah menghubungi kami. Pesan Anda telah kami terima.',
-                    'success'
-                );
-            }
-        });
+    function showContactForm() { Swal.fire({ title: 'Hubungi Kami', html: `<div class="swal-contact-form"><div class="swal-form-group"><label for="swal-name">Nama Anda</label><input id="swal-name" class="swal2-input" placeholder="John Doe"></div><div class="swal-form-group"><label for="swal-email">Email Anda</label><input id="swal-email" type="email" class="swal2-input" placeholder="john.doe@example.com"></div><div class="swal-form-group"><label for="swal-message">Pesan Anda</label><textarea id="swal-message" class="swal2-textarea" placeholder="Tulis pesan Anda di sini..."></textarea></div></div>`, showCancelButton: true, confirmButtonText: 'Kirim Pesan', cancelButtonText: 'Batal', preConfirm: () => { const name = document.getElementById('swal-name').value; const email = document.getElementById('swal-email').value; const message = document.getElementById('swal-message').value; if (!name || !email || !message) { Swal.showValidationMessage(`Harap isi semua kolom`); } return { name: name, email: email, message: message }; } }).then((result) => { if (result.isConfirmed) { console.log('Contact Form Data:', result.value); Swal.fire('Terkirim!', 'Terima kasih telah menghubungi kami. Pesan Anda telah kami terima.', 'success'); } }); }
+
+    // MODIFIED: renderCarousels now handles the upload button
+    function renderCarousels() { 
+        musicCarouselTrack.innerHTML = musicTracks.map((track, index) => {
+            const isUploadBtn = track.type === 'upload';
+            const iconClass = isUploadBtn ? track.icon : 'fas fa-music';
+            return `<div class="carousel-item" data-index="${index}" ${isUploadBtn ? 'data-type="upload"' : ''}>
+                        <i class="${iconClass} item-icon"></i>
+                        <span class="item-name">${track.name}</span>
+                    </div>`;
+        }).join('');
+        giftCarouselTrack.innerHTML = giftIcons.map((gift, index) => `<div class="carousel-item" data-index="${index}"><img src="${gift.path}" alt="${gift.name}"><span class="item-name">${gift.name}</span></div>`).join(''); 
+        addCarouselListeners(); 
     }
 
-    function renderCarousels() { musicCarouselTrack.innerHTML = musicTracks.map((track, index) => `<div class="carousel-item" data-index="${index}"><i class="fas fa-music item-icon"></i><span class="item-name">${track.name}</span></div>`).join(''); giftCarouselTrack.innerHTML = giftIcons.map((gift, index) => `<div class="carousel-item" data-index="${index}"><img src="${gift.path}" alt="${gift.name}"><span class="item-name">${gift.name}</span></div>`).join(''); addCarouselListeners(); }
-    function addCarouselListeners() { musicCarouselTrack.addEventListener('click', e => { const item = e.target.closest('.carousel-item'); if (item) { currentMusicIndex = parseInt(item.dataset.index); updateMusicSelection(); } }); giftCarouselTrack.addEventListener('click', e => { const item = e.target.closest('.carousel-item'); if (item) { currentGiftIndex = parseInt(item.dataset.index); updateGiftSelection(); } }); }
-    function updateMusicSelection() { musicCarouselTrack.querySelectorAll('.carousel-item').forEach(item => { item.classList.toggle('active', parseInt(item.dataset.index) === currentMusicIndex); }); musicPreviewPlayer.src = musicTracks[currentMusicIndex].path; document.getElementById('music-preview-btn').querySelector('i').classList.replace('fa-pause', 'fa-play'); const activeItem = musicCarouselTrack.querySelector('.active'); if (activeItem) { activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } }
+    // MODIFIED: addCarouselListeners now handles clicks on the upload button
+    function addCarouselListeners() { 
+        musicCarouselTrack.addEventListener('click', e => { 
+            const item = e.target.closest('.carousel-item'); 
+            if (item) {
+                if (item.dataset.type === 'upload') {
+                    document.getElementById('musicUploadInput').click();
+                } else {
+                    customMusic = null; // Clear custom music selection
+                    currentMusicIndex = parseInt(item.dataset.index); 
+                    updateMusicSelection(); 
+                }
+            } 
+        }); 
+        giftCarouselTrack.addEventListener('click', e => { const item = e.target.closest('.carousel-item'); if (item) { currentGiftIndex = parseInt(item.dataset.index); updateGiftSelection(); } }); 
+    }
+
+    // MODIFIED: updateMusicSelection now handles custom uploaded tracks
+    function updateMusicSelection() {
+        const musicItems = musicCarouselTrack.querySelectorAll('.carousel-item');
+        musicItems.forEach((item, index) => {
+            const isActive = customMusic ? item.dataset.type === 'upload' : index === currentMusicIndex;
+            item.classList.toggle('active', isActive);
+        });
+
+        const activeItem = musicCarouselTrack.querySelector('.active');
+        if (activeItem) {
+            musicPreviewPlayer.src = customMusic ? customMusic.path : musicTracks[currentMusicIndex].path;
+            activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+        document.getElementById('music-preview-btn').querySelector('i').classList.replace('fa-pause', 'fa-play');
+    }
+
     function updateGiftSelection() { giftCarouselTrack.querySelectorAll('.carousel-item').forEach(item => { item.classList.toggle('active', parseInt(item.dataset.index) === currentGiftIndex); }); const activeItem = giftCarouselTrack.querySelector('.active'); if (activeItem) { activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } }
     function formatDateForDisplay(dateString) { if (!dateString) return "Pilih Tanggal"; const date = new Date(dateString); const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"]; return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`; }
     function setButtonLoading(isLoading, text = '') { mainActionBtn.disabled = isLoading; document.getElementById('google-signin-btn').disabled = isLoading; if (isLoading) { mainActionBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text || 'Memproses...'}`; } else { if (sliderTabsContainer.classList.contains('register-active')) { showRegisterView(); } else { showLoginView(); } } }
     function handleMainAction() { if (sliderTabsContainer.classList.contains('register-active')) { createAccount(); } else { loginWithEmail(); } }
     
-    function createAccount() { 
-        const email = document.getElementById('registerEmail').value.trim(); 
-        const password = document.getElementById('registerPass').value; 
-        if (!email || !password) { Swal.fire('Input Tidak Lengkap', 'Email dan password wajib diisi.', 'warning'); return; } 
-        if (password.length < 6) { Swal.fire('Password Terlalu Pendek', 'Password minimal harus 6 karakter.', 'warning'); return; } 
-        setButtonLoading(true, 'Membuat Akun...'); 
-        auth.createUserWithEmailAndPassword(email, password)
-            .then(userCredential => { 
-                const user = userCredential.user; 
-                return createDefaultUserData(user).then(() => { 
-                    return user.sendEmailVerification().then(() => { 
-                        Swal.fire({ 
-                            icon: 'success', 
-                            title: 'Registrasi Berhasil!', 
-                            html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`, 
-                            allowOutsideClick: false, 
-                            showConfirmButton: false, 
-                            willOpen: () => { 
-                                Swal.showLoading(); 
-                                const verificationCheckInterval = setInterval(() => { 
-                                    auth.currentUser.reload().then(() => { 
-                                        if (auth.currentUser.emailVerified) { 
-                                            clearInterval(verificationCheckInterval); 
-                                            Swal.close(); 
-                                            // 3. Panggil fungsi showAdminPanel setelah verifikasi berhasil
-                                            showAdminPanel(auth.currentUser);
-                                        } 
-                                    }); 
-                                }, 2500); 
-                            } 
-                        }); 
-                    }); 
-                }); 
-            })
-            .catch(error => { 
-                const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message; 
-                Swal.fire('Registrasi Gagal', message, 'error'); 
-            })
-            .finally(() => setButtonLoading(false)); 
-    }
-
-    function loginWithEmail() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPass').value; if (!email || !password) { Swal.fire('Input Diperlukan', 'Email dan password harus diisi.', 'warning'); return; } setButtonLoading(true, 'Memverifikasi...'); auth.signInWithEmailAndPassword(email, password).then(userCredential => { if (!userCredential.user.emailVerified) { auth.signOut(); Swal.fire({ icon: 'warning', title: 'Email Belum Diverifikasi', html: `Silakan periksa email <b>${email}</b> dan klik link verifikasi.`, confirmButtonText: 'Kirim Ulang Email', showCancelButton: true, cancelButtonText: 'Tutup' }).then(result => { if (result.isConfirmed) { userCredential.user.sendEmailVerification().then(() => { Swal.fire('Terkirim!', 'Email verifikasi baru telah dikirim.', 'success'); }); } }); } /* Jika login berhasil dan email sudah terverifikasi, onAuthStateChanged akan menanganinya */ }).catch(error => { Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error'); }).finally(() => setButtonLoading(false)); }
-    function signInWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); setButtonLoading(true, 'Membuka Google...'); auth.signInWithPopup(provider).then(result => { if (result.additionalUserInfo.isNewUser) { return createDefaultUserData(result.user); } /* Jika login berhasil, onAuthStateChanged akan menanganinya */ }).catch(error => { if (error.code === 'auth/unauthorized-domain') { Swal.fire('Login Google Gagal', 'Domain aplikasi ini belum diizinkan. Pastikan Anda sudah menambahkan `localhost` dan `127.0.0.1` ke Authorized Domains di Firebase Console.', 'error'); } else if (error.code !== 'auth/popup-closed-by-user') { Swal.fire('Login Google Gagal', error.message, 'error'); } }).finally(() => setButtonLoading(false)); }
-    function createDefaultUserData(user) { const nameFromEmail = user.email.split('@')[0]; const defaultDisplayName = user.displayName || nameFromEmail; const defaultData = { birthdayName: defaultDisplayName, birthDate: "2005-09-28", guestUser: "tamu", guestPass: "12345", qrImageUrl: "", bestWishes: "", stayStrongQuote: "", qrMessage: "", targetWhatsappNumber: "", puzzleWord1: 'ULTAH', puzzleWord2: 'KADO', puzzleWord3: 'DOA', musicUrl: 'mayfa.mp3', giftIconUrl: 'nir.gif' }; return database.ref('birthday_pages/' + user.uid).set(defaultData); }
+    function createAccount() { const email = document.getElementById('registerEmail').value.trim(); const password = document.getElementById('registerPass').value; if (!email || !password) { Swal.fire('Input Tidak Lengkap', 'Email dan password wajib diisi.', 'warning'); return; } if (password.length < 6) { Swal.fire('Password Terlalu Pendek', 'Password minimal harus 6 karakter.', 'warning'); return; } setButtonLoading(true, 'Membuat Akun...'); auth.createUserWithEmailAndPassword(email, password).then(userCredential => { const user = userCredential.user; return createDefaultUserData(user).then(() => { return user.sendEmailVerification().then(() => { Swal.fire({ icon: 'success', title: 'Registrasi Berhasil!', html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`, allowOutsideClick: false, showConfirmButton: false, willOpen: () => { Swal.showLoading(); const verificationCheckInterval = setInterval(() => { auth.currentUser.reload().then(() => { if (auth.currentUser.emailVerified) { clearInterval(verificationCheckInterval); Swal.close(); showAdminPanel(auth.currentUser); } }); }, 2500); } }); }); }); }).catch(error => { const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message; Swal.fire('Registrasi Gagal', message, 'error'); }).finally(() => setButtonLoading(false)); }
+    function loginWithEmail() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPass').value; if (!email || !password) { Swal.fire('Input Diperlukan', 'Email dan password harus diisi.', 'warning'); return; } setButtonLoading(true, 'Memverifikasi...'); auth.signInWithEmailAndPassword(email, password).then(userCredential => { if (!userCredential.user.emailVerified) { auth.signOut(); Swal.fire({ icon: 'warning', title: 'Email Belum Diverifikasi', html: `Silakan periksa email <b>${email}</b> dan klik link verifikasi.`, confirmButtonText: 'Kirim Ulang Email', showCancelButton: true, cancelButtonText: 'Tutup' }).then(result => { if (result.isConfirmed) { userCredential.user.sendEmailVerification().then(() => { Swal.fire('Terkirim!', 'Email verifikasi baru telah dikirim.', 'success'); }); } }); } }).catch(error => { Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error'); }).finally(() => setButtonLoading(false)); }
+    function signInWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); setButtonLoading(true, 'Membuka Google...'); auth.signInWithPopup(provider).then(result => { if (result.additionalUserInfo.isNewUser) { return createDefaultUserData(result.user); } }).catch(error => { if (error.code === 'auth/unauthorized-domain') { Swal.fire('Login Google Gagal', 'Domain aplikasi ini belum diizinkan. Pastikan Anda sudah menambahkan `localhost` dan `127.0.0.1` ke Authorized Domains di Firebase Console.', 'error'); } else if (error.code !== 'auth/popup-closed-by-user') { Swal.fire('Login Google Gagal', error.message, 'error'); } }).finally(() => setButtonLoading(false)); }
+    function createDefaultUserData(user) { const nameFromEmail = user.email.split('@')[0]; const defaultDisplayName = user.displayName || nameFromEmail; const defaultData = { birthdayName: defaultDisplayName, birthDate: "2005-09-28", guestUser: "tamu", guestPass: "12345", qrImageUrl: "", bestWishes: "", stayStrongQuote: "", qrMessage: "", targetWhatsappNumber: "", puzzleWord1: 'ULTAH', puzzleWord2: 'KADO', puzzleWord3: 'DOA', musicUrl: musicTracks[0].path, giftIconUrl: giftIcons[0].path }; return database.ref('birthday_pages/' + user.uid).set(defaultData); }
     function copyShareableLink() { const linkInput = document.getElementById('shareableLink'); if (linkInput.value) { navigator.clipboard.writeText(linkInput.value).then(() => { Swal.fire({ icon: 'success', title: 'Link Berhasil Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }); }).catch(err => { console.error('Gagal menyalin:', err); Swal.fire('Oops!', 'Gagal menyalin link.', 'error'); }); } }
     function logout() { Swal.fire({ title: 'Konfirmasi Log Out', text: 'Anda yakin ingin keluar?', icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Log Out', cancelButtonText: 'Batal', reverseButtons: true }).then((result) => { if (result.isConfirmed) { musicPreviewPlayer.pause(); auth.signOut(); } }); }
     
+    // MODIFIED: loadDataToForm now identifies custom music URLs
     function loadDataToForm(user) {
         if (!user) return;
         const nameFromEmail = user.email.split('@')[0];
@@ -655,18 +638,28 @@
             document.getElementById('qrMessageInput').value = data.qrMessage || '';
             
             const qrPreviewImage = document.getElementById('qrPreviewImage');
-            if (data.qrImageUrl) {
-                qrPreviewImage.src = data.qrImageUrl;
-                qrPreviewImage.style.display = 'block';
-            } else {
-                qrPreviewImage.style.display = 'none';
-            }
+            if (data.qrImageUrl) { qrPreviewImage.src = data.qrImageUrl; qrPreviewImage.style.display = 'block'; } else { qrPreviewImage.style.display = 'none'; }
 
             document.getElementById('birthDateInput').value = data.birthDate || '';
             document.getElementById('dateDisplayText').textContent = formatDateForDisplay(data.birthDate);
             
-            const savedMusicPath = data.musicUrl || 'mayfa.mp3';
-            currentMusicIndex = Math.max(0, musicTracks.findIndex(track => track.path === savedMusicPath));
+            // Music selection logic
+            const savedMusicPath = data.musicUrl || musicTracks[0].path;
+            const preDefinedTrackIndex = musicTracks.findIndex(track => track.path === savedMusicPath);
+
+            if (preDefinedTrackIndex !== -1 && musicTracks[preDefinedTrackIndex].type !== 'upload') {
+                customMusic = null;
+                currentMusicIndex = preDefinedTrackIndex;
+            } else {
+                // It's a custom uploaded URL
+                customMusic = { name: 'Musik Unggahan', path: savedMusicPath };
+                currentMusicIndex = -1; // Indicate no pre-defined track is selected
+                const uploadBtn = musicCarouselTrack.querySelector('[data-type="upload"]');
+                if(uploadBtn) {
+                    uploadBtn.querySelector('.item-icon').className = 'fas fa-check-circle item-icon';
+                    uploadBtn.querySelector('.item-name').textContent = 'Musik Pilihan';
+                }
+            }
             updateMusicSelection();
 
             const savedGiftPath = data.giftIconUrl || 'nir.gif';
@@ -676,6 +669,7 @@
         }).catch(err => Swal.fire('Gagal Memuat Data', err.message, 'error'));
     }
 
+    // MODIFIED: saveData now checks for custom music
     function saveData() { 
         const user = auth.currentUser;
         if (!user) return;
@@ -697,43 +691,11 @@
             puzzleWord3: document.getElementById('puzzleWord3').value.trim().toUpperCase(), 
             qrImageUrl: newQrImageUrl || document.getElementById('qrPreviewImage').src,
             qrMessage: document.getElementById('qrMessageInput').value,
-            musicUrl: musicTracks[currentMusicIndex].path,
+            musicUrl: customMusic ? customMusic.path : musicTracks[currentMusicIndex].path,
             giftIconUrl: giftIcons[currentGiftIndex].path
         };
         
-        database.ref('birthday_pages/' + user.uid).update(settings)
-            .then(() => { 
-                newQrImageUrl = null;
-                const shareableLink = document.getElementById('shareableLink').value; 
-                const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim();
-                
-                Swal.fire({
-                    title: 'Data Berhasil Disimpan!',
-                    html: 'Semua perubahan telah disimpan.<br>Pilih tindakan selanjutnya:',
-                    icon: 'success',
-                    showCancelButton: true,
-                    showDenyButton: true,
-                    confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WA',
-                    denyButtonText: '<i class="fas fa-copy"></i> Salin Info',
-                    cancelButtonText: 'Selesai',
-                    reverseButtons: true,
-                }).then((result) => { 
-                    if (result.isConfirmed) {
-                        if (settings.targetWhatsappNumber) {
-                            window.open(`https://wa.me/${settings.targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank');
-                        } else {
-                            Swal.fire({ icon: 'info', title: 'Nomor WhatsApp Kosong', text: 'Nomor WhatsApp target belum diisi.' });
-                        }
-                    } else if (result.isDenied) {
-                        navigator.clipboard.writeText(messageText).then(() => Swal.fire({ icon: 'success', title: 'Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }));
-                    } 
-                }); 
-            })
-            .catch(e => Swal.fire('Gagal Menyimpan', e.message, 'error'))
-            .finally(() => {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
-            });
+        database.ref('birthday_pages/' + user.uid).update(settings).then(() => { newQrImageUrl = null; const shareableLink = document.getElementById('shareableLink').value; const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim(); Swal.fire({ title: 'Data Berhasil Disimpan!', html: 'Semua perubahan telah disimpan.<br>Pilih tindakan selanjutnya:', icon: 'success', showCancelButton: true, showDenyButton: true, confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WA', denyButtonText: '<i class="fas fa-copy"></i> Salin Info', cancelButtonText: 'Selesai', reverseButtons: true, }).then((result) => { if (result.isConfirmed) { if (settings.targetWhatsappNumber) { window.open(`https://wa.me/${settings.targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank'); } else { Swal.fire({ icon: 'info', title: 'Nomor WhatsApp Kosong', text: 'Nomor WhatsApp target belum diisi.' }); } } else if (result.isDenied) { navigator.clipboard.writeText(messageText).then(() => Swal.fire({ icon: 'success', title: 'Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 })); } }); }).catch(e => Swal.fire('Gagal Menyimpan', e.message, 'error')).finally(() => { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan'; });
     }
 
     // Initialize the App
@@ -741,18 +703,14 @@
         initTheme();
         renderCarousels();
         
-        // 2. Modifikasi onAuthStateChanged untuk menggunakan fungsi baru
         auth.onAuthStateChanged(user => {
             if (user && user.emailVerified) {
                 showAdminPanel(user);
             } else {
                 authContainer.classList.remove('is-active');
                 document.getElementById('auth-container').classList.add('loaded');
-                if (!user) { // Hanya tampilkan form login jika benar-benar sudah logout
-                    showLoginView();
-                }
-                // Jika user ada tapi belum verifikasi, biarkan di halaman login/register
-                // tanpa melakukan apa-apa, karena pop-up verifikasi akan muncul.
+                pageFooter.style.display = 'block';
+                if (!user) { showLoginView(); }
             }
         });
 
@@ -762,11 +720,7 @@
         document.getElementById('google-signin-btn').addEventListener('click', signInWithGoogle);
         document.getElementById('copyLinkBtn').addEventListener('click', copyShareableLink);
         document.getElementById('birthDateInput').addEventListener('change', () => { document.getElementById('dateDisplayText').textContent = formatDateForDisplay(document.getElementById('birthDateInput').value); });
-        
-        document.getElementById('contact-link').addEventListener('click', (event) => {
-            event.preventDefault();
-            showContactForm();
-        });
+        document.getElementById('contact-link').addEventListener('click', (event) => { event.preventDefault(); showContactForm(); });
 
         document.getElementById('prevMusicBtn').addEventListener('click', () => { currentMusicIndex = (currentMusicIndex - 1 + musicTracks.length) % musicTracks.length; updateMusicSelection(); });
         document.getElementById('nextMusicBtn').addEventListener('click', () => { currentMusicIndex = (currentMusicIndex + 1) % musicTracks.length; updateMusicSelection(); });
@@ -775,49 +729,69 @@
         document.getElementById('prevGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex - 1 + giftIcons.length) % giftIcons.length; updateGiftSelection(); });
         document.getElementById('nextGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex + 1) % giftIcons.length; updateGiftSelection(); });
 
-        const qrUploadInput = document.getElementById('qrImageUploadInput');
-        const qrPreviewImage = document.getElementById('qrPreviewImage');
-        const uploadBoxText = document.getElementById('uploadBoxText');
-
-        qrUploadInput.addEventListener('change', (event) => {
+        // NEW: Event listener for the music upload input
+        document.getElementById('musicUploadInput').addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (!file) { return; }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                qrPreviewImage.src = e.target.result;
-                qrPreviewImage.style.display = 'block';
-                uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Gambar berhasil dipilih!`;
-            };
-            reader.readAsDataURL(file);
-
             const user = auth.currentUser;
             if (!user) {
-                Swal.fire('Error', 'Anda harus login untuk mengunggah gambar.', 'error');
+                Swal.fire('Error', 'Anda harus login untuk mengunggah musik.', 'error');
                 return;
             }
-            
-            newQrImageUrl = null;
-            const filePath = `qr_codes/${user.uid}/${Date.now()}-${file.name}`;
+
+            const uploadBtn = musicCarouselTrack.querySelector('[data-type="upload"]');
+            const icon = uploadBtn.querySelector('.item-icon');
+            const name = uploadBtn.querySelector('.item-name');
+            const originalIconClass = icon.className;
+            const originalName = name.textContent;
+
+            icon.className = 'fas fa-spinner fa-spin item-icon';
+            name.textContent = 'Mengunggah...';
+
+            const filePath = `custom_music/${user.uid}/${Date.now()}-${file.name}`;
             const storageRef = storage.ref(filePath);
             const uploadTask = storageRef.put(file);
 
             uploadTask.on('state_changed',
-                (snapshot) => { /* Progress bisa dipantau di sini */ },
+                (snapshot) => { /* Optional: Handle progress */ },
                 (error) => {
-                    console.error("Upload Gagal:", error);
-                    Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah gambar.', 'error');
-                    uploadBoxText.innerHTML = `<i class="fas fa-upload"></i> Klik atau jatuhkan file di sini`;
-                    qrPreviewImage.style.display = 'none';
+                    console.error("Upload Failed:", error);
+                    Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah musik.', 'error');
+                    icon.className = originalIconClass; // Reset on failure
+                    name.textContent = originalName;
                 },
                 () => {
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        console.log('File diunggah dan tersedia di', downloadURL);
-                        newQrImageUrl = downloadURL;
-                        uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Berhasil diunggah!`;
+                        console.log('Music uploaded:', downloadURL);
+                        customMusic = { name: file.name, path: downloadURL };
+                        currentMusicIndex = -1; // Unset pre-defined index
+                        
+                        icon.className = 'fas fa-check-circle item-icon';
+                        name.textContent = file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name;
+                        updateMusicSelection(); // Visually select the new uploaded music
+                        Swal.fire('Sukses!', 'Musik Anda berhasil diunggah dan dipilih.', 'success');
                     });
                 }
             );
+        });
+
+        const qrUploadInput = document.getElementById('qrImageUploadInput');
+        const qrPreviewImage = document.getElementById('qrPreviewImage');
+        const uploadBoxText = document.getElementById('uploadBoxText');
+        qrUploadInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) { return; }
+            const reader = new FileReader();
+            reader.onload = function(e) { qrPreviewImage.src = e.target.result; qrPreviewImage.style.display = 'block'; uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Gambar berhasil dipilih!`; };
+            reader.readAsDataURL(file);
+            const user = auth.currentUser;
+            if (!user) { Swal.fire('Error', 'Anda harus login untuk mengunggah gambar.', 'error'); return; }
+            newQrImageUrl = null;
+            const filePath = `qr_codes/${user.uid}/${Date.now()}-${file.name}`;
+            const storageRef = storage.ref(filePath);
+            const uploadTask = storageRef.put(file);
+            uploadTask.on('state_changed', (snapshot) => {}, (error) => { console.error("Upload Gagal:", error); Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah gambar.', 'error'); uploadBoxText.innerHTML = `<i class="fas fa-upload"></i> Klik atau jatuhkan file di sini`; qrPreviewImage.style.display = 'none'; }, () => { uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { console.log('File diunggah dan tersedia di', downloadURL); newQrImageUrl = downloadURL; uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Berhasil diunggah!`; }); });
         });
     });
     </script>
