@@ -527,7 +527,7 @@
         document.getElementById('prevGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex - 1 + giftIcons.length) % giftIcons.length; updateGiftSelection(); });
         document.getElementById('nextGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex + 1) % giftIcons.length; updateGiftSelection(); });
 
-        // --- QR UPLOAD LISTENER (INSTANT PREVIEW VERSION) ---
+        // --- QR UPLOAD LISTENER (VERSI SUPER INSTAN) ---
         const qrUploadInput = document.getElementById('qrImageUploadInput');
         const qrPreviewImage = document.getElementById('qrPreviewImage');
         const uploadBoxText = document.getElementById('uploadBoxText');
@@ -536,40 +536,40 @@
             const file = event.target.files[0];
             if (!file) { return; }
 
-            // Show local preview instantly
+            // 1. Tampilkan preview lokal dan langsung ubah teks ke pesan sukses.
             const reader = new FileReader();
             reader.onload = function(e) {
                 qrPreviewImage.src = e.target.result;
                 qrPreviewImage.style.display = 'block';
+                uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Gambar berhasil dipilih!`;
             };
             reader.readAsDataURL(file);
 
-            // Handle Firebase upload in the background
+            // 2. Lakukan proses upload ke Firebase di latar belakang.
             const user = auth.currentUser;
             if (!user) {
                 Swal.fire('Error', 'Anda harus login untuk mengunggah gambar.', 'error');
                 return;
             }
-
-            uploadBoxText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengunggah...`;
+            
             newQrImageUrl = null;
-
             const filePath = `qr_codes/${user.uid}/${Date.now()}-${file.name}`;
             const storageRef = storage.ref(filePath);
             const uploadTask = storageRef.put(file);
 
             uploadTask.on('state_changed',
-                (snapshot) => { /* Progress can be monitored here */ },
+                (snapshot) => { /* Progress bisa dipantau di sini */ },
                 (error) => {
-                    console.error("Upload failed:", error);
+                    console.error("Upload Gagal:", error);
                     Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah gambar.', 'error');
                     uploadBoxText.innerHTML = `<i class="fas fa-upload"></i> Klik atau jatuhkan file di sini`;
+                    qrPreviewImage.style.display = 'none';
                 },
                 () => {
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        console.log('File available at', downloadURL);
-                        newQrImageUrl = downloadURL; // Store the permanent URL
-                        uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Berhasil! Ganti gambar?`;
+                        console.log('File diunggah dan tersedia di', downloadURL);
+                        newQrImageUrl = downloadURL;
+                        uploadBoxText.innerHTML = `<i class="fas fa-check-circle"></i> Berhasil diunggah!`;
                     });
                 }
             );
