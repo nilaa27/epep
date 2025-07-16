@@ -9,10 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" type="image/png" href="IMG_1551.png" />
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script> <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
     <style>
     :root {
@@ -501,7 +503,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-    // Firebase Configuration
+    // =================================================================
+    // KONFIGURASI FIREBASE & SUPABASE
+    // =================================================================
+
+    // --- Konfigurasi Firebase (Biarkan seperti ini) ---
     const firebaseConfig = {
         apiKey: "AIzaSyCWl2CJqIr-u8lSHu8s4tgZ25UQIK2ivt0",
         authDomain: "mayfa-fa284.firebaseapp.com",
@@ -511,14 +517,20 @@
         messagingSenderId: "523290705179",
         appId: "1:523290705179:web:b06ae4d8e6b08cf07b27be"
     };
-
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const database = firebase.database();
-    const storage = firebase.storage();
+    const storage = firebase.storage(); // Untuk QR Code
 
-    // DOM Elements & Global Variables
+    // --- Konfigurasi Supabase (WAJIB GANTI!) ---
+    const SUPABASE_URL = 'https://nzjbpacjssqagnpobqsx.supabase.co'; // Ganti dengan URL dari Dasbor Supabase Anda
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56amJwYWNqc3NxYWducG9icXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI2NzYzNzIsImV4cCI6MjA2ODI1MjM3Mn0.mW_KvkD8gTcdVY_OJbhkcMfR_wqf84J_-f3-DH_dqDM'; // Ganti dengan kunci 'anon public' dari Dasbor Supabase Anda
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
+    // =================================================================
+    // DOM Elements & Variabel Global
+    // =================================================================
     const authContainer = document.getElementById('auth-container');
     const authFlipper = document.getElementById('auth-flipper');
     const mainActionBtn = document.getElementById('main-action-btn');
@@ -545,6 +557,10 @@
     ];
     const giftIcons = [ { name: "Kado1", path: "nir.gif" }, { name: "Kado2", path: "/img/gif1.gif" }, { name: "Kado3", path: "/img/gif2.gif" }, { name: "Kado4", path: "/img/gif3.gif" } ];
     let currentGiftIndex = 0;
+
+    // =================================================================
+    // Fungsi-Fungsi Utama Aplikasi
+    // =================================================================
 
     function showAdminPanel(user) { if (!user) return; authContainer.classList.add('is-active'); pageFooter.style.display = 'none'; loadDataToForm(user); }
     themeToggle.addEventListener('click', () => { const currentTheme = document.documentElement.getAttribute('data-theme'); const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', newTheme); localStorage.setItem('theme', newTheme); });
@@ -589,7 +605,7 @@
                     }
                 } else {
                     currentMusicIndex = parseInt(item.dataset.index); 
-                    customMusic = null; // Hapus musik kustom jika memilih dari daftar
+                    customMusic = null;
                     updateMusicSelection(); 
                 }
             } 
@@ -628,6 +644,7 @@
     function setButtonLoading(isLoading, text = '') { mainActionBtn.disabled = isLoading; document.getElementById('google-signin-btn').disabled = isLoading; if (isLoading) { mainActionBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text || 'Memproses...'}`; } else { if (sliderTabsContainer.classList.contains('register-active')) { showRegisterView(); } else { showLoginView(); } } }
     function handleMainAction() { if (sliderTabsContainer.classList.contains('register-active')) { createAccount(); } else { loginWithEmail(); } }
     
+    // Fungsi otentikasi Firebase (Tidak berubah)
     function createAccount() { const email = document.getElementById('registerEmail').value.trim(); const password = document.getElementById('registerPass').value; if (!email || !password) { Swal.fire('Input Tidak Lengkap', 'Email dan password wajib diisi.', 'warning'); return; } if (password.length < 6) { Swal.fire('Password Terlalu Pendek', 'Password minimal harus 6 karakter.', 'warning'); return; } setButtonLoading(true, 'Membuat Akun...'); auth.createUserWithEmailAndPassword(email, password).then(userCredential => { const user = userCredential.user; return createDefaultUserData(user).then(() => { return user.sendEmailVerification().then(() => { Swal.fire({ icon: 'success', title: 'Registrasi Berhasil!', html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`, allowOutsideClick: false, showConfirmButton: false, willOpen: () => { Swal.showLoading(); const verificationCheckInterval = setInterval(() => { auth.currentUser.reload().then(() => { if (auth.currentUser.emailVerified) { clearInterval(verificationCheckInterval); Swal.close(); showAdminPanel(auth.currentUser); } }); }, 2500); } }); }); }); }).catch(error => { const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message; Swal.fire('Registrasi Gagal', message, 'error'); }).finally(() => setButtonLoading(false)); }
     function loginWithEmail() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPass').value; if (!email || !password) { Swal.fire('Input Diperlukan', 'Email dan password harus diisi.', 'warning'); return; } setButtonLoading(true, 'Memverifikasi...'); auth.signInWithEmailAndPassword(email, password).then(userCredential => { if (!userCredential.user.emailVerified) { auth.signOut(); Swal.fire({ icon: 'warning', title: 'Email Belum Diverifikasi', html: `Silakan periksa email <b>${email}</b> dan klik link verifikasi.`, confirmButtonText: 'Kirim Ulang Email', showCancelButton: true, cancelButtonText: 'Tutup' }).then(result => { if (result.isConfirmed) { userCredential.user.sendEmailVerification().then(() => { Swal.fire('Terkirim!', 'Email verifikasi baru telah dikirim.', 'success'); }); } }); } }).catch(error => { Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error'); }).finally(() => setButtonLoading(false)); }
     function signInWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); setButtonLoading(true, 'Membuka Google...'); auth.signInWithPopup(provider).then(result => { if (result.additionalUserInfo.isNewUser) { return createDefaultUserData(result.user); } }).catch(error => { if (error.code !== 'auth/popup-closed-by-user') { Swal.fire('Login Google Gagal', error.message, 'error'); } }).finally(() => setButtonLoading(false)); }
@@ -683,12 +700,6 @@
         }).catch(err => Swal.fire('Gagal Memuat Data', err.message, 'error'));
     }
 
-    // =================================================================
-    // KODE YANG DIPERBAIKI ADA DI DUA BLOK DI BAWAH INI
-    // 1. Fungsi saveData()
-    // 2. Event listener untuk musicUploadInput
-    // =================================================================
-
     function saveData() {
         const user = auth.currentUser;
         if (!user) return;
@@ -696,25 +707,17 @@
         const saveBtn = document.querySelector('.btn-save');
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-
-        // Ambil data dari database untuk mendapatkan URL musik terakhir yang valid
+        
         database.ref('birthday_pages/' + user.uid).once('value').then(snapshot => {
             const existingData = snapshot.val() || {};
-            let musicUrlToSave = existingData.musicUrl; // Default ke URL yang sudah ada
+            let musicUrlToSave = existingData.musicUrl; 
 
-            // Tentukan URL musik yang akan disimpan
             if (currentMusicIndex !== -1) {
-                // Pengguna memilih musik dari daftar default
                 musicUrlToSave = musicTracks[currentMusicIndex].path;
             } else if (customMusic) {
-                // Pengguna memilih musik kustom
                 if (customMusic.path && !customMusic.path.startsWith('blob:')) {
-                    // Musik kustom sudah berhasil diunggah dan punya URL Firebase
                     musicUrlToSave = customMusic.path;
                 }
-                // Jika masih 'blob:', kita tidak melakukan apa-apa,
-                // sehingga 'musicUrlToSave' akan tetap berisi URL lama dari 'existingData.musicUrl'.
-                // Ini membuat proses simpan tidak terblokir.
             }
 
             const settings = {
@@ -730,7 +733,7 @@
                 puzzleWord3: document.getElementById('puzzleWord3').value.trim().toUpperCase(),
                 qrImageUrl: newQrImageUrl || document.getElementById('qrPreviewImage').src,
                 qrMessage: document.getElementById('qrMessageInput').value,
-                musicUrl: musicUrlToSave, // Gunakan URL yang sudah ditentukan
+                musicUrl: musicUrlToSave,
                 giftIconUrl: giftIcons[currentGiftIndex].path
             };
 
@@ -738,7 +741,7 @@
 
         }).then(() => {
             newQrImageUrl = null;
-            const settings = { // Ambil lagi data yang relevan untuk pesan WA
+            const settings = { 
                 birthdayName: document.getElementById('birthdayNameInput').value,
                 guestUser: document.getElementById('guestUserInput').value,
                 guestPass: document.getElementById('guestPassInput').value,
@@ -761,26 +764,14 @@
                     if (settings.targetWhatsappNumber) {
                         window.open(`https://wa.me/${settings.targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank');
                     } else {
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Nomor WhatsApp Kosong',
-                            text: 'Nomor WhatsApp target belum diisi.'
-                        });
+                        Swal.fire({ icon: 'info', title: 'Nomor WhatsApp Kosong', text: 'Nomor WhatsApp target belum diisi.' });
                     }
                 } else if (result.isDenied) {
-                    navigator.clipboard.writeText(messageText).then(() => Swal.fire({
-                        icon: 'success',
-                        title: 'Disalin!',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }));
+                    navigator.clipboard.writeText(messageText).then(() => Swal.fire({ icon: 'success', title: 'Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }));
                 }
             });
         }).catch(e => Swal.fire('Gagal Menyimpan', e.message, 'error'))
         .finally(() => {
-            const saveBtn = document.querySelector('.btn-save');
             saveBtn.disabled = false;
             saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
         });
@@ -809,7 +800,10 @@
         document.getElementById('prevGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex - 1 + giftIcons.length) % giftIcons.length; updateGiftSelection(); });
         document.getElementById('nextGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex + 1) % giftIcons.length; updateGiftSelection(); });
 
-        document.getElementById('musicUploadInput').addEventListener('change', (event) => {
+        // =================================================================
+        // KODE UNGGAH MUSIK MENGGUNAKAN SUPABASE
+        // =================================================================
+        document.getElementById('musicUploadInput').addEventListener('change', async (event) => {
             const file = event.target.files[0];
             if (!file) return;
 
@@ -818,11 +812,10 @@
                 Swal.fire('Error', 'Anda harus login untuk mengunggah musik.', 'error');
                 return;
             }
-            
-            // Buat URL lokal untuk pratinjau dan pemutaran segera
+
             const localUrl = URL.createObjectURL(file);
             customMusic = { name: file.name, path: localUrl };
-            currentMusicIndex = -1; 
+            currentMusicIndex = -1;
             updateMusicSelection();
             
             const uploadBtnElement = document.querySelector('.carousel-item[data-type="upload"]');
@@ -832,37 +825,47 @@
             iconElement.className = 'fas fa-spinner fa-spin item-icon';
             nameElement.textContent = 'Mengunggah...';
 
-            // Mulai unggah ke Firebase Storage di latar belakang
-            const filePath = `custom_music/${user.uid}/${Date.now()}-${file.name}`;
-            const storageRef = storage.ref(filePath);
-            const uploadTask = storageRef.put(file);
+            try {
+                const filePath = `${user.uid}/${Date.now()}-${file.name}`;
 
-            uploadTask.on('state_changed', 
-                null, 
-                (error) => {
-                    console.error("Upload Gagal:", error);
-                    Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah.', 'error');
-                    iconElement.className = 'fas fa-upload item-icon';
-                    nameElement.textContent = 'Upload Musik';
-                    customMusic = null;
-                    currentMusicIndex = 0; // Kembali ke musik default
-                    updateMusicSelection();
-                },
-                () => {
-                    // Setelah unggah selesai, dapatkan URL unduhan
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        // Perbarui path di objek customMusic dengan URL Firebase
-                        if(customMusic) {
-                           customMusic.path = downloadURL; 
-                        }
-                        iconElement.className = 'fas fa-check-circle item-icon';
-                        nameElement.textContent = file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name;
-                        Swal.fire({icon: 'success', title: 'Upload Sukses!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000});
-                    });
+                // Unggah file ke bucket 'music-uploads' di Supabase
+                const { data, error } = await supabase
+                    .storage
+                    .from('music-uploads') // PASTIKAN NAMA BUCKET INI SESUAI
+                    .upload(filePath, file);
+
+                if (error) {
+                    throw error;
                 }
-            );
+
+                const { data: publicUrlData } = supabase
+                    .storage
+                    .from('music-uploads') // PASTIKAN NAMA BUCKET INI SESUAI
+                    .getPublicUrl(filePath);
+
+                if (customMusic) {
+                    customMusic.path = publicUrlData.publicUrl;
+                }
+
+                iconElement.className = 'fas fa-check-circle item-icon';
+                nameElement.textContent = file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name;
+                Swal.fire({icon: 'success', title: 'Upload Sukses!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000});
+
+            } catch (error) {
+                console.error("Upload ke Supabase Gagal:", error);
+                Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah.', 'error');
+                iconElement.className = 'fas fa-upload item-icon';
+                nameElement.textContent = 'Upload Musik';
+                customMusic = null;
+                currentMusicIndex = 0;
+                updateMusicSelection();
+            }
         });
 
+
+        // =================================================================
+        // KODE UNGGAH QR MENGGUNAKAN FIREBASE STORAGE (TIDAK BERUBAH)
+        // =================================================================
         const qrUploadInput = document.getElementById('qrImageUploadInput');
         qrUploadInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -874,7 +877,7 @@
             if (!user) { Swal.fire('Error', 'Anda harus login.', 'error'); return; }
             newQrImageUrl = null;
             const filePath = `qr_codes/${user.uid}/${Date.now()}-${file.name}`;
-            const uploadTask = storage.ref(filePath).put(file);
+            const uploadTask = storage.ref(filePath).put(file); // Menggunakan Firebase Storage
             uploadTask.on('state_changed', null, (error) => { Swal.fire('Upload Gagal', 'Terjadi kesalahan.', 'error'); }, () => { uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { newQrImageUrl = downloadURL; document.getElementById('uploadBoxText').innerHTML = `<i class="fas fa-check-circle"></i> Berhasil diunggah!`; }); });
         });
     });
