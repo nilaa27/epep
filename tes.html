@@ -589,6 +589,7 @@
                     }
                 } else {
                     currentMusicIndex = parseInt(item.dataset.index); 
+                    customMusic = null; // Hapus musik kustom jika memilih dari daftar
                     updateMusicSelection(); 
                 }
             } 
@@ -610,7 +611,13 @@
         });
 
         if (activeItem) {
-            musicPreviewPlayer.src = currentMusicIndex === -1 ? customMusic.path : musicTracks[currentMusicIndex].path;
+            let musicSource = '';
+            if (currentMusicIndex === -1 && customMusic) {
+                 musicSource = customMusic.path;
+            } else if (currentMusicIndex !== -1) {
+                 musicSource = musicTracks[currentMusicIndex].path;
+            }
+            musicPreviewPlayer.src = musicSource;
             activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
         document.getElementById('music-preview-btn').querySelector('i').classList.replace('fa-pause', 'fa-play');
@@ -676,47 +683,104 @@
         }).catch(err => Swal.fire('Gagal Memuat Data', err.message, 'error'));
     }
 
-    function saveData() { 
+    // =================================================================
+    // KODE YANG DIPERBAIKI ADA DI DUA BLOK DI BAWAH INI
+    // 1. Fungsi saveData()
+    // 2. Event listener untuk musicUploadInput
+    // =================================================================
+
+    function saveData() {
         const user = auth.currentUser;
         if (!user) return;
-        
+
         const saveBtn = document.querySelector('.btn-save');
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-        
-        const musicToSave = currentMusicIndex === -1 ? customMusic.path : musicTracks[currentMusicIndex].path;
-        
-        if (musicToSave && musicToSave.startsWith('blob:')) {
-            Swal.fire('Proses Upload Belum Selesai', 'Harap tunggu hingga musik selesai diunggah sebelum menyimpan.', 'warning');
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
-            return;
-        }
 
-        const settings = { 
-            birthdayName: document.getElementById('birthdayNameInput').value, 
-            birthDate: document.getElementById('birthDateInput').value,
-            bestWishes: document.getElementById('bestWishesInput').value, 
-            stayStrongQuote: document.getElementById('stayStrongQuoteInput').value, 
-            guestUser: document.getElementById('guestUserInput').value, 
-            guestPass: document.getElementById('guestPassInput').value, 
-            targetWhatsappNumber: document.getElementById('targetWhatsappNumber').value.trim(), 
-            puzzleWord1: document.getElementById('puzzleWord1').value.trim().toUpperCase(), 
-            puzzleWord2: document.getElementById('puzzleWord2').value.trim().toUpperCase(), 
-            puzzleWord3: document.getElementById('puzzleWord3').value.trim().toUpperCase(), 
-            qrImageUrl: newQrImageUrl || document.getElementById('qrPreviewImage').src,
-            qrMessage: document.getElementById('qrMessageInput').value,
-            musicUrl: musicToSave,
-            giftIconUrl: giftIcons[currentGiftIndex].path
-        };
-        
-        database.ref('birthday_pages/' + user.uid).update(settings).then(() => { 
-            newQrImageUrl = null; 
-            const shareableLink = document.getElementById('shareableLink').value; 
-            const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim(); 
-            Swal.fire({ title: 'Data Berhasil Disimpan!', html: 'Semua perubahan telah disimpan.<br>Pilih tindakan selanjutnya:', icon: 'success', showCancelButton: true, showDenyButton: true, confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WA', denyButtonText: '<i class="fas fa-copy"></i> Salin Info', cancelButtonText: 'Selesai', reverseButtons: true, }).then((result) => { if (result.isConfirmed) { if (settings.targetWhatsappNumber) { window.open(`https://wa.me/${settings.targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank'); } else { Swal.fire({ icon: 'info', title: 'Nomor WhatsApp Kosong', text: 'Nomor WhatsApp target belum diisi.' }); } } else if (result.isDenied) { navigator.clipboard.writeText(messageText).then(() => Swal.fire({ icon: 'success', title: 'Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 })); } }); 
+        // Ambil data dari database untuk mendapatkan URL musik terakhir yang valid
+        database.ref('birthday_pages/' + user.uid).once('value').then(snapshot => {
+            const existingData = snapshot.val() || {};
+            let musicUrlToSave = existingData.musicUrl; // Default ke URL yang sudah ada
+
+            // Tentukan URL musik yang akan disimpan
+            if (currentMusicIndex !== -1) {
+                // Pengguna memilih musik dari daftar default
+                musicUrlToSave = musicTracks[currentMusicIndex].path;
+            } else if (customMusic) {
+                // Pengguna memilih musik kustom
+                if (customMusic.path && !customMusic.path.startsWith('blob:')) {
+                    // Musik kustom sudah berhasil diunggah dan punya URL Firebase
+                    musicUrlToSave = customMusic.path;
+                }
+                // Jika masih 'blob:', kita tidak melakukan apa-apa,
+                // sehingga 'musicUrlToSave' akan tetap berisi URL lama dari 'existingData.musicUrl'.
+                // Ini membuat proses simpan tidak terblokir.
+            }
+
+            const settings = {
+                birthdayName: document.getElementById('birthdayNameInput').value,
+                birthDate: document.getElementById('birthDateInput').value,
+                bestWishes: document.getElementById('bestWishesInput').value,
+                stayStrongQuote: document.getElementById('stayStrongQuoteInput').value,
+                guestUser: document.getElementById('guestUserInput').value,
+                guestPass: document.getElementById('guestPassInput').value,
+                targetWhatsappNumber: document.getElementById('targetWhatsappNumber').value.trim(),
+                puzzleWord1: document.getElementById('puzzleWord1').value.trim().toUpperCase(),
+                puzzleWord2: document.getElementById('puzzleWord2').value.trim().toUpperCase(),
+                puzzleWord3: document.getElementById('puzzleWord3').value.trim().toUpperCase(),
+                qrImageUrl: newQrImageUrl || document.getElementById('qrPreviewImage').src,
+                qrMessage: document.getElementById('qrMessageInput').value,
+                musicUrl: musicUrlToSave, // Gunakan URL yang sudah ditentukan
+                giftIconUrl: giftIcons[currentGiftIndex].path
+            };
+
+            return database.ref('birthday_pages/' + user.uid).update(settings);
+
+        }).then(() => {
+            newQrImageUrl = null;
+            const settings = { // Ambil lagi data yang relevan untuk pesan WA
+                birthdayName: document.getElementById('birthdayNameInput').value,
+                guestUser: document.getElementById('guestUserInput').value,
+                guestPass: document.getElementById('guestPassInput').value,
+                targetWhatsappNumber: document.getElementById('targetWhatsappNumber').value.trim()
+            };
+            const shareableLink = document.getElementById('shareableLink').value;
+            const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim();
+            Swal.fire({
+                title: 'Data Berhasil Disimpan!',
+                html: 'Semua perubahan telah disimpan.<br>Pilih tindakan selanjutnya:',
+                icon: 'success',
+                showCancelButton: true,
+                showDenyButton: true,
+                confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WA',
+                denyButtonText: '<i class="fas fa-copy"></i> Salin Info',
+                cancelButtonText: 'Selesai',
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (settings.targetWhatsappNumber) {
+                        window.open(`https://wa.me/${settings.targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank');
+                    } else {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Nomor WhatsApp Kosong',
+                            text: 'Nomor WhatsApp target belum diisi.'
+                        });
+                    }
+                } else if (result.isDenied) {
+                    navigator.clipboard.writeText(messageText).then(() => Swal.fire({
+                        icon: 'success',
+                        title: 'Disalin!',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }));
+                }
+            });
         }).catch(e => Swal.fire('Gagal Menyimpan', e.message, 'error'))
-          .finally(() => {
+        .finally(() => {
+            const saveBtn = document.querySelector('.btn-save');
             saveBtn.disabled = false;
             saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
         });
@@ -754,11 +818,8 @@
                 Swal.fire('Error', 'Anda harus login untuk mengunggah musik.', 'error');
                 return;
             }
-
-            const saveBtn = document.querySelector('.btn-save');
-            saveBtn.disabled = true;
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menunggu Upload';
-
+            
+            // Buat URL lokal untuk pratinjau dan pemutaran segera
             const localUrl = URL.createObjectURL(file);
             customMusic = { name: file.name, path: localUrl };
             currentMusicIndex = -1; 
@@ -771,6 +832,7 @@
             iconElement.className = 'fas fa-spinner fa-spin item-icon';
             nameElement.textContent = 'Mengunggah...';
 
+            // Mulai unggah ke Firebase Storage di latar belakang
             const filePath = `custom_music/${user.uid}/${Date.now()}-${file.name}`;
             const storageRef = storage.ref(filePath);
             const uploadTask = storageRef.put(file);
@@ -783,19 +845,19 @@
                     iconElement.className = 'fas fa-upload item-icon';
                     nameElement.textContent = 'Upload Musik';
                     customMusic = null;
-                    currentMusicIndex = 0;
+                    currentMusicIndex = 0; // Kembali ke musik default
                     updateMusicSelection();
-                    saveBtn.disabled = false;
-                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
                 },
                 () => {
+                    // Setelah unggah selesai, dapatkan URL unduhan
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        customMusic.path = downloadURL; 
+                        // Perbarui path di objek customMusic dengan URL Firebase
+                        if(customMusic) {
+                           customMusic.path = downloadURL; 
+                        }
                         iconElement.className = 'fas fa-check-circle item-icon';
                         nameElement.textContent = file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name;
                         Swal.fire({icon: 'success', title: 'Upload Sukses!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000});
-                        saveBtn.disabled = false;
-                        saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
                     });
                 }
             );
