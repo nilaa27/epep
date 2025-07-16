@@ -464,12 +464,12 @@
                 © 2025 xlordcode. All rights reserved.
             </p>
             <p class="footer-creator">
-                Made with <i class="fas fa-heart"></i> by Misbah
+                Made with <i class="fas fa-heart"></i> by Misb4
             </p>
         </div>
     </div>
     
-    <input type="file" id="musicUploadInput" accept="audio/mp3,audio/mpeg" style="display: none;" />
+    <input type="file" id="musicUploadInput" accept="audio/*" style="display: none;" />
     <audio id="musicPreviewPlayer"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
@@ -544,10 +544,10 @@
             if (item) {
                 if (item.dataset.type === 'upload') {
                     if (customMusic) {
-                        currentMusicIndex = -1; // Reactivate existing custom music
+                        currentMusicIndex = -1;
                         updateMusicSelection();
                     } else {
-                        document.getElementById('musicUploadInput').click(); // Prompt for new upload
+                        document.getElementById('musicUploadInput').click();
                     }
                 } else {
                     currentMusicIndex = parseInt(item.dataset.index); 
@@ -619,6 +619,7 @@
 
             if (preDefinedTrackIndex !== -1) {
                 currentMusicIndex = preDefinedTrackIndex;
+                customMusic = null;
             } else {
                 customMusic = { name: 'Musik Pilihan', path: savedMusicPath };
                 currentMusicIndex = -1;
@@ -630,7 +631,7 @@
             }
             updateMusicSelection();
 
-            const savedGiftPath = data.giftIconUrl || 'nir.gif';
+            const savedGiftPath = data.giftIconUrl || giftIcons[0].path;
             currentGiftIndex = Math.max(0, giftIcons.findIndex(icon => icon.path === savedGiftPath));
             updateGiftSelection();
 
@@ -646,6 +647,13 @@
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
         
         const musicToSave = currentMusicIndex === -1 ? customMusic.path : musicTracks[currentMusicIndex].path;
+        
+        if (musicToSave.startsWith('blob:')) {
+            Swal.fire('Proses Upload Belum Selesai', 'Harap tunggu hingga musik selesai diunggah sebelum menyimpan.', 'warning');
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
+            return;
+        }
 
         const settings = { 
             birthdayName: document.getElementById('birthdayNameInput').value, 
@@ -664,7 +672,16 @@
             giftIconUrl: giftIcons[currentGiftIndex].path
         };
         
-        database.ref('birthday_pages/' + user.uid).update(settings).then(() => { newQrImageUrl = null; const shareableLink = document.getElementById('shareableLink').value; const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim(); Swal.fire({ title: 'Data Berhasil Disimpan!', html: 'Semua perubahan telah disimpan.<br>Pilih tindakan selanjutnya:', icon: 'success', showCancelButton: true, showDenyButton: true, confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WA', denyButtonText: '<i class="fas fa-copy"></i> Salin Info', cancelButtonText: 'Selesai', reverseButtons: true, }).then((result) => { if (result.isConfirmed) { if (settings.targetWhatsappNumber) { window.open(`https://wa.me/${settings.targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank'); } else { Swal.fire({ icon: 'info', title: 'Nomor WhatsApp Kosong', text: 'Nomor WhatsApp target belum diisi.' }); } } else if (result.isDenied) { navigator.clipboard.writeText(messageText).then(() => Swal.fire({ icon: 'success', title: 'Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 })); } }); }).catch(e => Swal.fire('Gagal Menyimpan', e.message, 'error')).finally(() => { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan'; });
+        database.ref('birthday_pages/' + user.uid).update(settings).then(() => { 
+            newQrImageUrl = null; 
+            const shareableLink = document.getElementById('shareableLink').value; 
+            const messageText = `Halo *${settings.birthdayName}*! 👋\n\nKejutan spesialmu sudah siap! 🎉 Akses halaman ulang tahunmu di link ini:\n\n🔗 *Link Halaman Ulang Tahun:*\n${shareableLink}\n\nDetail untuk masuk:\n👤 *Username:* ${settings.guestUser}\n🔑 *Password:* ${settings.guestPass}\n\n*Jangan lupa login ya!* ✨`.trim(); 
+            Swal.fire({ title: 'Data Berhasil Disimpan!', html: 'Semua perubahan telah disimpan.<br>Pilih tindakan selanjutnya:', icon: 'success', showCancelButton: true, showDenyButton: true, confirmButtonText: '<i class="fab fa-whatsapp"></i> Kirim via WA', denyButtonText: '<i class="fas fa-copy"></i> Salin Info', cancelButtonText: 'Selesai', reverseButtons: true, }).then((result) => { if (result.isConfirmed) { if (settings.targetWhatsappNumber) { window.open(`https://wa.me/${settings.targetWhatsappNumber}?text=${encodeURIComponent(messageText)}`, '_blank'); } else { Swal.fire({ icon: 'info', title: 'Nomor WhatsApp Kosong', text: 'Nomor WhatsApp target belum diisi.' }); } } else if (result.isDenied) { navigator.clipboard.writeText(messageText).then(() => Swal.fire({ icon: 'success', title: 'Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 })); } }); 
+        }).catch(e => Swal.fire('Gagal Menyimpan', e.message, 'error'))
+          .finally(() => {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
+        });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -684,7 +701,7 @@
         document.getElementById('birthDateInput').addEventListener('change', () => { document.getElementById('dateDisplayText').textContent = formatDateForDisplay(document.getElementById('birthDateInput').value); });
         document.getElementById('contact-link').addEventListener('click', (event) => { event.preventDefault(); showContactForm(); });
         document.getElementById('prevMusicBtn').addEventListener('click', () => { if (currentMusicIndex > 0) { currentMusicIndex--; } else { currentMusicIndex = musicTracks.findIndex(t => t.type !== 'upload'); } updateMusicSelection(); });
-        document.getElementById('nextMusicBtn').addEventListener('click', () => { const lastPresetIndex = musicTracks.findIndex(t => t.type === 'upload') - 1; if (currentMusicIndex < lastPresetIndex) { currentMusicIndex++; } else { currentMusicIndex = 0; } updateMusicSelection(); });
+        document.getElementById('nextMusicBtn').addEventListener('click', () => { const lastPresetIndex = musicTracks.findIndex(t => t.type === 'upload') - 1; if (currentMusicIndex < lastPresetIndex && currentMusicIndex !== -1) { currentMusicIndex++; } else { currentMusicIndex = 0; } updateMusicSelection(); });
         document.getElementById('music-preview-btn').addEventListener('click', () => { const icon = document.getElementById('music-preview-btn').querySelector('i'); if (musicPreviewPlayer.paused) { musicPreviewPlayer.play().catch(e => console.error("Audio play failed", e)); icon.classList.replace('fa-play', 'fa-pause'); } else { musicPreviewPlayer.pause(); icon.classList.replace('fa-pause', 'fa-play'); } });
         musicPreviewPlayer.onended = () => { document.getElementById('music-preview-btn').querySelector('i').classList.replace('fa-pause', 'fa-play'); };
         document.getElementById('prevGiftBtn').addEventListener('click', () => { currentGiftIndex = (currentGiftIndex - 1 + giftIcons.length) % giftIcons.length; updateGiftSelection(); });
@@ -692,41 +709,55 @@
 
         document.getElementById('musicUploadInput').addEventListener('change', (event) => {
             const file = event.target.files[0];
-            if (!file) { return; }
-            const user = auth.currentUser;
-            if (!user) { Swal.fire('Error', 'Anda harus login untuk mengunggah musik.', 'error'); return; }
+            if (!file) return;
 
-            // Instant Preview
+            const user = auth.currentUser;
+            if (!user) {
+                Swal.fire('Error', 'Anda harus login untuk mengunggah musik.', 'error');
+                return;
+            }
+
+            const saveBtn = document.querySelector('.btn-save');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menunggu Upload';
+
             const localUrl = URL.createObjectURL(file);
             customMusic = { name: file.name, path: localUrl };
             currentMusicIndex = -1; 
             updateMusicSelection();
             
-            const uploadBtn = musicCarouselTrack.querySelector('[data-type="upload"]');
-            const icon = uploadBtn.querySelector('.item-icon');
-            const name = uploadBtn.querySelector('.item-name');
-            icon.className = 'fas fa-spinner fa-spin item-icon';
-            name.textContent = 'Mengunggah...';
+            const uploadBtnElement = document.querySelector('.carousel-item[data-type="upload"]');
+            const iconElement = uploadBtnElement.querySelector('.item-icon');
+            const nameElement = uploadBtnElement.querySelector('.item-name');
+            
+            iconElement.className = 'fas fa-spinner fa-spin item-icon';
+            nameElement.textContent = 'Mengunggah...';
 
             const filePath = `custom_music/${user.uid}/${Date.now()}-${file.name}`;
             const storageRef = storage.ref(filePath);
             const uploadTask = storageRef.put(file);
 
-            uploadTask.on('state_changed', null, 
+            uploadTask.on('state_changed', 
+                null, 
                 (error) => {
-                    console.error("Upload Failed:", error);
-                    Swal.fire('Upload Gagal', 'Terjadi kesalahan.', 'error');
-                    icon.className = 'fas fa-upload item-icon';
-                    name.textContent = 'Upload Musik';
-                    customMusic = null; // Reset on failure
+                    console.error("Upload Gagal:", error);
+                    Swal.fire('Upload Gagal', 'Terjadi kesalahan saat mengunggah.', 'error');
+                    iconElement.className = 'fas fa-upload item-icon';
+                    nameElement.textContent = 'Upload Musik';
+                    customMusic = null;
+                    currentMusicIndex = 0;
+                    updateMusicSelection();
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
                 },
                 () => {
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        console.log('Music uploaded:', downloadURL);
-                        customMusic.path = downloadURL; // Update path from local to firebase URL
-                        icon.className = 'fas fa-check-circle item-icon';
-                        name.textContent = file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name;
+                        customMusic.path = downloadURL; 
+                        iconElement.className = 'fas fa-check-circle item-icon';
+                        nameElement.textContent = file.name.length > 15 ? file.name.substring(0, 12) + '...' : file.name;
                         Swal.fire({icon: 'success', title: 'Upload Sukses!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000});
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
                     });
                 }
             );
