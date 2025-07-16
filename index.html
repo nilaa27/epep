@@ -32,6 +32,19 @@
             --border-radius-inner: 15px;
         }
 
+        /* Light mode color scheme */
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --shadow-dark: #d9dde2;
+            --shadow-light: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --primary: #6d5bff;
+            --secondary: #ff69b4;
+            --star-color: #ffc107;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -117,6 +130,7 @@
         /* --- Header / Navigasi --- */
         .main-header { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 980px; z-index: 1000; }
         .header-container { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(44, 47, 54, 0.8); backdrop-filter: blur(10px); border-radius: var(--border-radius-main); box-shadow: 10px 10px 25px var(--shadow-dark), -10px -10px 25px var(--shadow-light); border: 1px solid var(--shadow-light); }
+        [data-theme="light"] .header-container { background: rgba(240, 242, 245, 0.8); }
         .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-color); font-weight: 600; font-size: 1.1rem; }
         .logo img { width: 30px; height: 30px; transition: transform 0.4s ease; }
         .logo:hover img { transform: rotate(360deg); }
@@ -124,6 +138,52 @@
         .main-nav a { color: var(--text-light); text-decoration: none; font-weight: 500; transition: var(--transition-smooth); }
         .main-nav a:hover { color: var(--primary); }
         .sign-in-btn { padding: 12px 24px; }
+        
+        /* --- Theme Toggle Button --- */
+        .theme-toggle-btn {
+            background: var(--bg-color);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            transition: var(--transition-smooth);
+            margin-left: 15px;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.05);
+            color: var(--primary);
+        }
+
+        .theme-toggle-btn:active {
+            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="light"] .theme-toggle-btn i.fa-moon {
+            display: none;
+        }
+
+        [data-theme="light"] .theme-toggle-btn i.fa-sun {
+            display: block;
+        }
+
+        .theme-toggle-btn i.fa-sun {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle-btn i.fa-moon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle-btn i.fa-sun {
+            display: none;
+        }
         
         .hamburger-menu {
             display: none; cursor: pointer; width: 48px; height: 48px;
@@ -271,8 +331,6 @@
             pointer-events: none; /* Agar GIF tidak bisa diklik */
         }
         
-        /* --- [DIHAPUS] CSS untuk gelembung tidak diperlukan lagi --- */
-
         /* --- Gaya 3D untuk Fitur --- */
         .features-grid { 
             display: grid; 
@@ -557,6 +615,10 @@
             .header-container { border-radius: 0; padding: 15px 20px; }
             .main-nav, .sign-in-btn { display: none; }
             .hamburger-menu { display: flex; }
+            .theme-toggle-btn {
+                margin-left: auto;
+                margin-right: 15px;
+            }
             .landing-page { padding-top: 100px; gap: 4rem; }
             #typing-text { font-size: 2.3rem; }
             .section-title { font-size: 2rem; margin-bottom: 1rem; }
@@ -613,6 +675,9 @@
                 <a href="#faq">FAQ</a>
                 <a href="#contact">Kontak</a>
             </nav>
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
             <a href="register.html" class="btn primary sign-in-btn">Sign in</a>
             
             <button class="hamburger-menu" id="hamburger-menu" aria-label="Buka menu">
@@ -786,7 +851,7 @@
                 </div>
                  <div class="form-group">
                     <input type="text" id="testimonial-position" class="form-input" placeholder=" " required>
-                    <label for="testimonial-position" class="form-label">Posisi (Contoh: Pelajar, Desainer)</label>
+                    <label for="testimonial-position" class="form-label">Posisi (Contoh: Pelajar)</label>
                 </div>
                 <div class="form-group">
                     <textarea id="testimonial-text" rows="4" class="form-input" placeholder=" " required></textarea>
@@ -850,6 +915,46 @@
                 once: false, // Animasi akan berulang saat scroll
                 offset: 150,
             });
+
+            // --- Theme Toggle Functionality ---
+            (() => {
+                const themeToggle = document.getElementById('theme-toggle');
+                const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+                const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+                
+                // Set initial theme
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                updateThemeIcon(currentTheme);
+                
+                // Toggle theme on button click
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateThemeIcon(newTheme);
+                });
+                
+                // Update theme icon based on current theme
+                function updateThemeIcon(theme) {
+                    const icon = themeToggle.querySelector('i');
+                    if (theme === 'dark') {
+                        icon.classList.remove('fa-sun');
+                        icon.classList.add('fa-moon');
+                    } else {
+                        icon.classList.remove('fa-moon');
+                        icon.classList.add('fa-sun');
+                    }
+                }
+                
+                // Listen for system theme changes
+                prefersDarkScheme.addListener(e => {
+                    const newTheme = e.matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateThemeIcon(newTheme);
+                });
+            })();
 
             // Animasi ketik untuk hero text
             const typingText = document.getElementById('typing-text');
