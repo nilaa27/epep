@@ -835,7 +835,7 @@
                 // PERBAIKAN: Menggunakan 'supabaseClient'
                 const { data, error } = await supabaseClient
                     .storage
-                    .from('music-uploads') // Ganti nama bucket jika perlu
+                    .from('music-upload') // Ganti nama bucket jika perlu
                     .upload(filePath, file);
 
                 if (error) { throw error; }
@@ -843,7 +843,7 @@
                 // PERBAIKAN: Menggunakan 'supabaseClient'
                 const { data: publicUrlData } = supabaseClient
                     .storage
-                    .from('music-uploads') // Ganti nama bucket jika perlu
+                    .from('music-upload') // Ganti nama bucket jika perlu
                     .getPublicUrl(filePath);
 
                 if (customMusic) {
