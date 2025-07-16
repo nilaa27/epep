@@ -146,7 +146,8 @@
 
         .sidebar {
             position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
-            background: var(--bg-color); box-shadow: -10px 0px 30px var(--shadow-dark);
+            background: var(--bg-color);
+            box-shadow: -10px 0px 30px var(--shadow-dark);
             z-index: 999; padding: 80px 30px 30px; display: flex; flex-direction: column;
             gap: 25px; transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -166,12 +167,78 @@
         .section-subtitle { font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto 3.5rem; line-height: 1.7; }
 
         /* --- Hero Section --- */
-        .hero-section .welcome-panel { background: var(--bg-color); border-radius: var(--border-radius-main); padding: 40px 45px; box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light); max-width: 650px; margin: 0 auto; }
-        .panel-icon { width: 100px; height: 100px; background: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; font-size: 3.5rem; color: var(--primary); box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); }
+        .hero-section .welcome-panel { 
+            background: var(--bg-color); 
+            border-radius: var(--border-radius-main); 
+            padding: 40px 45px; 
+            box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light); 
+            max-width: 650px; 
+            margin: 0 auto; 
+            position: relative;
+        }
+        
+        .panel-icon { 
+            width: 100px; 
+            height: 100px; 
+            background: var(--bg-color); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto 25px; 
+            font-size: 3.5rem; 
+            color: var(--primary); 
+            box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); 
+        }
+        
         .panel-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
         .panel-icon i { background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 20px; line-height: 1.3; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        p { color: var(--text-light); font-size: 1.1rem; line-height: 1.7; margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        
+        /* Typing Effect Styles */
+        .typing-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+        
+        #typing-text {
+            display: inline;
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.3;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 2.8rem;
+            background: var(--primary);
+            margin-left: 4px;
+            animation: blink 0.7s infinite;
+            vertical-align: bottom;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .hero-section p { 
+            color: var(--text-light); 
+            font-size: 1.1rem; 
+            line-height: 1.7; 
+            margin-bottom: 40px; 
+            max-width: 500px; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        
         .button-group { display: flex; justify-content: center; gap: 20px; }
 
         /* --- How It Works & Templates Section --- */
@@ -189,19 +256,55 @@
         .card-button-group { display: flex; flex-direction: column; gap: 15px; margin-top: auto; position: relative; z-index: 2; }
         .card-button-group .btn { width: 100%; }
         .confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .bubbles-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: hidden; }
-        @keyframes rise-and-wobble { 0% { transform: translateY(0) translateX(0); opacity: 0; } 10% { opacity: 0.7; } 50% { transform: translateY(-150px) translateX(20px); } 90% { opacity: 0.2; } 100% { transform: translateY(-300px) translateX(-20px); opacity: 0; } }
-        .bubble { position: absolute; bottom: -80px; border-radius: 50%; background: radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%); animation: rise-and-wobble linear infinite; }
-        .bubble:nth-child(1) { width: 25px; height: 25px; left: 10%; animation-duration: 15s; animation-delay: 0s; background-color: rgba(109, 91, 255, 0.2); } .bubble:nth-child(2) { width: 15px; height: 15px; left: 20%; animation-duration: 10s; animation-delay: 1.5s; background-color: rgba(255, 105, 180, 0.25); } .bubble:nth-child(3) { width: 40px; height: 40px; left: 35%; animation-duration: 20s; animation-delay: 3s; background-color: rgba(109, 91, 255, 0.15); } .bubble:nth-child(4) { width: 20px; height: 20px; left: 50%; animation-duration: 12s; animation-delay: 0.5s; background-color: rgba(255, 105, 180, 0.2); } .bubble:nth-child(5) { width: 30px; height: 30px; left: 70%; animation-duration: 18s; animation-delay: 5s; background-color: rgba(109, 91, 255, 0.2); } .bubble:nth-child(6) { width: 18px; height: 18px; left: 85%; animation-duration: 9s; animation-delay: 2s; background-color: rgba(255, 105, 180, 0.3); } .bubble:nth-child(7) { width: 22px; height: 22px; left: 90%; animation-duration: 14s; animation-delay: 6s; background-color: rgba(109, 91, 255, 0.1); } .bubble:nth-child(8) { width: 12px; height: 12px; left: 5%; animation-duration: 11s; animation-delay: 8s; background-color: rgba(255, 105, 180, 0.2); } .bubble:nth-child(9) { width: 35px; height: 35px; left: 55%; animation-duration: 22s; animation-delay: 9s; background-color: rgba(109, 91, 255, 0.25); } .bubble:nth-child(10) { width: 10px; height: 10px; left: 25%; animation-duration: 8s; animation-delay: 4s; background-color: rgba(255, 105, 180, 0.15); }
+        
+        /* --- [BARU] Gaya untuk Latar Belakang GIF --- */
+        .template-card .gif-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Memastikan GIF menutupi seluruh area kartu */
+            opacity: 0.15;      /* Membuat GIF menjadi latar belakang subtil, sesuaikan nilainya */
+            z-index: 1;         /* Menempatkan GIF di belakang konten */
+            border-radius: var(--border-radius-main); /* Mengikuti lengkungan kartu */
+            pointer-events: none; /* Agar GIF tidak bisa diklik */
+        }
+        
+        /* --- [DIHAPUS] CSS untuk gelembung tidak diperlukan lagi --- */
 
-        /* --- Features, FAQ, CTA --- */
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-        .feature-card { background: transparent; padding: 30px; border-radius: var(--border-radius-inner); box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); text-align: left; }
+        /* --- Gaya 3D untuk Fitur --- */
+        .features-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 30px;
+            perspective: 1200px; /* Membuat ruang 3D */
+        }
+        .feature-card { 
+            background: var(--bg-color); /* Ubah background agar bayangan terlihat */
+            padding: 30px; 
+            border-radius: var(--border-radius-inner); 
+            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+            text-align: left; 
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s ease;
+        }
+        .feature-card:hover {
+            transform: scale(1.03) rotateY(7deg) rotateX(3deg);
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+        }
+        .feature-card.active {
+            transform: scale(1.08) rotateY(0) rotateX(0) translateZ(40px);
+            box-shadow: 0px 25px 50px rgba(0,0,0,0.3);
+        }
         .feature-icon { font-size: 2rem; color: var(--secondary); margin-bottom: 20px; }
         .feature-card h4 { font-size: 1.2rem; color: var(--text-color); margin-bottom: 10px; }
         .feature-card p { font-size: 0.9rem; color: var(--text-light); margin-bottom: 0; line-height: 1.6; text-align: left; }
+        
+        /* --- FAQ & CTA --- */
         .faq-container { max-width: 768px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-        .faq-item { background: var(--bg-color); border-radius: var(--border-radius-inner); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); overflow: hidden; }
+        .faq-item { background: var(--bg-color); border-radius: var(--border-radius-inner); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); overflow: hidden; transition: box-shadow 0.3s ease; }
         .faq-item[open] { box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light); }
         .faq-question { padding: 20px 25px; font-weight: 600; font-size: 1.1rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
         .faq-question::-webkit-details-marker { display: none; }
@@ -304,17 +407,86 @@
         .footer-bottom { font-size: 0.8rem; color: var(--text-light); opacity: 0.7; }
 
         /* --- Modal Global --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; backdrop-filter: blur(5px); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; align-items: center; justify-content: center; z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; backdrop-filter: blur(5px); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--bg-color); padding: 30px 35px; border-radius: var(--border-radius-main); box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative; max-width: 500px; width: 90%; text-align: left; }
-        .modal-content h2 { text-align: center; font-size: 1.8rem; margin-bottom: 10px; font-weight: 700; }
-        .modal-content p.modal-subtitle { text-align: center; max-width: 100%; margin-bottom: 30px; font-size: 1rem; color: var(--text-light); line-height: 1.6; }
+        .modal-content { 
+            background: var(--bg-color); padding: 30px 35px; border-radius: var(--border-radius-main); box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative; max-width: 480px; width: 90%; text-align: left;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            transform: scale(0.95);
+            opacity: 0;
+        }
+        .modal-overlay.active .modal-content {
+             transform: scale(1);
+             opacity: 1;
+        }
+
+        .modal-content h2 { text-align: center; font-size: 1.6rem; margin-bottom: 8px; font-weight: 700; }
+        .modal-content p.modal-subtitle { text-align: center; max-width: 100%; margin-bottom: 25px; font-size: 0.95rem; color: var(--text-light); line-height: 1.6; }
         .modal-close-btn { position: absolute; top: 10px; right: 20px; background: none; border: none; font-size: 2.5rem; color: var(--text-light); cursor: pointer; line-height: 1; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-color); }
-        .form-group input, .form-group textarea { width: 100%; padding: 15px; border: 1px solid var(--shadow-dark); background: var(--shadow-dark); border-radius: var(--border-radius-inner); color: var(--text-color); font-size: 1rem; box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43; transition: all 0.2s ease; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43, 0 0 0 2px var(--primary); }
-        .form-group textarea { resize: vertical; }
+        
+        /* --- Gaya Form Baru dengan Floating Label --- */
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--shadow-dark);
+            background: var(--shadow-dark);
+            border-radius: var(--border-radius-inner);
+            color: var(--text-color);
+            font-size: 1rem;
+            box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43;
+            transition: all 0.2s ease;
+        }
+
+        .form-label {
+            position: absolute;
+            top: 15px;
+            left: 17px;
+            color: var(--text-light);
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background-color: var(--shadow-dark); /* Agar teks tidak tertimpa garis input */
+            padding: 0 5px;
+        }
+        
+        .form-input:focus,
+        .form-input:not(:placeholder-shown) {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: inset 4px 4px 8px #212429, inset -4px -4px 8px #373a43, 0 0 0 2px var(--primary);
+        }
+
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            top: -10px;
+            left: 12px;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+        
+        /* Khusus untuk textarea */
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+        textarea.form-input + .form-label {
+            background-color: transparent; /* Textarea tidak butuh background karena multiline */
+        }
+        textarea.form-input:focus + .form-label,
+        textarea.form-input:not(:placeholder-shown) + .form-label {
+             background-color: var(--shadow-dark); /* Beri background saat floating */
+        }
+        .form-group.rating-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
         .modal-button-group { display: flex; gap: 15px; margin-top: 25px; }
         .modal-button-group .btn { flex-grow: 1; }
         
@@ -363,6 +535,15 @@
         .star-rating-input.rating-5 i:nth-child(-n+5) {
             color: var(--star-color);
         }
+        @keyframes star-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3) rotate(15deg); }
+            100% { transform: scale(1.1); }
+        }
+        .star-rating-input i.pop {
+            animation: star-pop 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: scale(1.1); /* Jaga ukuran setelah animasi */
+        }
 
         /* --- Modal QRIS Spesifik --- */
         .qris-modal .modal-content { text-align: center; }
@@ -377,7 +558,7 @@
             .main-nav, .sign-in-btn { display: none; }
             .hamburger-menu { display: flex; }
             .landing-page { padding-top: 100px; gap: 4rem; }
-            h1 { font-size: 2.3rem; }
+            #typing-text { font-size: 2.3rem; }
             .section-title { font-size: 2rem; margin-bottom: 1rem; }
             .section-subtitle { margin-bottom: 2.5rem; }
             p { font-size: 1rem; }
@@ -402,7 +583,8 @@
             .blob { filter: blur(60px); }
             .blob.one { width: 300px; height: 300px; }
             .blob.two { width: 250px; height: 250px; }
-            
+            #typing-text { font-size: 1.8rem; }
+            .cursor { height: 1.8rem; }
             .testimonial-card-new { padding: 25px; }
             .testimonial-card-new .quote-icon { font-size: 2.5rem; left: 20px; top: 20px; }
             .testimonial-card-new .quote-text,
@@ -462,11 +644,16 @@
                 <div class="panel-icon">
                     <img src="/img/dor.gif" alt="Ikon Selamat Datang">
                 </div>
-                <h1>Desain Ucapan Ultah, Cuma Modal Klik?</h1>
+                
+                <div class="typing-container">
+                    <h1 id="typing-text"></h1>
+                    <div class="cursor"></div>
+                </div>
+                
                 <p>Animasi keren + desain elegan. Gak perlu ngoding, ciptakan website ucapan selamat ulang tahun yang personal dan berkesan dalam hitungan menit.</p>
                 <div class="button-group">
                     <a href="register.html" class="btn primary">Mulai buat ucapan!<i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i></a>
-                    <a href="demo.html" class="btn secondary"><i class="fas fa-eye"></i> Lihat Demo</a>
+                    <a href="demo.html" class="btn secondary"><i class="fas fa-eye"></i> watch demo</a>
                 </div>
             </div>
         </section>
@@ -488,16 +675,12 @@
                     <canvas class="confetti-canvas"></canvas>
                     <div class="template-header"><div class="template-icon"><i class="fas fa-birthday-cake"></i></div><h3>Birthday Template</h3></div>
                     <p>Buat ucapan ulang tahun yang menyenangkan dengan pesan pribadi, transisi yang indah, dan animasi yang memikat. Sempurna untuk membuat hari istimewa seseorang menjadi lebih berkesan.</p>
-                    <div class="card-button-group"><a href="register.html" class="btn primary">Mulai buat ucapan!<i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i></a><a href="demo.html" class="btn secondary"><i class="fas fa-eye"></i> Preview demo template</a></div>
+                    <div class="card-button-group"><a href="register.html" class="btn primary">Mulai buat ucapan!<i class="fa-solid fa-arrow-right-to-bracket" style="color: #ffffff;"></i></a><a href="demo.html" class="btn secondary"><i class="fas fa-eye"></i> watch demo</a></div>
                 </div>
 
                 <div class="template-card" data-aos="fade-left" data-aos-delay="200">
-                    <div class="bubbles-container">
-                        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-                        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-                        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-                        <div class="bubble"></div>
-                    </div>
+                    <img src="/ken.gif" alt="Coming Soon Animation" class="gif-background">
+                    
                     <div class="template-header"><div class="template-icon"><i class="fas fa-wand-sparkles"></i></div><h3>More Templates Coming Soon</h3></div>
                     <p>Kami sedang mengembangkan lebih banyak template indah untuk berbagai momen spesial. Nantikan ucapan ulang tahun pernikahan, kartu ucapan selamat, dan masih banyak lagi tambahan menarik dalam koleksi kami.</p>
                     <p>Punya ide untuk acara tertentu atau template yang ingin dibuat? Kami ingin sekali mendengarnya!</p>
@@ -572,9 +755,18 @@
             <h2>Hubungi Saya</h2>
             <p class="modal-subtitle">Punya pertanyaan atau masukan? Saya ingin sekali mendengarnya.</p>
             <form class="contact-form" id="main-contact-form">
-                <div class="form-group"><label for="contact-name">Nama</label><input type="text" id="contact-name" name="name" placeholder="Nama kamu" required></div>
-                <div class="form-group"><label for="contact-email">E-mail</label><input type="email" id="contact-email" name="email" placeholder="email@anda.com" required></div>
-                <div class="form-group"><label for="contact-message">Pesan</label><textarea id="contact-message" name="message" rows="5" placeholder="Pesan Anda..." required></textarea></div>
+                <div class="form-group">
+                    <input type="text" id="contact-name" name="name" class="form-input" placeholder=" " required>
+                    <label for="contact-name" class="form-label">Nama</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="contact-email" name="email" class="form-input" placeholder=" " required>
+                    <label for="contact-email" class="form-label">E-mail</label>
+                </div>
+                <div class="form-group">
+                    <textarea id="contact-message" name="message" class="form-input" placeholder=" " required></textarea>
+                    <label for="contact-message" class="form-label">Pesan Anda</label>
+                </div>
                 <div class="modal-button-group">
                     <button type="submit" class="btn primary" id="submit-contact-btn">Kirim Pesan</button>
                 </div>
@@ -585,23 +777,23 @@
     <div class="modal-overlay" id="testimonial-modal">
         <div class="modal-content">
             <button class="modal-close-btn">&times;</button>
-            <h2>Share Your Testimonial</h2>
-            <p class="modal-subtitle">Tell us about your experience working with us.</p>
+            <h2>Bagikan Testimoni Anda</h2>
+            <p class="modal-subtitle">Ceritakan pengalaman Anda menggunakan layanan kami.</p>
             <form id="testimonial-form">
                 <div class="form-group">
-                    <label for="testimonial-name">Full Name</label>
-                    <input type="text" id="testimonial-name" placeholder="John Doe" required>
+                    <input type="text" id="testimonial-name" class="form-input" placeholder=" " required>
+                    <label for="testimonial-name" class="form-label">Nama Lengkap</label>
                 </div>
                  <div class="form-group">
-                    <label for="testimonial-position">Position</label>
-                    <input type="text" id="testimonial-position" placeholder="CEO, Developer, Designer, etc." required>
+                    <input type="text" id="testimonial-position" class="form-input" placeholder=" " required>
+                    <label for="testimonial-position" class="form-label">Posisi (Contoh: Pelajar, Desainer)</label>
                 </div>
                 <div class="form-group">
-                    <label for="testimonial-text">Testimonial</label>
-                    <textarea id="testimonial-text" rows="4" placeholder="Share your experience..." required></textarea>
+                    <textarea id="testimonial-text" rows="4" class="form-input" placeholder=" " required></textarea>
+                    <label for="testimonial-text" class="form-label">Testimoni</label>
                 </div>
-                <div class="form-group">
-                    <label>Rating</label>
+                <div class="form-group rating-group">
+                    <label>Rating Anda</label>
                     <div class="star-rating-input" data-rating="0">
                         <i class="fas fa-star" data-value="1"></i>
                         <i class="fas fa-star" data-value="2"></i>
@@ -611,9 +803,9 @@
                     </div>
                 </div>
                 <div class="modal-button-group">
-                    <button type="button" class="btn secondary" id="cancel-testimonial-btn">Cancel</button>
+                    <button type="button" class="btn secondary" id="cancel-testimonial-btn">Batal</button>
                     <button type="submit" class="btn primary" id="submit-testimonial-btn">
-                        <i class="fa-solid fa-paper-plane"></i> Submit
+                        <i class="fa-solid fa-paper-plane"></i> Kirim
                     </button>
                 </div>
             </form>
@@ -638,15 +830,14 @@
     <script>
         // PASTE KONFIGURASI FIREBASE ANDA DI SINI
         const firebaseConfig = {
-    apiKey: "AIzaSyCWl2CJqIr-u8lSHu8s4tgZ25UQIK2ivt0",
-    authDomain: "mayfa-fa284.firebaseapp.com",
-    databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "mayfa-fa284",
-    storageBucket: "mayfa-fa284.firebasestorage.app",
-    storageBucket: "mayfa-fa284.firebasestorage.app",
-    messagingSenderId: "523290705179",
-    appId: "1:523290705179:web:b06ae4d8e6b08cf07b27be",
-};
+            apiKey: "AIzaSyCWl2CJqIr-u8lSHu8s4tgZ25UQIK2ivt0",
+            authDomain: "mayfa-fa284.firebaseapp.com",
+            databaseURL: "https://mayfa-fa284-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "mayfa-fa284",
+            storageBucket: "mayfa-fa284.firebasestorage.app",
+            messagingSenderId: "523290705179",
+            appId: "1:523290705179:web:b06ae4d8e6b08cf07b27be",
+        };
 
         // Inisialisasi Firebase
         firebase.initializeApp(firebaseConfig);
@@ -654,12 +845,29 @@
         const testimonialsCollection = db.collection('testimonials');
 
         document.addEventListener('DOMContentLoaded', () => {
-
             AOS.init({
                 duration: 800,
-                once: false,
+                once: false, // Animasi akan berulang saat scroll
                 offset: 150,
             });
+
+            // Animasi ketik untuk hero text
+            const typingText = document.getElementById('typing-text');
+            if (typingText) {
+                const staticPart = "Desain Ucapan Ultah, ";
+                const dynamicPart = "Cuma Modal Klik?";
+                let i = 0, j = 0, isDeleting = false;
+                const typeLoop = () => {
+                    const typingSpeed = 100, erasingSpeed = 50, pauseEnd = 2000, pauseStart = 500;
+                    if (i < staticPart.length) { typingText.innerHTML += staticPart.charAt(i); i++; setTimeout(typeLoop, typingSpeed); return; }
+                    if (isDeleting) { typingText.innerHTML = staticPart + dynamicPart.substring(0, j - 1); j--; } 
+                    else { typingText.innerHTML = staticPart + dynamicPart.substring(0, j + 1); j++; }
+                    if (!isDeleting && j === dynamicPart.length) { isDeleting = true; setTimeout(typeLoop, pauseEnd); } 
+                    else if (isDeleting && j === 0) { isDeleting = false; setTimeout(typeLoop, pauseStart); } 
+                    else { setTimeout(typeLoop, isDeleting ? erasingSpeed : typingSpeed); }
+                };
+                typeLoop();
+            }
 
             // Muat testimoni dari Firestore saat halaman siap
             loadTestimonials();
@@ -667,27 +875,15 @@
             // --- Custom Alert/Toast Function ---
             function showCustomAlert(message) {
                 const oldToast = document.querySelector('.toast-notification');
-                if (oldToast) {
-                    oldToast.remove();
-                }
-
+                if (oldToast) oldToast.remove();
                 const toast = document.createElement('div');
                 toast.className = 'toast-notification';
                 toast.innerHTML = `<i class="fas fa-check-circle"></i><p>${message}</p>`;
-                
                 document.body.appendChild(toast);
-
-                setTimeout(() => {
-                    toast.classList.add('show');
-                }, 100);
-
+                setTimeout(() => { toast.classList.add('show'); }, 100);
                 setTimeout(() => {
                     toast.classList.remove('show');
-                    toast.addEventListener('transitionend', () => {
-                        if (toast.parentNode) {
-                            toast.parentNode.removeChild(toast);
-                        }
-                    }, { once: true });
+                    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
                 }, 4000);
             }
             
@@ -696,26 +892,13 @@
                 const openBtn = document.getElementById(openBtnId);
                 const modal = document.getElementById(modalId);
                 if (!openBtn || !modal) return;
-                
                 const closeBtn = modal.querySelector(closeBtnSelector);
-                
-                const open = (e) => {
-                    if (e) e.preventDefault();
-                    modal.classList.add('active');
-                    document.body.classList.add('modal-open');
-                };
-                const close = () => {
-                    modal.classList.remove('active');
-                    document.body.classList.remove('modal-open');
-                };
-                
+                const open = (e) => { if (e) e.preventDefault(); modal.classList.add('active'); document.body.classList.add('modal-open'); };
+                const close = () => { modal.classList.remove('active'); document.body.classList.remove('modal-open'); };
                 openBtn.addEventListener('click', open);
                 closeBtn.addEventListener('click', close);
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) close();
-                });
-
-                return { open, close, modalElement: modal };
+                modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+                return { open, close };
             };
 
             // Setup all modals
@@ -725,23 +908,15 @@
             
             // --- Contact Form Logic ---
             (() => {
-                const contactForm = document.getElementById('main-contact-form');
-                if (!contactForm) return;
-
-                contactForm.addEventListener('submit', (e) => {
+                const form = document.getElementById('main-contact-form');
+                if (!form) return;
+                form.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    const name = document.getElementById('contact-name').value;
-                    const email = document.getElementById('contact-email').value;
-                    const message = document.getElementById('contact-message').value;
-                    const adminEmail = 'email@xlord.web.id'; // GANTI DENGAN EMAIL ANDA
-                    const subject = `Pesan dari ${name} via Website`;
-                    const body = `Halo,\n\nNama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`;
-                    const mailtoLink = `mailto:${adminEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    const name = form.name.value, email = form.email.value, message = form.message.value;
+                    const adminEmail = 'email@xlord.web.id';
+                    const mailtoLink = `mailto:${adminEmail}?subject=${encodeURIComponent(`Pesan dari ${name}`)}&body=${encodeURIComponent(`Nama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`)}`;
                     window.location.href = mailtoLink;
-                    setTimeout(() => {
-                       contactModal.close();
-                       contactForm.reset();
-                    }, 500);
+                    setTimeout(() => { contactModal.close(); form.reset(); }, 500);
                 });
             })();
             
@@ -751,28 +926,27 @@
             (() => {
                 const hamburger = document.getElementById('hamburger-menu');
                 const sidebar = document.getElementById('sidebar');
-                const navLinks = sidebar.querySelectorAll('a');
                 const closeBtn = document.getElementById('close-sidebar-btn');
-
-                const toggleSidebar = () => {
-                    sidebar.classList.toggle('active');
-                    document.body.classList.toggle('sidebar-open');
-                };
-                
+                const toggleSidebar = () => { sidebar.classList.toggle('active'); document.body.classList.toggle('sidebar-open'); };
                 hamburger.addEventListener('click', toggleSidebar);
                 closeBtn.addEventListener('click', toggleSidebar);
-                
-                navLinks.forEach(link => {
-                    link.addEventListener('click', () => {
-                        if (sidebar.classList.contains('active')) {
-                           toggleSidebar();
-                        }
+                sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', () => sidebar.classList.contains('active') && toggleSidebar()));
+                document.addEventListener('click', (e) => { if (sidebar.classList.contains('active') && !sidebar.contains(e.target) && !hamburger.contains(e.target)) toggleSidebar(); });
+            })();
+            
+            // --- Logika untuk Kartu Fitur 3D ---
+            (() => {
+                const featureCards = document.querySelectorAll('.feature-card');
+                featureCards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        if (card.classList.contains('active')) { card.classList.remove('active'); return; }
+                        featureCards.forEach(otherCard => otherCard.classList.remove('active'));
+                        card.classList.add('active');
                     });
                 });
-                
-                 document.addEventListener('click', (e) => {
-                    if (sidebar.classList.contains('active') && !sidebar.contains(e.target) && !hamburger.contains(e.target)) {
-                        toggleSidebar();
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.feature-card')) {
+                         featureCards.forEach(card => card.classList.remove('active'));
                     }
                 });
             })();
@@ -783,43 +957,31 @@
                 if (!birthdayCard) return;
                 const canvas = birthdayCard.querySelector('.confetti-canvas');
                 if (!canvas) return;
-
-                let birthdayConfettiInstance = confetti.create(canvas, { resize: true, useWorker: true });
-                let birthdayInterval = null; 
-
-                function fireBirthdayExplosion() {
-                    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
-                    const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary').trim();
-                    const fire = (particleRatio, opts) => { birthdayConfettiInstance(Object.assign({}, { origin: { y: 0.6, x: 0.5 } }, opts, { particleCount: Math.floor(200 * particleRatio) })); };
-                    
-                    fire(0.35, { spread: 45, startVelocity: 55, decay: 0.9, gravity: 1.2, scalar: 1.2, shapes: ['star'], colors: [primaryColor, secondaryColor, '#FFFFFF'] });
-                    fire(0.25, { spread: 80, startVelocity: 35, decay: 0.91, gravity: 1.2, scalar: 0.8, shapes: ['circle'], colors: [primaryColor, secondaryColor, '#FFFFFF'] });
-                    fire(0.4, { spread: 120, startVelocity: 50, decay: 0.92, gravity: 1.2, scalar: 1.5, shapes: ['emoji'], shapeOptions: { emoji: { value: ['🎂', '🥳', '✨', '🎊', '⭐'] } } });
-                }
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            fireBirthdayExplosion();
-                            if (birthdayInterval) clearInterval(birthdayInterval);
-                            birthdayInterval = setInterval(fireBirthdayExplosion, 3500);
-                        } else {
-                            clearInterval(birthdayInterval);
-                        }
-                    });
+                const myConfetti = confetti.create(canvas, { resize: true, useWorker: true });
+                let interval;
+                const fireConfetti = () => {
+                    const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+                    const secondary = getComputedStyle(document.documentElement).getPropertyValue('--secondary').trim();
+                    myConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: [primary, secondary, '#FFFFFF'], shapes: ['star', 'circle'] });
+                };
+                const observer = new IntersectionObserver(entries => {
+                    if (entries[0].isIntersecting) {
+                        fireConfetti();
+                        interval = setInterval(fireConfetti, 3500);
+                    } else {
+                        clearInterval(interval);
+                    }
                 }, { threshold: 0.5 });
-                
                 observer.observe(birthdayCard);
             })();
 
             // --- FAQ Logic ---
-            (() => { document.querySelectorAll('.faq-item').forEach(item => { item.addEventListener('toggle', event => { if (event.target.open) { document.querySelectorAll('.faq-item').forEach(otherItem => { if (otherItem !== event.target) { otherItem.open = false; } }); } }); }); })();
+            (() => { document.querySelectorAll('.faq-item').forEach(item => item.addEventListener('toggle', e => { if (e.target.open) document.querySelectorAll('.faq-item').forEach(other => { if (other !== e.target) other.open = false; }); })); })();
             
             // --- Testimonial Form Logic with Firebase ---
             (() => {
                 const form = document.getElementById('testimonial-form');
                 if (!form) return;
-                
                 const starContainer = form.querySelector('.star-rating-input');
                 const stars = starContainer.querySelectorAll('i');
                 const submitBtn = document.getElementById('submit-testimonial-btn');
@@ -827,68 +989,52 @@
 
                 stars.forEach(star => {
                     star.addEventListener('mouseover', () => {
-                        const rating = star.dataset.value;
-                        starContainer.classList.remove('rating-1', 'rating-2', 'rating-3', 'rating-4', 'rating-5');
-                        starContainer.classList.add(`rating-${rating}`);
+                        starContainer.classList.remove(...Array(5).fill(0).map((_,i) => `rating-${i+1}`));
+                        starContainer.classList.add(`rating-${star.dataset.value}`);
                     });
-
                     star.addEventListener('mouseout', () => {
-                        const currentRating = starContainer.dataset.rating;
-                        starContainer.classList.remove('rating-1', 'rating-2', 'rating-3', 'rating-4', 'rating-5');
-                        if (currentRating > 0) {
-                            starContainer.classList.add(`rating-${currentRating}`);
-                        }
+                        starContainer.classList.remove(...Array(5).fill(0).map((_,i) => `rating-${i+1}`));
+                        if (starContainer.dataset.rating > 0) starContainer.classList.add(`rating-${starContainer.dataset.rating}`);
                     });
-
                     star.addEventListener('click', () => {
-                        starContainer.dataset.rating = star.dataset.value;
+                        const rating = star.dataset.value;
+                        starContainer.dataset.rating = rating;
+                        stars.forEach(s => s.classList.remove('pop'));
+                        for (let i = 0; i < rating; i++) stars[i].classList.add('pop');
                     });
                 });
 
                 form.addEventListener('submit', async (e) => {
                     e.preventDefault();
-
-                    const name = document.getElementById('testimonial-name').value;
-                    const position = document.getElementById('testimonial-position').value;
-                    const text = document.getElementById('testimonial-text').value;
+                    const name = form.querySelector('#testimonial-name').value;
+                    const position = form.querySelector('#testimonial-position').value;
+                    const text = form.querySelector('#testimonial-text').value;
                     const rating = parseInt(starContainer.dataset.rating) || 0;
 
-                    if (!name || !position || !text || rating === 0) {
-                        alert('Please fill all fields and provide a rating.');
-                        return;
-                    }
+                    if (!name || !position || !text || rating === 0) { showCustomAlert('Harap isi semua kolom dan berikan rating.'); return; }
 
                     submitBtn.disabled = true;
-                    submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting...`;
+                    submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...`;
                     
                     try {
-                        await testimonialsCollection.add({
-                            name: name,
-                            position: position,
-                            text: text,
-                            rating: rating,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        
+                        await testimonialsCollection.add({ name, position, text, rating, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                         loadTestimonials();
-
-                        submitBtn.innerHTML = `<i class="fa-solid fa-check"></i> Submitted!`;
-
-                        // Panggil alert kustom di sini
-                        showCustomAlert(`Terimakasih ${name} atas testimoninya :)`);
+                        submitBtn.innerHTML = `<i class="fa-solid fa-check"></i> Terkirim!`;
+                        showCustomAlert(`Terima kasih ${name} atas testimoninya :)`);
                         
                         setTimeout(() => {
                             testimonialModal.close();
                             form.reset();
                             starContainer.dataset.rating = 0;
-                            starContainer.classList.remove('rating-1', 'rating-2', 'rating-3', 'rating-4', 'rating-5');
+                            starContainer.classList.remove(...Array(5).fill(0).map((_,i) => `rating-${i+1}`));
+                            stars.forEach(s => s.classList.remove('pop'));
                             submitBtn.disabled = false;
                             submitBtn.innerHTML = originalBtnHTML;
                         }, 1200);
 
                     } catch (error) {
                         console.error("Error adding testimonial: ", error);
-                        alert("Failed to submit testimonial. Please try again.");
+                        alert("Gagal mengirim testimoni. Silakan coba lagi.");
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalBtnHTML;
                     }
@@ -898,19 +1044,11 @@
             // Fungsi untuk MEMUAT testimoni dari Firestore
             async function loadTestimonials() {
                 const listContainer = document.getElementById('testimonial-list-container');
-                listContainer.innerHTML = ''; // Kosongkan kontainer
-
+                listContainer.innerHTML = '';
                 try {
-                    const querySnapshot = await testimonialsCollection.orderBy('createdAt', 'desc').get();
-                    
-                    if (querySnapshot.empty) {
-                        listContainer.innerHTML = '<p style="text-align:center; color: var(--text-light);">Belum ada testimoni. Jadilah yang pertama!</p>';
-                        return;
-                    }
-
-                    querySnapshot.forEach((doc) => {
-                        addTestimonialCardToDOM(doc.data());
-                    });
+                    const snapshot = await testimonialsCollection.orderBy('createdAt', 'desc').get();
+                    if (snapshot.empty) { listContainer.innerHTML = '<p style="text-align:center; color: var(--text-light);">Belum ada testimoni. Jadilah yang pertama!</p>'; return; }
+                    snapshot.forEach(doc => addTestimonialCardToDOM(doc.data()));
                 } catch (error) {
                     console.error("Error loading testimonials: ", error);
                     listContainer.innerHTML = '<p style="text-align:center; color: var(--text-light);">Gagal memuat testimoni saat ini.</p>';
@@ -920,13 +1058,8 @@
             // Fungsi untuk MENAMBAHKAN kartu testimoni ke DOM
             function addTestimonialCardToDOM(data) {
                 const listContainer = document.getElementById('testimonial-list-container');
-                
                 const initials = data.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-                let starsHTML = '';
-                for (let i = 1; i <= 5; i++) {
-                    starsHTML += `<i class="${i <= data.rating ? 'fas' : 'far'} fa-star"></i>`;
-                }
-
+                let starsHTML = Array(5).fill(0).map((_, i) => `<i class="${i < data.rating ? 'fas' : 'far'} fa-star"></i>`).join('');
                 const card = document.createElement('div');
                 card.className = 'testimonial-card-new';
                 card.innerHTML = `
