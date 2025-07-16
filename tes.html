@@ -192,12 +192,38 @@
     .carousel-section-container { position: relative; }
     .carousel-track { display: flex; overflow-x: auto; padding: 10px; margin: 0 -10px 15px -10px; gap: 15px; scroll-snap-type: x mandatory; -ms-overflow-style: none; scrollbar-width: none; }
     .carousel-track::-webkit-scrollbar { display: none; }
-    .carousel-item { flex: 0 0 120px; height: 120px; background: var(--bg-color); border-radius: var(--radius-inner); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); scroll-snap-align: center; border: 3px solid transparent; text-align: center; padding: 10px; }
+    .carousel-item { position: relative; flex: 0 0 120px; height: 120px; background: var(--bg-color); border-radius: var(--radius-inner); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); scroll-snap-align: center; border: 3px solid transparent; text-align: center; padding: 10px; }
     .carousel-item:hover { transform: translateY(-4px); }
     .carousel-item.active { box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light), 0 0 0 3px var(--primary); color: var(--primary); }
     .carousel-item img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 8px; }
     .carousel-item .item-icon { font-size: 2rem; margin-bottom: 10px; }
     .carousel-item .item-name { font-size: 0.85rem; font-weight: 500; word-break: break-all; }
+    
+    .carousel-item .change-music-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 6px;
+        background: var(--bg-color);
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 2px 2px 4px var(--shadow-dark), -2px -2px 4px var(--shadow-light);
+        z-index: 5;
+    }
+    .carousel-item.active[data-type="upload"] .change-music-btn {
+        display: flex;
+    }
+    .carousel-item .change-music-btn:hover {
+        color: var(--primary);
+    }
+
     .carousel-controls { display: flex; align-items: center; justify-content: center; gap: 20px; }
     .carousel-nav-btn { background: var(--bg-color); border: none; border-radius: 50%; color: var(--text-muted); width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; font-size: 1rem; cursor: pointer; transition: var(--transition); box-shadow: 7px 7px 14px var(--shadow-dark), -7px -7px 14px var(--shadow-light); }
     .carousel-nav-btn:hover { color: var(--primary); }
@@ -464,7 +490,7 @@
                 © 2025 xlordcode. All rights reserved.
             </p>
             <p class="footer-creator">
-                Made with <i class="fas fa-heart"></i> by Misb4
+                Made with <i class="fas fa-heart"></i> by Misbah
             </p>
         </div>
     </div>
@@ -532,14 +558,26 @@
         musicCarouselTrack.innerHTML = musicTracks.map((track, index) => {
             const isUploadBtn = track.type === 'upload';
             const iconClass = isUploadBtn ? track.icon : 'fas fa-music';
-            return `<div class="carousel-item" data-index="${index}" ${isUploadBtn ? 'data-type="upload"' : ''}><i class="${iconClass} item-icon"></i><span class="item-name">${track.name}</span></div>`;
+            const changeBtnHtml = isUploadBtn ? '<i class="fas fa-sync-alt change-music-btn" title="Ganti Musik"></i>' : '';
+            return `<div class="carousel-item" data-index="${index}" ${isUploadBtn ? 'data-type="upload"' : ''}>
+                        ${changeBtnHtml}
+                        <i class="${iconClass} item-icon"></i>
+                        <span class="item-name">${track.name}</span>
+                    </div>`;
         }).join('');
         giftCarouselTrack.innerHTML = giftIcons.map((gift, index) => `<div class="carousel-item" data-index="${index}"><img src="${gift.path}" alt="${gift.name}"><span class="item-name">${gift.name}</span></div>`).join(''); 
         addCarouselListeners(); 
     }
 
     function addCarouselListeners() { 
-        musicCarouselTrack.addEventListener('click', e => { 
+        musicCarouselTrack.addEventListener('click', e => {
+            const changeButton = e.target.closest('.change-music-btn');
+            if (changeButton) {
+                e.stopPropagation();
+                document.getElementById('musicUploadInput').click();
+                return;
+            }
+
             const item = e.target.closest('.carousel-item'); 
             if (item) {
                 if (item.dataset.type === 'upload') {
@@ -648,7 +686,7 @@
         
         const musicToSave = currentMusicIndex === -1 ? customMusic.path : musicTracks[currentMusicIndex].path;
         
-        if (musicToSave.startsWith('blob:')) {
+        if (musicToSave && musicToSave.startsWith('blob:')) {
             Swal.fire('Proses Upload Belum Selesai', 'Harap tunggu hingga musik selesai diunggah sebelum menyimpan.', 'warning');
             saveBtn.disabled = false;
             saveBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Semua Perubahan';
