@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>XlordVerse - Panel</title>
+    <title>Regist page</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -285,6 +285,28 @@
     .footer-copyright { margin-bottom: 10px; }
     .footer-creator .fa-heart { color: var(--pink); animation: pulse 1.5s ease-in-out infinite; display: inline-block; }
     
+    /* MODIFICATION: Desktop Footer Layout */
+    @media (min-width: 992px) {
+        .page-footer {
+            max-width: 1200px; /* Make footer wider on desktop */
+        }
+        .support-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-nav {
+            order: 2; /* Center element */
+            margin-bottom: 0; /* Remove mobile stacking margin */
+        }
+        .footer-copyright {
+            order: 1; /* Left element */
+            margin-bottom: 0; /* Remove mobile stacking margin */
+        }
+        .footer-creator {
+            order: 3; /* Right element */
+        }
+    }
     </style>
 </head>
 <body>
@@ -494,7 +516,7 @@
                 © 2025 xlordcode. All rights reserved.
             </p>
             <p class="footer-creator">
-                Made with <i class="fas fa-heart"></i> by Misb4
+                Made with <i class="fas fa-heart"></i> by MunMun
             </p>
         </div>
     </div>
@@ -572,7 +594,7 @@
     function togglePasswordVisibility(fieldId, icon) { const field = document.getElementById(fieldId); if (field) { field.type = field.type === "password" ? "text" : "password"; icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash'); } }
     function showLoginView() { sliderTabsContainer.classList.add('login-active'); sliderTabsContainer.classList.remove('register-active'); authFlipper.classList.remove('is-flipped'); mainActionBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk'; document.getElementById('auth-subtitle').textContent = 'Masuk untuk melanjutkan'; document.getElementById('form-title').textContent = 'Selamat datang!'; setTimeout(() => { const loginForm = document.getElementById('login-form-content'); if (loginForm) { authFlipper.style.height = `${loginForm.offsetHeight}px`; } }, 50); }
     function showRegisterView() { sliderTabsContainer.classList.remove('login-active'); sliderTabsContainer.classList.add('register-active'); authFlipper.classList.add('is-flipped'); mainActionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang'; document.getElementById('auth-subtitle').textContent = 'Buat akun untuk memulai'; document.getElementById('form-title').textContent = 'Buat Akun Anda'; setTimeout(() => { const registerForm = document.getElementById('register-form-content'); if (registerForm) { authFlipper.style.height = `${registerForm.offsetHeight}px`; } }, 50); }
-    function showContactForm() { Swal.fire({ title: 'Hubungi Kami', html: `<div class="swal-contact-form"><div class="swal-form-group"><label for="swal-name">Nama Anda</label><input id="swal-name" class="swal2-input" placeholder="John Doe"></div><div class="swal-form-group"><label for="swal-email">Email Anda</label><input id="swal-email" type="email" class="swal2-input" placeholder="john.doe@example.com"></div><div class="swal-form-group"><label for="swal-message">Pesan Anda</label><textarea id="swal-message" class="swal2-textarea" placeholder="Tulis pesan Anda di sini..."></textarea></div></div>`, showCancelButton: true, confirmButtonText: 'Kirim Pesan', cancelButtonText: 'Batal', preConfirm: () => { const name = document.getElementById('swal-name').value; const email = document.getElementById('swal-email').value; const message = document.getElementById('swal-message').value; if (!name || !email || !message) { Swal.showValidationMessage(`Harap isi semua kolom`); } return { name, email, message }; } }).then((result) => { if (result.isConfirmed) { Swal.fire('Terkirim!', 'Terima kasih telah menghubungi kami.', 'success'); } }); }
+    function showContactForm() { Swal.fire({ title: 'Contact me', html: `<div class="swal-contact-form"><div class="swal-form-group"><label for="swal-name">Nama Anda</label><input id="swal-name" class="swal2-input" placeholder="Namamu"></div><div class="swal-form-group"><label for="swal-email">Email Anda</label><input id="swal-email" type="email" class="swal2-input" placeholder="urmail@example.com"></div><div class="swal-form-group"><label for="swal-message">Pesan Anda</label><textarea id="swal-message" class="swal2-textarea" placeholder="Tulis pesan Anda di sini..."></textarea></div></div>`, showCancelButton: true, confirmButtonText: 'Kirim Pesan', cancelButtonText: 'Batal', preConfirm: () => { const name = document.getElementById('swal-name').value; const email = document.getElementById('swal-email').value; const message = document.getElementById('swal-message').value; if (!name || !email || !message) { Swal.showValidationMessage(`Harap isi semua kolom`); } return { name, email, message }; } }).then((result) => { if (result.isConfirmed) { Swal.fire('Terkirim!', 'Terima kasih telah menghubungi kami.', 'success'); } }); }
 
     function renderCarousels() { 
         musicCarouselTrack.innerHTML = musicTracks.map((track, index) => {
