@@ -304,24 +304,18 @@
     .footer-nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
     .footer-nav a:hover { color: var(--primary); }
     
-    /* PERUBAHAN: Menghapus margin default dan menambahkan style untuk baris bawah */
     .footer-copyright { margin: 0; }
+    
+    /* PERUBAHAN: Mengatur baris bawah agar selalu di tengah dengan spasi yang pas */
     .footer-bottom-row {
         display: flex;
+        justify-content: center; /* Selalu di tengah */
         align-items: center;
-        flex-wrap: wrap;
-        gap: 10px 20px; /* Spasi antar item */
-        justify-content: center; /* Default di mobile: tengah */
+        flex-wrap: wrap; /* Akan turun ke bawah jika layar terlalu kecil */
+        gap: 10px 25px; /* Spasi vertikal & horizontal antar item */
     }
     
     .footer-creator .fa-heart { color: var(--pink); animation: pulse 1.5s ease-in-out infinite; display: inline-block; }
-
-    /* PERUBAHAN: Mengaktifkan layout bersebelahan di layar lebar */
-    @media (min-width: 550px) {
-        .footer-bottom-row {
-            justify-content: space-between; /* Sejajarkan ke kiri dan kanan */
-        }
-    }
     
     </style>
 </head>
