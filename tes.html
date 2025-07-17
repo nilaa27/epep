@@ -47,21 +47,17 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     
-    /* Keyframes for bubble effect */
-    @keyframes bubble {
-        0% { transform: scale(0) translateY(0); opacity: 0; }
-        50% { opacity: 1; }
-        100% { transform: scale(1.2) translateY(-50px); opacity: 0; }
-    }
-    @keyframes bubble-slow {
-        0% { transform: scale(0) translateY(0); opacity: 0; }
-        50% { opacity: 0.8; }
-        100% { transform: scale(1.5) translateY(-80px); opacity: 0; }
-    }
-    
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
     
-    body { background: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; transition: var(--transition); }
+    body {
+        background: var(--bg-color);
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        transition: var(--transition);
+    }
     
     .theme-toggle { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-color); box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; transition: var(--transition); }
     .theme-toggle:hover { transform: scale(1.1); }
@@ -69,7 +65,17 @@
     .theme-toggle i { font-size: 1.2rem; color: var(--text-color); transition: var(--transition); }
     [data-theme="dark"] .fa-moon, [data-theme="light"] .fa-sun { display: none; }
     
-    #auth-container { width: 100%; max-width: 960px; transition: all 0.6s ease; perspective: 1500px; display: flex; flex-shrink: 0; }
+    #auth-container {
+        width: 100%;
+        max-width: 960px;
+        transition: all 0.6s ease;
+        perspective: 1500px;
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
     #auth-container.is-active { max-width: 1200px; min-height: 95vh; }
     
     .auth-card {
@@ -95,39 +101,7 @@
         background: linear-gradient(135deg, rgba(238, 221, 255, 0.1), rgba(213, 229, 255, 0.1));
         color: var(--text-color);
         border-right: 1px solid var(--shadow-dark);
-        position: relative; /* Added for bubble effect */
-        overflow: hidden; /* Added for bubble effect */
     }
-    /* Bubble effects for auth-sidebar */
-    .auth-sidebar::before,
-    .auth-sidebar::after {
-        content: '';
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.05); /* Lighter bubbles */
-        pointer-events: none;
-        z-index: 1;
-        opacity: 0;
-    }
-
-    .auth-sidebar::before {
-        width: 100px;
-        height: 100px;
-        bottom: -20px;
-        left: -20px;
-        animation: bubble 10s ease-in-out infinite alternate;
-        animation-delay: 1s;
-    }
-
-    .auth-sidebar::after {
-        width: 80px;
-        height: 80px;
-        top: -10px;
-        right: -10px;
-        animation: bubble-slow 12s ease-in-out infinite alternate;
-        animation-delay: 3s;
-    }
-
     [data-theme="light"] .auth-sidebar {
         background: linear-gradient(135deg, #f8f0ff, #e6f0ff);
     }
@@ -136,22 +110,16 @@
         height: 90px;
         margin-bottom: 25px;
         animation: float 4s ease-in-out infinite;
-        position: relative; /* Ensure logo is above bubbles */
-        z-index: 2;
     }
     .auth-sidebar h2 {
         font-size: 1.6rem;
         font-weight: 700;
         margin-bottom: 15px;
-        position: relative; /* Ensure text is above bubbles */
-        z-index: 2;
     }
     .auth-sidebar p {
         font-size: 1rem;
         color: var(--text-muted);
         max-width: 300px;
-        position: relative; /* Ensure text is above bubbles */
-        z-index: 2;
     }
 
     #auth-box {
@@ -223,6 +191,9 @@
             background: var(--bg-color);
             box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
             transition: var(--transition);
+        }
+        .page-footer {
+            max-width: 450px;
         }
     }
     @media (max-width: 768px) { #auth-box { padding: 30px 20px; } .brand-header img { width: 70px; height: 70px; } }
@@ -315,87 +286,25 @@
 
     /* Styles for the separated page footer */
     .page-footer {
-        width: 100%; /* Make it full width */
-        max-width: none; /* Remove max-width constraint */
-        margin-top: 20px; /* Only margin-top */
-        padding: 10px 20px; /* Add padding to prevent content from touching edges */
+        width: 100%;
+        max-width: 960px;
+        margin: 20px auto 0 auto;
+        padding: 10px 20px;
         text-align: center;
-        display: none; /* Controlled by JS */
         animation: slideIn 0.6s ease-out;
-        box-sizing: border-box; /* Include padding in the width calculation */
     }
-    
     .page-footer .support-section {
         font-size: 0.9rem;
         color: var(--text-muted);
         border-top: 1px solid var(--shadow-dark);
         padding-top: 20px;
-        
-        /* Desktop: Use flexbox for horizontal alignment and spacing */
-        display: flex;
-        justify-content: space-between; /* Space out items */
-        align-items: center;
-        flex-wrap: wrap; /* Allow wrapping on smaller screens before media query kicks in */
-        text-align: left; /* Adjust text alignment for individual blocks if needed */
     }
-
-    .footer-nav { 
-        display: flex; /* Keep nav items horizontal */
-        justify-content: flex-start; /* Align nav to the left */
-        align-items: center; 
-        gap: 25px; 
-        margin-bottom: 0; 
-        flex-grow: 1; /* Allow it to take available space */
-        min-width: fit-content; /* Prevent content from collapsing too much */
-    }
-    .footer-nav a { 
-        color: var(--text-muted); 
-        text-decoration: none; 
-        font-weight: 500; 
-        transition: var(--transition); 
-    }
-    .footer-nav a:hover { 
-        color: var(--primary); 
-    }
-
-    .footer-copyright { 
-        margin-bottom: 0; 
-        text-align: center; /* Center copyright text */
-        flex-grow: 1; /* Allow it to take available space */
-        min-width: fit-content;
-    }
+    .footer-nav { display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 15px; }
+    .footer-nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
+    .footer-nav a:hover { color: var(--primary); }
+    .footer-copyright { margin-bottom: 10px; }
+    .footer-creator .fa-heart { color: var(--pink); animation: pulse 1.5s ease-in-out infinite; display: inline-block; }
     
-    .footer-creator { 
-        margin-bottom: 0; 
-        text-align: right; /* Align creator text to the right */
-        flex-grow: 1; /* Allow it to take available space */
-        min-width: fit-content;
-    }
-    .footer-creator .fa-heart { 
-        color: var(--pink); 
-        animation: pulse 1.5s ease-in-out infinite; 
-        display: inline-block; 
-    }
-
-    /* Media query for mobile to stack items vertically again */
-    @media (max-width: 768px) {
-        .page-footer .support-section {
-            flex-direction: column;
-            align-items: center; /* Center items when stacked */
-            gap: 15px; /* Add some space between stacked items */
-        }
-        .footer-nav, 
-        .footer-copyright, 
-        .footer-creator {
-            width: 100%; /* Make them take full width when stacked */
-            margin: 0; /* Reset margins for mobile stacking */
-            padding: 0; /* Reset padding for mobile stacking */
-            text-align: center; /* Ensure all text is centered on mobile */
-        }
-        .footer-nav {
-            justify-content: center; /* Center nav items horizontally on mobile */
-        }
-    }
     </style>
 </head>
 <body>
@@ -605,7 +514,7 @@
                 © 2025 xlordcode. All rights reserved.
             </p>
             <p class="footer-creator">
-                Made with <i class="fas fa-heart"></i> by MunMun
+                Made with <i class="fas fa-heart"></i> by *{.€|Kis}
             </p>
         </div>
     </div>
@@ -897,8 +806,17 @@
         renderCarousels();
         
         auth.onAuthStateChanged(user => {
-            if (user && user.emailVerified) { showAdminPanel(user); } 
-            else { authContainer.classList.remove('is-active'); document.getElementById('auth-container').classList.add('loaded'); pageFooter.style.display = 'block'; if (!user) { showLoginView(); } }
+            if (user && user.emailVerified) {
+                showAdminPanel(user);
+            }
+            else {
+                authContainer.classList.remove('is-active');
+                document.getElementById('auth-container').classList.add('loaded');
+                pageFooter.style.display = ''; // Revert to stylesheet default
+                if (!user) {
+                    showLoginView();
+                }
+            }
         });
 
         loginTabLabel.addEventListener('click', showLoginView);
