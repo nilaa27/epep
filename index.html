@@ -317,18 +317,17 @@
         .card-button-group .btn { width: 100%; }
         .confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
         
-        /* --- [BARU] Gaya untuk Latar Belakang GIF --- */
         .template-card .gif-background {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Memastikan GIF menutupi seluruh area kartu */
-            opacity: 0.15;      /* Membuat GIF menjadi latar belakang subtil, sesuaikan nilainya */
-            z-index: 1;         /* Menempatkan GIF di belakang konten */
-            border-radius: var(--border-radius-main); /* Mengikuti lengkungan kartu */
-            pointer-events: none; /* Agar GIF tidak bisa diklik */
+            object-fit: cover;
+            opacity: 0.15;
+            z-index: 1;
+            border-radius: var(--border-radius-main);
+            pointer-events: none;
         }
         
         /* --- Gaya 3D untuk Fitur --- */
@@ -538,6 +537,37 @@
         textarea.form-input:not(:placeholder-shown) + .form-label {
              background-color: var(--shadow-dark); /* Beri background saat floating */
         }
+        
+        /* --- [FIX] Light Mode Styles for Form & Buttons --- */
+        [data-theme="light"] .form-input {
+            background: var(--bg-color);
+            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+        
+        [data-theme="light"] .form-input:focus,
+        [data-theme="light"] .form-input:not(:placeholder-shown) {
+            box-shadow: inset 4px 4px 8px var(--shadow-dark), 
+                        inset -4px -4px 8px var(--shadow-light), 
+                        0 0 0 2px var(--primary);
+        }
+        
+        [data-theme="light"] .form-label {
+            background-color: var(--bg-color);
+        }
+        
+        [data-theme="light"] textarea.form-input:focus + .form-label,
+        [data-theme="light"] textarea.form-input:not(:placeholder-shown) + .form-label {
+            background-color: var(--bg-color);
+        }
+
+        [data-theme="light"] .btn.disabled, 
+        [data-theme="light"] .btn:disabled {
+            background: var(--shadow-dark);
+            color: var(--text-light);
+            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+        /* --- End of Fix --- */
+
         .form-group.rating-group label {
             display: block;
             margin-bottom: 12px;
@@ -747,11 +777,16 @@ Xlordverse bantu kamu bikin website ucapan ultah yang aesthetic, personal, dan i
 
                 <div class="template-card" data-aos="fade-left" data-aos-delay="200">
                     <img src="/ken.gif" alt="Coming Soon Animation" class="gif-background">
-                    
-                    <div class="template-header"><div class="template-icon"><i class="fas fa-wand-sparkles"></i></div><h3>More Templates Coming Soon</h3></div>
+                    <div class="template-header">
+                        <div class="template-icon"><i class="fas fa-wand-sparkles"></i></div>
+                        <h3>More Templates Coming Soon</h3>
+                    </div>
                     <p>Kami sedang mengembangkan lebih banyak template indah untuk berbagai momen spesial. Nantikan ucapan ulang tahun pernikahan, kartu ucapan selamat, dan masih banyak lagi tambahan menarik dalam koleksi kami.</p>
                     <p>Punya ide untuk acara tertentu atau template yang ingin dibuat? Kami ingin sekali mendengarnya!</p>
-                    <div class="card-button-group"><a class="btn disabled"><i class="fas fa-gift"></i> Coming Soon</a><a href="#" class="btn secondary"><i class="fas fa-lightbulb"></i> Suggest Template</a></div>
+                    <div class="card-button-group">
+                        <a class="btn disabled"><i class="fas fa-gift"></i> Coming Soon</a>
+                        <a href="#" class="btn secondary"><i class="fas fa-lightbulb"></i> Suggest Template</a>
+                    </div>
                 </div>
             </div>
         </section>
