@@ -47,6 +47,18 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     
+    /* Keyframes for bubble effect */
+    @keyframes bubble {
+        0% { transform: scale(0) translateY(0); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: scale(1.2) translateY(-50px); opacity: 0; }
+    }
+    @keyframes bubble-slow {
+        0% { transform: scale(0) translateY(0); opacity: 0; }
+        50% { opacity: 0.8; }
+        100% { transform: scale(1.5) translateY(-80px); opacity: 0; }
+    }
+    
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
     
     body { background: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; transition: var(--transition); }
@@ -83,7 +95,39 @@
         background: linear-gradient(135deg, rgba(238, 221, 255, 0.1), rgba(213, 229, 255, 0.1));
         color: var(--text-color);
         border-right: 1px solid var(--shadow-dark);
+        position: relative; /* Added for bubble effect */
+        overflow: hidden; /* Added for bubble effect */
     }
+    /* Bubble effects for auth-sidebar */
+    .auth-sidebar::before,
+    .auth-sidebar::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05); /* Lighter bubbles */
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0;
+    }
+
+    .auth-sidebar::before {
+        width: 100px;
+        height: 100px;
+        bottom: -20px;
+        left: -20px;
+        animation: bubble 10s ease-in-out infinite alternate;
+        animation-delay: 1s;
+    }
+
+    .auth-sidebar::after {
+        width: 80px;
+        height: 80px;
+        top: -10px;
+        right: -10px;
+        animation: bubble-slow 12s ease-in-out infinite alternate;
+        animation-delay: 3s;
+    }
+
     [data-theme="light"] .auth-sidebar {
         background: linear-gradient(135deg, #f8f0ff, #e6f0ff);
     }
@@ -92,16 +136,22 @@
         height: 90px;
         margin-bottom: 25px;
         animation: float 4s ease-in-out infinite;
+        position: relative; /* Ensure logo is above bubbles */
+        z-index: 2;
     }
     .auth-sidebar h2 {
         font-size: 1.6rem;
         font-weight: 700;
         margin-bottom: 15px;
+        position: relative; /* Ensure text is above bubbles */
+        z-index: 2;
     }
     .auth-sidebar p {
         font-size: 1rem;
         color: var(--text-muted);
         max-width: 300px;
+        position: relative; /* Ensure text is above bubbles */
+        z-index: 2;
     }
 
     #auth-box {
@@ -265,46 +315,85 @@
 
     /* Styles for the separated page footer */
     .page-footer {
-        width: 100%;
-        max-width: 450px;
-        margin: 20px auto 0 auto;
-        padding: 10px 20px;
+        width: 100%; /* Make it full width */
+        max-width: none; /* Remove max-width constraint */
+        margin-top: 20px; /* Only margin-top */
+        padding: 10px 20px; /* Add padding to prevent content from touching edges */
         text-align: center;
-        display: none;
+        display: none; /* Controlled by JS */
         animation: slideIn 0.6s ease-out;
+        box-sizing: border-box; /* Include padding in the width calculation */
     }
+    
     .page-footer .support-section {
         font-size: 0.9rem;
         color: var(--text-muted);
         border-top: 1px solid var(--shadow-dark);
         padding-top: 20px;
+        
+        /* Desktop: Use flexbox for horizontal alignment and spacing */
+        display: flex;
+        justify-content: space-between; /* Space out items */
+        align-items: center;
+        flex-wrap: wrap; /* Allow wrapping on smaller screens before media query kicks in */
+        text-align: left; /* Adjust text alignment for individual blocks if needed */
     }
-    .footer-nav { display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 15px; }
-    .footer-nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: var(--transition); }
-    .footer-nav a:hover { color: var(--primary); }
-    .footer-copyright { margin-bottom: 10px; }
-    .footer-creator .fa-heart { color: var(--pink); animation: pulse 1.5s ease-in-out infinite; display: inline-block; }
+
+    .footer-nav { 
+        display: flex; /* Keep nav items horizontal */
+        justify-content: flex-start; /* Align nav to the left */
+        align-items: center; 
+        gap: 25px; 
+        margin-bottom: 0; 
+        flex-grow: 1; /* Allow it to take available space */
+        min-width: fit-content; /* Prevent content from collapsing too much */
+    }
+    .footer-nav a { 
+        color: var(--text-muted); 
+        text-decoration: none; 
+        font-weight: 500; 
+        transition: var(--transition); 
+    }
+    .footer-nav a:hover { 
+        color: var(--primary); 
+    }
+
+    .footer-copyright { 
+        margin-bottom: 0; 
+        text-align: center; /* Center copyright text */
+        flex-grow: 1; /* Allow it to take available space */
+        min-width: fit-content;
+    }
     
-    /* MODIFICATION: Desktop Footer Layout */
-    @media (min-width: 992px) {
-        .page-footer {
-            max-width: 1200px; /* Make footer wider on desktop */
+    .footer-creator { 
+        margin-bottom: 0; 
+        text-align: right; /* Align creator text to the right */
+        flex-grow: 1; /* Allow it to take available space */
+        min-width: fit-content;
+    }
+    .footer-creator .fa-heart { 
+        color: var(--pink); 
+        animation: pulse 1.5s ease-in-out infinite; 
+        display: inline-block; 
+    }
+
+    /* Media query for mobile to stack items vertically again */
+    @media (max-width: 768px) {
+        .page-footer .support-section {
+            flex-direction: column;
+            align-items: center; /* Center items when stacked */
+            gap: 15px; /* Add some space between stacked items */
         }
-        .support-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .footer-nav, 
+        .footer-copyright, 
+        .footer-creator {
+            width: 100%; /* Make them take full width when stacked */
+            margin: 0; /* Reset margins for mobile stacking */
+            padding: 0; /* Reset padding for mobile stacking */
+            text-align: center; /* Ensure all text is centered on mobile */
         }
         .footer-nav {
-            order: 2; /* Center element */
-            margin-bottom: 0; /* Remove mobile stacking margin */
-        }
-        .footer-copyright {
-            order: 1; /* Left element */
-            margin-bottom: 0; /* Remove mobile stacking margin */
-        }
-        .footer-creator {
-            order: 3; /* Right element */
+            justify-content: center; /* Center nav items horizontally on mobile */
         }
     }
     </style>
