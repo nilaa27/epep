@@ -51,10 +51,59 @@
         .btn:hover:not(:disabled) { transform: translateY(-2px); color: var(--primary-dark); }
         .btn:active:not(:disabled) { transform: translateY(0px); box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light); }
         .btn:disabled { cursor: not-allowed; opacity: 0.7; }
-        .error-page { display: none; text-align: center; color: var(--text-light); animation: fadeIn 0.5s ease-out; z-index: 20; }
-        .error-page .error-icon { font-size: 5rem; color: var(--primary); margin-bottom: 20px; }
-        .error-page h1 { font-size: 2.2rem; color: var(--text-color); margin-bottom: 10px; }
-        .error-page p { font-size: 1.1rem; }
+        
+        /* === KODE CSS ERROR PAGE BARU === */
+        .error-page {
+            display: none; /* Tetap 'none' untuk kontrol via JS */
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            animation: fadeIn 0.5s ease-out;
+            z-index: 20;
+            padding: 20px;
+        }
+
+        .error-card {
+            background: var(--bg-color);
+            border-radius: var(--border-radius-main);
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .error-main-image {
+            max-width: 220px; /* Sesuaikan ukuran gambar */
+            margin-bottom: 20px;
+        }
+
+        .error-page h1 {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .error-page p {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .error-btn {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none; /* Menghilangkan garis bawah pada link */
+        }
+
+        .error-btn:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+        /* === AKHIR KODE CSS ERROR PAGE BARU === */
+
         .login-container { width: 100%; max-width: 400px; display: none; }
         .login-box { background: var(--bg-color); border-radius: var(--border-radius-main); box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light); padding: 40px; text-align: center; animation: fadeIn 0.8s ease forwards; }
         .login-header { margin-bottom: 35px; }
@@ -168,11 +217,19 @@
             </div>
         </div>
     </div>
-
+    
     <div class="error-page" id="errorPage">
-        <div class="error-icon"><i class="fas fa-link-slash"></i></div>
-        <h1 id="errorTitle">Halaman Tidak Ditemukan</h1>
-        <p id="errorMessage">Pastikan link yang Anda masukkan sudah benar dan lengkap.</p>
+        <div class="error-card">
+            <img src="404.gif" alt="Halaman Tidak Ditemukan" class="error-main-image">
+            
+            <h1 id="errorTitle">Halaman Tidak Ditemukan</h1>
+            <p id="errorMessage">Oops! Sepertinya link yang Anda tuju salah atau sudah tidak ada lagi.</p>
+            
+            <a href="/" class="btn error-btn">
+                <i class="fas fa-home"></i>
+                Kembali ke Beranda
+            </a>
+        </div>
     </div>
     <div class="gift-modal" id="giftModal">
         <div class="gift-box" onclick="openCard()"><img id="giftBoxImage" src="nir.gif" alt="Gift Box" style="width: 100%; height: 100%; object-fit: contain;"></div>
@@ -257,7 +314,16 @@
 
         // --- LOGIN & DATA FETCHING ---
         function getUrlParameter(name) { name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]'); var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'); var results = regex.exec(location.search); return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' ')); }
-        function showErrorPage(title, message) { loginContainer.style.display = 'none'; birthdayPage.style.display = 'none'; gameContainer.style.display = 'none'; document.getElementById('errorTitle').textContent = title; document.getElementById('errorMessage').textContent = message; errorPage.style.display = 'block'; document.body.classList.remove("no-scroll"); }
+        function showErrorPage(title, message) { 
+            loginContainer.style.display = 'none'; 
+            birthdayPage.style.display = 'none'; 
+            gameContainer.style.display = 'none'; 
+            // Baris di bawah ini diperbarui untuk mencocokkan struktur HTML baru
+            document.getElementById('errorTitle').textContent = title; 
+            document.getElementById('errorMessage').textContent = message; 
+            errorPage.style.display = 'flex'; // Menggunakan 'flex' untuk centering
+            document.body.classList.remove("no-scroll"); 
+        }
         function showFeedback(state, title, message = '') { const modal = document.getElementById('feedbackModal'); document.getElementById('feedbackLoader').style.display = (state === 'loading' ? 'block' : 'none'); document.getElementById('feedbackTitle').textContent = title; document.getElementById('feedbackMessage').textContent = message; modal.style.display = 'flex'; }
         function hideFeedback() { document.getElementById('feedbackModal').style.display = 'none'; }
 
