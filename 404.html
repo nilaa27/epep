@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>404 - Halaman Tidak Ditemukan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #2c2f36;
+            --shadow-dark: #202227;
+            --shadow-light: #383c45;
+            --text-color: #d1d5db;
+            --text-light: #8a91a0;
+            --primary: #5a7dff;
+            --primary-dark: #4a6fe0;
+            --transition-smooth: all 0.3s ease-in-out;
+            --border-radius-main: 24px;
+            --border-radius-inner: 15px;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #e4e9f2;
+            --shadow-dark: #c8d0db;
+            --shadow-light: #ffffff;
+            --text-color: #313848;
+            --text-light: #6c7990;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { 
+            background: var(--bg-color); 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+            color: var(--text-color); 
+            transition: background-color 0.3s, color 0.3s; 
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .btn { 
+            padding: 16px; 
+            background: var(--bg-color); 
+            border: none; 
+            border-radius: var(--border-radius-inner); 
+            color: var(--primary); 
+            font-size: 1.05rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            width: 100%; 
+            transition: var(--transition-smooth); 
+            box-shadow: 8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            text-decoration: none;
+        }
+        
+        .btn:hover:not(:disabled) { 
+            transform: translateY(-2px); 
+            color: var(--primary-dark); 
+        }
+        
+        .btn:active:not(:disabled) { 
+            transform: translateY(0px); 
+            box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light); 
+        }
+
+        .error-page {
+            display: flex; /* Dibuat flex agar langsung tampil dan di tengah */
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            animation: fadeIn 0.5s ease-out;
+            z-index: 20;
+        }
+
+        .error-card {
+            background: var(--bg-color);
+            border-radius: var(--border-radius-main);
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .error-main-image {
+            max-width: 220px;
+            margin-bottom: 20px;
+        }
+
+        .error-page h1 {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .error-page p {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .error-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .error-btn:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+        
+        .floating-btn { 
+            position: fixed; 
+            width: 50px; 
+            height: 50px; 
+            z-index: 1000; 
+            padding: 0; 
+            border-radius: 50%; 
+            color: var(--text-light); 
+        }
+        
+        .floating-btn:hover { 
+            color: var(--primary); 
+        }
+        
+        .theme-toggle { 
+            top: 20px; 
+            left: 20px; 
+        }
+        
+        [data-theme="dark"] .theme-toggle .fa-sun { 
+            display: none; 
+        }
+        
+        [data-theme="light"] .theme-toggle .fa-moon { 
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <button id="themeToggleBtn" class="btn floating-btn theme-toggle">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <div class="error-page" id="errorPage">
+        <div class="error-card">
+            <img src="404.gif" alt="Halaman Tidak Ditemukan" class="error-main-image">
+            
+            <h1>Halaman Tidak Ditemukan</h1>
+            <p>Oops! Sepertinya link yang Anda tuju salah atau sudah tidak ada lagi.</p>
+            
+            <a href="/" class="btn error-btn">
+                <i class="fas fa-home"></i>
+                Kembali ke Beranda
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        document.addEventListener('DOMContentLoaded', initTheme);
+    </script>
+</body>
+</html>
