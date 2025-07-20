@@ -3,2090 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Photobooth</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Photobooth Online v2.1 (Fixed)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --primary: #8a2be2; /* BlueViolet */
-            --secondary: #ff6b6b; /* Neo Red */
-            --accent: #4ecdc4; /* Turquoise */
-            --dark: #2d3436; /* Dark Grey */
-            --light: #f7f7f7; /* Off-White */
-            --background: #f0f2f5;
-            --card-bg: #ffffff;
-            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            --transition-fast: all 0.2s ease-out;
-            --transition-medium: all 0.4s ease-in-out;
-            --transition-slow: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --bg-color: #f4f7f6;
+            --panel-bg: #ffffff;
+            --primary-color: #3b82f6;
+            --secondary-color: #e2e8f0;
+            --text-color: #334155;
+            --subtle-text: #64748b;
+            --border-color: #cbd5e1;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --font-primary: 'Poppins', sans-serif;
+            --font-display: 'Pacifico', cursive;
         }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background);
-            color: var(--dark);
-            overflow-x: hidden;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header */
-        header {
+            font-family: var(--font-primary);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background-color: var(--card-bg);
-            box-shadow: var(--shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo i {
-            font-size: 28px;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover i {
-            transform: rotate(10deg);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-medium);
-            border: none;
-            font-size: 16px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
-        }
-
-        .btn-primary:hover {
-            background-color: #7a25cc;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary);
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
-        }
-
-        .btn-secondary:hover {
-            background-color: #e55a5a;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2);
-        }
-
-        /* Step Container */
-        .step-container {
-            min-height: calc(100vh - 80px); /* Adjust for header height */
-            padding: 100px 20px 50px;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none; /* Disable interaction when not active */
-            position: absolute;
-            top: 0;
-            left: 0;
+            overflow: hidden;
+        }
+
+        .main-container {
             width: 100%;
-            transition: opacity var(--transition-medium), transform var(--transition-medium);
-            text-align: center;
-        }
-
-        .step-container.active {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
-            position: static; /* Re-enable flow */
-        }
-
-        /* Landing Page */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            gap: 30px;
+            height: 100%;
             max-width: 900px;
-            width: 100%;
-        }
-
-        .hero h1 {
-            font-size: 3.8rem;
-            font-weight: 700;
-            line-height: 1.2;
-            color: var(--dark);
-            position: relative;
-            animation: textFadeIn 1s ease forwards;
-        }
-
-        .hero h1 span {
-            color: var(--primary);
+            max-height: 95vh;
+            background: var(--panel-bg);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px var(--shadow-color);
+            overflow: hidden;
             position: relative;
         }
 
-        .hero h1 span::after {
-            content: "";
+        .page {
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0%;
-            height: 8px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 4px;
-            animation: underlineGrow 1.5s ease forwards 0.5s;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 650px;
-            color: #555;
-            animation: textFadeIn 1s ease forwards 0.2s;
-        }
-
-        .hero-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin-top: 30px;
-            transform: scale(0.9);
-            opacity: 0;
-            animation: scaleIn 0.8s ease forwards 0.8s;
-        }
-
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 50px;
-            flex-wrap: wrap;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
-            width: 280px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition-medium);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.8s ease forwards;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
-        }
-
-        .feature-card i {
-            font-size: 48px;
-            color: var(--primary);
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover i {
-            transform: scale(1.1);
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        /* General Title Styles */
-        .page-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--dark);
-        }
-
-        .page-title span {
-            color: var(--primary);
-        }
-
-        .page-subtitle {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 40px;
-        }
-
-        /* Layout Selection */
-        .layout-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            width: 100%;
-            max-width: 1000px;
-            margin-top: 30px;
-        }
-
-        .layout-option {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            cursor: pointer;
-            transition: var(--transition-medium);
-            box-shadow: var(--shadow);
-            border: 3px solid transparent;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            padding: 2.5rem;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .layout-option::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: scale(0.8);
-            border-radius: 20px;
-            z-index: 1;
-        }
-
-        .layout-option:hover::before {
-            opacity: 0.1;
-            transform: scale(1);
-        }
-
-        .layout-option.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 5px rgba(138, 43, 226, 0.3), var(--shadow);
-            transform: translateY(-5px);
-        }
-
-        .layout-option.active::before {
-            opacity: 0.2;
-            transform: scale(1);
-        }
-
-        .layout-preview {
-            width: 100%;
-            height: 220px;
-            background: var(--background);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            overflow: hidden;
-            border: 1px solid #eee;
-            position: relative;
-            z-index: 2;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-        }
-
-        .layout-preview div {
-            background: #e0e0e0;
-            border: 2px solid var(--light);
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .layout-preview div::after {
-            content: '📸';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.5em;
-            color: rgba(0,0,0,0.1);
-        }
-
-        .layout-2 .layout-preview div {
-            width: 100%;
-            height: 50%;
-        }
-
-        .layout-3 .layout-preview div {
-            width: 100%;
-            height: 33.33%;
-        }
-
-        .layout-4 .layout-preview div {
-            width: 50%;
-            height: 50%;
-        }
-
-        .layout-6 .layout-preview div {
-            width: 33.33%;
-            height: 50%;
-        }
-
-        .layout-option h3 {
-            font-size: 20px;
-            margin-bottom: 5px;
-            color: var(--dark);
-            position: relative;
-            z-index: 2;
-        }
-
-        .layout-option p {
-            font-size: 0.95rem;
-            color: #777;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Capture Page */
-        .capture-container {
-            width: 100%;
-            max-width: 1100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .camera-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
-            justify-content: center;
-            margin-top: 30px;
-            width: 100%;
-        }
-
-        .camera-preview {
-            width: 100%;
-            max-width: 550px;
-            background-color: var(--dark);
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: var(--shadow);
-            aspect-ratio: 4/3; /* Maintain aspect ratio */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .video-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1); /* Mirror effect for selfie cam */
-        }
-
-        #captured-photo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1); /* Mirror effect for selfie cam */
-            display: none;
-            transition: opacity 0.3s ease;
-        }
-        
-        .shutter-effect {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            opacity: 0;
-            animation: shutterFlash 0.3s ease-out;
-            z-index: 100;
-        }
-
-        .camera-controls {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 10;
-        }
-
-        .control-btn {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--card-bg);
-            border: none;
-            cursor: pointer;
-            font-size: 26px;
-            color: var(--dark);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: var(--transition-fast);
-        }
-
-        .control-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-        .control-btn:active {
-            transform: scale(0.95);
-        }
-
-        .capture-btn {
-            background: var(--primary);
-            color: white;
-            width: 75px;
-            height: 75px;
-            font-size: 32px;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-        }
-        .capture-btn:hover {
-            background-color: #7a25cc;
-            transform: scale(1.1);
-            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.5);
-        }
-
-        .options-panel {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .panel-title {
-            font-size: 26px;
-            margin-bottom: 15px;
-            color: var(--dark);
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .filter-options {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .filter-option {
-            width: 75px;
-            height: 75px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            border: 3px solid transparent;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 500;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .filter-option:hover {
-            transform: scale(1.08);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .filter-option.active {
-            border-color: var(--primary);
-            transform: scale(1.1);
-            box-shadow: 0 0 0 5px rgba(138, 43, 226, 0.3), 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Filter background styles */
-        .normal { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-        .vintage { background: linear-gradient(135deg, #d4c098, #a17e5e); }
-        .bw { background: linear-gradient(135deg, #616161, #9bc5c3); }
-        .warm { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
-        .cool { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
-
-        .filter-option::before {
-            content: attr(data-filter);
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-transform: capitalize;
-            font-size: 0.8em;
-            background: rgba(0,0,0,0.3);
-            padding: 2px 8px;
-            border-radius: 5px;
-        }
-
-
-        .upload-section {
-            margin-top: 20px;
-            text-align: center;
-            border-top: 1px dashed #e0e0e0;
-            padding-top: 30px;
-        }
-
-        .upload-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 28px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: var(--transition-medium);
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
-        }
-
-        .upload-btn:hover {
-            background: #3abbb3;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(78, 205, 196, 0.4);
-        }
-
-        /* Edit Page */
-        .edit-container {
-            width: 100%;
-            max-width: 1100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .photostrip-preview {
-            width: 100%;
-            max-width: 650px; /* Adjust based on strip width */
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .photostrip-preview h3 {
-            font-size: 22px;
-            color: var(--dark);
-            margin-bottom: 20px;
-        }
-
-        .strip-container {
-            display: flex;
-            flex-direction: column; /* Start vertical */
-            gap: 10px;
-            padding: 10px;
-            background-color: #f5f5f5;
-            border-radius: 15px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-            max-height: 500px;
-            overflow-y: auto;
-            align-items: center;
-        }
-
-        .photo-slot {
-            flex-shrink: 0;
-            width: 200px; /* Base width for a single photo in the strip */
-            height: 150px;
-            background-color: #ddd;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 2px dashed #bbb;
-            position: relative;
-        }
-
-        .photo-slot.empty::before {
-            content: 'Tambahkan Foto';
-            color: #888;
-            font-size: 0.9em;
-            text-align: center;
-        }
-
-        .photo-slot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-        }
-
-        .photo-slot:hover img {
-            transform: scale(1.05);
-        }
-
-        /* Dynamically adjust strip layout based on selected layout (for preview) */
-        .photostrip-preview[data-selected-layout="2"] .strip-container,
-        .photostrip-preview[data-selected-layout="3"] .strip-container {
-            width: 250px; /* Narrower for vertical strips */
-        }
-        .photostrip-preview[data-selected-layout="4"] .strip-container,
-        .photostrip-preview[data-selected-layout="6"] .strip-container {
-            width: 400px; /* Wider for grid strips */
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .photostrip-preview[data-selected-layout="4"] .photo-slot {
-            width: 170px;
-            height: 170px;
-        }
-
-        .photostrip-preview[data-selected-layout="6"] .photo-slot {
-            width: 120px;
-            height: 120px;
-        }
-
-
-        .edit-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            justify-content: center;
-            margin-top: 30px;
-            width: 100%;
-        }
-
-        .option-group {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            min-width: 280px;
-            box-shadow: var(--shadow);
-            flex: 1;
-            min-height: 180px; /* Consistent height */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .option-title {
-            font-size: 22px;
-            margin-bottom: 20px;
-            color: var(--dark);
-            font-weight: 600;
-        }
-
-        .color-options {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .color-option {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: var(--transition-medium);
-            border: 3px solid transparent;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
-        .color-option:hover {
-            transform: scale(1.15);
-            box-shadow: 0 0 0 3px white, 0 0 0 6px var(--primary);
-        }
-
-        .color-option.active {
-            transform: scale(1.25);
-            box-shadow: 0 0 0 3px white, 0 0 0 6px var(--primary);
-        }
-
-        .sticker-options {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .sticker {
-            width: 65px;
-            height: 65px;
-            background-color: var(--background);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            cursor: pointer;
-            transition: var(--transition-medium);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            border: 2px solid transparent;
-        }
-
-        .sticker:hover {
-            transform: translateY(-5px) scale(1.05);
-            background-color: var(--accent);
-            color: white;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-            border-color: var(--accent);
-        }
-        .sticker.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px white, 0 0 0 6px var(--primary);
-            transform: scale(1.1);
-        }
-        
-        /* Modal for adding stickers to photo slots */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1001;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s 0.5s;
         }
-
-        .modal-overlay.active {
+        .page.active {
             opacity: 1;
             visibility: visible;
-        }
-
-        .sticker-modal-content {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            max-width: 90%;
-            width: 500px;
-        }
-        .modal-overlay.active .sticker-modal-content {
             transform: translateY(0);
-            opacity: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .sticker-modal-content h4 {
-            font-size: 24px;
-            margin-bottom: 25px;
-            color: var(--dark);
-        }
-
-        .modal-photo-slots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .modal-photo-slot {
-            width: 120px;
-            height: 120px;
-            border: 2px dashed var(--primary);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition-fast);
-            background-color: var(--background);
-            position: relative;
-            overflow: hidden;
-        }
-        .modal-photo-slot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .modal-photo-slot.selected {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.5);
-            transform: scale(1.05);
-        }
-        
-        .modal-photo-slot .applied-sticker {
-            position: absolute;
-            font-size: 3em;
-            pointer-events: none; /* Make sticker non-interactive */
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-
-        .modal-buttons {
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-
-        /* Download Page */
-        .download-container {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 80px); /* Adjust for header */
-            padding: 100px 20px 50px;
-        }
-
-        .download-title {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: var(--dark);
-        }
-
-        .download-title span {
-            color: var(--primary);
-        }
-        .download-container > p {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 40px;
-        }
-
-        .download-options {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 40px 0;
-            width: 100%;
-            max-width: 900px;
-        }
-
-        .download-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
-            width: 320px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition-medium);
-            flex: 1;
-            min-width: 280px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .download-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: scale(0.8);
-            border-radius: 20px;
-            z-index: 1;
-        }
-        .download-card:hover::before {
-            opacity: 0.05;
-            transform: scale(1);
-        }
-
-        .download-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
-        }
-
-        .download-card i {
-            font-size: 60px;
-            margin-bottom: 20px;
-            color: var(--primary);
-            transition: transform 0.3s ease;
-            position: relative;
-            z-index: 2;
-        }
-        .download-card:hover i {
-            transform: scale(1.1);
-        }
-
-        .download-card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: var(--dark);
-            position: relative;
-            z-index: 2;
-        }
-
-        .download-card p {
-            font-size: 0.95rem;
-            color: #777;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .qrcode-container {
-            margin: 20px auto;
-            padding: 15px;
-            background: white;
-            border-radius: 15px;
+        /* --- SHARED COMPONENTS --- */
+        h1 { font-family: var(--font-display); color: var(--primary-color); font-size: 3rem; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+        p { max-width: 500px; color: var(--subtle-text); margin-bottom: 2rem; }
+        .button {
             display: inline-block;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-            position: relative;
-            z-index: 2;
-        }
-
-        #qrcode-img {
-            width: 180px;
-            height: 180px;
-            display: block;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+            font-family: var(--font-primary);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-weight: 500;
             text-align: center;
-            padding: 30px 20px;
-            margin-top: 50px;
-            position: relative;
-            z-index: 900;
         }
+        .button.primary { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .button.primary:hover { background-color: #2563eb; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        .button.secondary { background-color: var(--secondary-color); color: var(--text-color); }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-            .page-title, .download-title {
-                font-size: 2.5rem;
-            }
-            .camera-section {
-                flex-direction: column;
-                align-items: center;
-            }
-            .options-panel {
-                max-width: 100%;
-            }
-            .download-options {
-                flex-direction: column;
-                align-items: center;
-            }
-            .download-card {
-                width: 100%;
-                max-width: 350px;
-            }
-            .strip-container {
-                max-width: 100%;
-            }
-        }
+        /* --- PAGE SPECIFIC STYLES --- */
+        #page-layout .layout-options-grid { display: flex; gap: 1.5rem; justify-content: center; }
+        .layout-card { padding: 2rem; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
+        .layout-card:hover { border-color: var(--primary-color); transform: scale(1.05); box-shadow: 0 5px 20px var(--shadow-color); }
+        .layout-card span { font-size: 2.5rem; font-weight: 700; display: block; }
 
-        @media (max-width: 600px) {
-            header {
-                padding: 15px 20px;
-            }
-            .logo {
-                font-size: 20px;
-            }
-            .logo i {
-                font-size: 24px;
-            }
-            .btn {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .feature-card {
-                width: 100%;
-                max-width: 280px;
-            }
-            .page-title, .download-title {
-                font-size: 2rem;
-            }
-            .layout-options {
-                grid-template-columns: 1fr;
-            }
-            .camera-controls {
-                gap: 10px;
-            }
-            .control-btn {
-                width: 55px;
-                height: 55px;
-                font-size: 22px;
-            }
-            .capture-btn {
-                width: 65px;
-                height: 65px;
-                font-size: 28px;
-            }
-            .filter-option {
-                width: 65px;
-                height: 65px;
-                font-size: 12px;
-            }
-            .option-group {
-                min-width: unset;
-                width: 100%;
-            }
-            .color-option {
-                width: 40px;
-                height: 40px;
-            }
-            .sticker {
-                width: 55px;
-                height: 55px;
-                font-size: 28px;
-            }
-            .photostrip-preview[data-selected-layout="2"] .strip-container,
-            .photostrip-preview[data-selected-layout="3"] .strip-container {
-                width: 100%;
-                max-width: 250px;
-            }
-            .photostrip-preview[data-selected-layout="4"] .strip-container,
-            .photostrip-preview[data-selected-layout="6"] .strip-container {
-                width: 100%;
-                max-width: 400px;
-            }
-            .photo-slot {
-                width: 180px;
-                height: 130px;
-            }
-            .modal-photo-slot {
-                width: 100px;
-                height: 100px;
-            }
-        }
+        /* PAGE CAPTURE */
+        #page-capture .capture-wrapper { position: relative; width: 100%; max-width: 560px; aspect-ratio: 4 / 3; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+        #camera-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); transition: filter 0.3s ease; }
+        #capture-info { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
+        #countdown-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); color: white; font-size: 8rem; font-weight: 700; display: none; justify-content: center; align-items: center; z-index: 10; }
+        .capture-controls { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; width: 100%; max-width: 560px; }
+        .capture-controls .button { flex-grow: 1; }
+        .dropdown { width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); font-size: 1rem; }
+        .capture-controls > .control-group { flex-basis: 100%; }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* PAGE EDIT (FIXED) */
+        #page-edit { flex-direction: row; gap: 2rem; justify-content: space-around; align-items: flex-start; }
+        .edit-controls-panel { width: 350px; text-align: left; }
+        .preview-panel { padding-top: 2rem; }
+        .control-section { margin-bottom: 1.5rem; }
+        .control-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+        #photostrip-preview-wrapper { width: 250px; padding: 15px; background-color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 8px; }
+        #photo-container { display: flex; flex-direction: column; gap: 10px; }
+        .photo-slot { width: 100%; aspect-ratio: 4 / 3; background-color: var(--bg-color); overflow: hidden; }
+        .photo-slot .photo-img { width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s ease; }
+        .strip-footer { padding-top: 15px; text-align: center; }
+        #footer-text { font-family: var(--font-display); font-size: 1.2rem; color: var(--primary-color); min-height: 25px; word-wrap: break-word; }
+        #footer-timestamp { font-size: 0.8rem; color: var(--subtle-text); min-height: 15px; }
 
-        @keyframes textFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes underlineGrow {
-            from { width: 0%; }
-            to { width: 100%; }
-        }
-
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes shutterFlash {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .loading-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid var(--primary);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        input[type="text"] { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; font-family: var(--font-primary); }
+        .thumbnail-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 0.75rem; }
+        .frame-thumb { width: 100%; aspect-ratio: 1/1; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; }
+        .frame-thumb.active { box-shadow: 0 0 0 3px var(--primary-color); transform: scale(1.05); }
         
-        .loading-overlay p {
-            font-size: 1.2rem;
-            color: var(--dark);
-        }
+        .frame-thumb[data-frame="frame-1"] { border: 5px solid #ffafcc; }
+        .frame-thumb[data-frame="frame-2"] { border: 5px solid #a2d2ff; }
+        .frame-thumb[data-frame="frame-3"] { border: 5px dotted #cdb4db; }
+        .frame-thumb[data-frame="frame-4"] { border: 5px double #fcf6bd; }
+        .frame-1 .photo-img { border: 8px solid #ffafcc; padding: 3px; }
+        .frame-2 .photo-img { border: 8px solid #a2d2ff; padding: 3px; }
+        .frame-3 .photo-img { border: 8px dotted #cdb4db; padding: 3px; }
+        .frame-4 .photo-img { border: 8px double #fcf6bd; padding: 3px; }
 
+        .filter-grayscale, #camera-feed.video-filter-grayscale { filter: grayscale(100%); }
+        .filter-sepia, #camera-feed.video-filter-sepia { filter: sepia(100%); }
+        .filter-warm, #camera-feed.video-filter-warm { filter: sepia(40%) contrast(110%) brightness(105%); }
+        .filter-cool, #camera-feed.video-filter-cool { filter: contrast(110%) brightness(105%) hue-rotate(-20deg); }
+        .filter-retro, #camera-feed.video-filter-retro { filter: sepia(70%) contrast(90%) brightness(110%) saturate(140%); }
+        
+        .loader { border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top: 3px solid #fff; width: 20px; height: 20px; display: inline-block; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            body { padding: 0; align-items: stretch; }
+            .main-container { max-height: 100%; height: 100%; border-radius: 0; }
+            .page { padding: 1.5rem; overflow-y: auto; }
+            #page-edit { flex-direction: column; align-items: center; }
+            .edit-controls-panel { width: 100%; max-width: 400px; padding: 0; order: 2; }
+            .preview-panel { order: 1; padding-top: 0; }
+            h1 { font-size: 2.5rem; } h2 { font-size: 1.2rem; }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <a href="#" class="logo" id="homeBtn">
-            <i class="fas fa-camera-retro"></i>
-            <span>Modern Photobooth</span>
-        </a>
-        <div class="nav-buttons">
-            <button class="btn btn-primary" id="startBtn">Mulai Sekarang <i class="fas fa-arrow-right"></i></button>
+
+    <div class="main-container">
+        <div id="page-start" class="page active">
+            <h1>Photobooth V2.1</h1>
+            <p>Selamat datang! Kini dengan kontrol lebih lengkap dan tampilan yang telah diperbaiki. Siapkan pose terbaikmu!</p>
+            <button id="start-btn" class="button primary">Mulai Sekarang 🚀</button>
         </div>
-    </header>
 
-    <section id="step1" class="step-container active">
-        <div class="hero container">
-            <h1>Buat Momen Berharga Menjadi <span>Abadi</span></h1>
-            <p>Photobooth modern dengan berbagai fitur menarik untuk menangkap momen spesial Anda. Pilih layout, ambil foto, tambahkan efek, dan bagikan dengan mudah.</p>
-            <button class="btn btn-primary" id="nextStep1">Mulai Sekarang <i class="fas fa-arrow-right"></i></button>
-            
-            <img src="https://images.unsplash.com/photo-1540398696144-d36353d9a9f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzgyMjl8MHwxfHNlYXJjaHw1NXx8cGhvdG9ib290aHxlbnwwfHx8fDE3MjE0ODY2MjJ8MA&ixlib=rb-4.0.3&q=80&w=1080" alt="Photobooth Illustration" class="hero-image">
-
-            <div class="features">
-                <div class="feature-card" style="animation-delay: 0.6s;">
-                    <i class="fas fa-th-large"></i>
-                    <h3>Layout Fleksibel</h3>
-                    <p>Pilih dari berbagai layout untuk menampilkan foto Anda dengan gaya unik</p>
-                </div>
-                <div class="feature-card" style="animation-delay: 0.8s;">
-                    <i class="fas fa-camera"></i>
-                    <h3>Ambil & Edit Foto</h3>
-                    <p>Ambil foto langsung atau unggah dari galeri, lalu tambahkan filter</p>
-                </div>
-                <div class="feature-card" style="animation-delay: 1s;">
-                    <i class="fas fa-magic"></i>
-                    <h3>Kustomisasi</h3>
-                    <p>Tambahkan stiker dan pilih warna fotostrip sesuai keinginan Anda</p>
-                </div>
+        <div id="page-layout" class="page">
+            <h2>Langkah 1: Pilih Layout</h2>
+            <p>Berapa banyak foto yang ingin kamu ambil untuk satu strip?</p>
+            <div class="layout-options-grid">
+                <div class="layout-card" data-count="2"><span>2</span> Foto</div>
+                <div class="layout-card" data-count="3"><span>3</span> Foto</div>
+                <div class="layout-card" data-count="6"><span>6</span> Foto</div>
             </div>
         </div>
-    </section>
 
-    <section id="step2" class="step-container">
-        <div class="container">
-            <h2 class="page-title">Pilih <span>Layout</span> Fotostrip</h2>
-            <p class="page-subtitle">Pilih salah satu layout di bawah ini untuk fotostrip Anda</p>
-            
-            <div class="layout-options">
-                <div class="layout-option layout-2" data-layout="2">
-                    <div class="layout-preview">
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <h3>2 Foto</h3>
-                    <p>Layout vertikal dengan 2 foto</p>
-                </div>
-                <div class="layout-option layout-3" data-layout="3">
-                    <div class="layout-preview">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <h3>3 Foto</h3>
-                    <p>Layout vertikal dengan 3 foto</p>
-                </div>
-                <div class="layout-option layout-4" data-layout="4">
-                    <div class="layout-preview">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <h3>4 Foto</h3>
-                    <p>Layout kotak 2x2</p>
-                </div>
-                <div class="layout-option layout-6" data-layout="6">
-                    <div class="layout-preview">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <h3>6 Foto</h3>
-                    <p>Layout kotak 2x3</p>
-                </div>
+        <div id="page-capture" class="page">
+            <p id="capture-info">Siapkan pose untuk <b>Foto 1 dari ...</b></p>
+            <div class="capture-wrapper">
+                <video id="camera-feed" autoplay playsinline></video>
+                <div id="countdown-overlay">3</div>
             </div>
-            
-            <button class="btn btn-primary" id="nextStep2" style="margin-top: 40px;">Lanjutkan <i class="fas fa-arrow-right"></i></button>
+            <div class="capture-controls">
+                <div class="control-group">
+                     <select id="capture-filter-options" class="dropdown">
+                        <option value="filter-none">Preview Filter: Original</option>
+                        <option value="video-filter-grayscale">Preview: Grayscale</option>
+                        <option value="video-filter-sepia">Preview: Sepia</option>
+                        <option value="video-filter-warm">Preview: Warm</option>
+                        <option value="video-filter-cool">Preview: Cool</option>
+                        <option value="video-filter-retro">Preview: Retro</option>
+                    </select>
+                </div>
+                <button id="manual-capture-btn" class="button primary">📸 Ambil Gambar</button>
+                <label for="upload-slot-input" class="button secondary">📤 Upload Foto</label>
+                <input type="file" id="upload-slot-input" style="display:none;" accept="image/*">
+            </div>
+            <canvas id="photo-canvas" style="display:none;"></canvas>
         </div>
-    </section>
 
-    <section id="step3" class="step-container">
-        <div class="capture-container">
-            <h2 class="page-title">Ambil <span>Foto</span></h2>
-            <p class="page-subtitle">Ambil foto langsung atau unggah dari perangkat Anda</p>
-            
-            <div class="camera-section">
-                <div class="camera-preview">
-                    <div class="video-container">
-                        <video id="video" autoplay playsinline></video>
-                        <canvas id="photoCanvas" style="display:none;"></canvas>
-                        <img id="captured-photo" alt="Captured Photo">
-                        <div id="shutter-flash" class="shutter-effect" style="display: none;"></div>
-                    </div>
-                    <div class="camera-controls">
-                        <button class="control-btn" id="retakeBtn" style="display: none;">
-                            <i class="fas fa-redo"></i>
-                        </button>
-                        <button class="control-btn capture-btn" id="captureBtn">
-                            <i class="fas fa-camera"></i>
-                        </button>
-                        <button class="control-btn" id="saveBtn" style="display: none;">
-                            <i class="fas fa-check"></i>
-                        </button>
+        <div id="page-edit" class="page">
+            <div class="edit-controls-panel">
+                <h2>Langkah Terakhir: Edit Hasil</h2>
+                <div class="control-section">
+                    <h3>Pilih Bingkai</h3>
+                    <div id="frame-options" class="thumbnail-group">
+                        <div class="frame-thumb active" data-frame="frame-none" style="border: 2px solid #ccc;">Ori</div>
+                        <div class="frame-thumb" data-frame="frame-1"></div>
+                        <div class="frame-thumb" data-frame="frame-2"></div>
+                        <div class="frame-thumb" data-frame="frame-3"></div>
+                        <div class="frame-thumb" data-frame="frame-4"></div>
                     </div>
                 </div>
-                
-                <div class="options-panel">
-                    <div>
-                        <h3 class="panel-title">Filter Foto</h3>
-                        <div class="filter-options">
-                            <div class="filter-option normal active" data-filter="normal"></div>
-                            <div class="filter-option vintage" data-filter="vintage"></div>
-                            <div class="filter-option bw" data-filter="bw"></div>
-                            <div class="filter-option warm" data-filter="warm"></div>
-                            <div class="filter-option cool" data-filter="cool"></div>
+                <div class="control-section">
+                    <h3>Terapkan Filter Akhir</h3>
+                    <select id="filter-options" class="dropdown">
+                        <option value="filter-none">Original</option>
+                        <option value="filter-grayscale">Grayscale</option>
+                        <option value="filter-sepia">Sepia</option>
+                        <option value="filter-warm">Warm</option>
+                        <option value="filter-cool">Cool</option>
+                        <option value="filter-retro">Retro</option>
+                    </select>
+                </div>
+                <div class="control-section">
+                    <h3>Teks Kustom</h3>
+                    <input type="text" id="custom-text-input" placeholder="Nama Acara / Namamu">
+                </div>
+                <button id="download-btn" class="button primary" style="width: 100%;">
+                    <span class="btn-text">⬇️ Download Hasil</span>
+                    <span class="loader" style="display: none;"></span>
+                </button>
+            </div>
+            <div class="preview-panel">
+                <div id="photostrip-preview-wrapper">
+                    <div id="photostrip-preview">
+                        <div id="photo-container">
+                            </div>
+                        <div class="strip-footer">
+                            <p id="footer-text"></p>
+                            <p id="footer-timestamp"></p>
                         </div>
                     </div>
-                    
-                    <div class="upload-section">
-                        <h3 class="panel-title">Atau Unggah Foto</h3>
-                        <button class="upload-btn" id="uploadBtn">
-                            <i class="fas fa-upload"></i> Pilih dari Galeri
-                        </button>
-                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                    </div>
                 </div>
             </div>
-            
-            <button class="btn btn-primary" id="nextStep3" style="margin-top: 30px; display: none;">Edit Fotostrip <i class="fas fa-edit"></i></button>
         </div>
-    </section>
-
-    <section id="step4" class="step-container">
-        <div class="edit-container">
-            <h2 class="page-title">Edit <span>Fotostrip</span></h2>
-            <p class="page-subtitle">Kustomisasi fotostrip Anda dengan berbagai pilihan</p>
-            
-            <div class="photostrip-preview" data-selected-layout="3"> <h3>Pratinjau Fotostrip Anda</h3>
-                <div class="strip-container" id="photostrip-slots">
-                    </div>
-            </div>
-            
-            <div class="edit-options">
-                <div class="option-group">
-                    <h3 class="option-title">Warna Fotostrip</h3>
-                    <div class="color-options" id="color-options">
-                        <div class="color-option active" data-color="#8a2be2" style="background-color: #8a2be2;"></div>
-                        <div class="color-option" data-color="#ff6b6b" style="background-color: #ff6b6b;"></div>
-                        <div class="color-option" data-color="#4ecdc4" style="background-color: #4ecdc4;"></div>
-                        <div class="color-option" data-color="#2d3436" style="background-color: #2d3436;"></div>
-                        <div class="color-option" data-color="#fdcb6e" style="background-color: #fdcb6e;"></div>
-                        <div class="color-option" data-color="#a29bfe" style="background-color: #a29bfe;"></div>
-                    </div>
-                </div>
-                
-                <div class="option-group">
-                    <h3 class="option-title">Stiker</h3>
-                    <div class="sticker-options" id="sticker-options">
-                        <div class="sticker" data-emoji="😊">😊</div>
-                        <div class="sticker" data-emoji="❤️">❤️</div>
-                        <div class="sticker" data-emoji="⭐">⭐</div>
-                        <div class="sticker" data-emoji="🎉">🎉</div>
-                        <div class="sticker" data-emoji="🎈">🎈</div>
-                        <div class="sticker" data-emoji="🎁">🎁</div>
-                        <div class="sticker" data-emoji="😎">😎</div>
-                        <div class="sticker" data-emoji="🌸">🌸</div>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="btn btn-primary" id="nextStep4" style="margin-top: 30px;">Unduh Hasil <i class="fas fa-download"></i></button>
-        </div>
-    </section>
-
-    <section id="step5" class="step-container">
-        <div class="download-container">
-            <h2 class="download-title">Unduh <span>Fotostrip</span> Anda</h2>
-            <p>Pilih metode pengunduhan yang Anda inginkan</p>
-            
-            <div class="download-options">
-                <div class="download-card">
-                    <i class="fas fa-download"></i>
-                    <h3>Unduh Langsung</h3>
-                    <p>Simpan fotostrip langsung ke perangkat Anda</p>
-                    <button class="btn btn-primary" id="downloadStripBtn" style="margin-top: 20px;">Unduh Sekarang</button>
-                </div>
-                
-                <div class="download-card">
-                    <i class="fas fa-qrcode"></i>
-                    <h3>Via Kode QR</h3>
-                    <p>Scan kode QR untuk mengakses fotostrip Anda</p>
-                    <div class="qrcode-container">
-                        <img id="qrcode-img" src="" alt="QR Code">
-                    </div>
-                </div>
-            </div>
-            
-            <button class="btn btn-outline" id="restartBtn" style="margin-top: 30px;">Buat Fotostrip Baru</button>
-        </div>
-    </section>
-
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-        <p>Memproses foto Anda...</p>
-    </div>
-
-    <div class="modal-overlay" id="stickerModal">
-        <div class="sticker-modal-content">
-            <h4>Pilih Foto untuk Stiker <span id="current-sticker-emoji"></span></h4>
-            <div class="modal-photo-slots" id="modal-photo-slots-container">
-                </div>
-            <div class="modal-buttons">
-                <button class="btn btn-outline" id="cancelStickerBtn">Batal</button>
-                <button class="btn btn-primary" id="applyStickerBtn">Terapkan</button>
-            </div>
+        
+        <div id="page-final" class="page">
+            <h1>Terima Kasih!</h1>
+            <p>Photostrip-mu telah berhasil diunduh. Jangan ragu untuk membuat lagi!</p>
+            <button id="restart-btn" class="button secondary">Buat Lagi</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script>
-        // --- Global Variables ---
-        const steps = document.querySelectorAll('.step-container');
-        let currentStepIndex = 0;
-        let selectedLayout = 3; // Default layout
-        let capturedPhotos = []; // Stores captured/uploaded image data URLs
-        let currentFilter = 'normal'; // Default filter
-        let selectedStripColor = '#8a2be2'; // Default strip color
-        let appliedStickers = []; // { slotIndex: 0, emoji: '😊' }
+    document.addEventListener('DOMContentLoaded', () => {
+        let state = { layout: 0, photos: [], currentCaptureIndex: 0, frame: 'frame-none', filter: 'filter-none', text: '' };
+        let cameraStream = null;
 
-        // --- DOM Elements ---
-        const video = document.getElementById('video');
-        const photoCanvas = document.getElementById('photoCanvas');
-        const capturedPhotoImg = document.getElementById('captured-photo');
-        const captureBtn = document.getElementById('captureBtn');
-        const retakeBtn = document.getElementById('retakeBtn');
-        const saveBtn = document.getElementById('saveBtn');
-        const shutterFlash = document.getElementById('shutter-flash');
-        const nextStep3Btn = document.getElementById('nextStep3');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const fileInput = document.getElementById('fileInput');
-        const photostripSlotsContainer = document.getElementById('photostrip-slots');
+        const pages = document.querySelectorAll('.page');
+        const startBtn = document.getElementById('start-btn');
+        const layoutOptionsGrid = document.querySelector('.layout-options-grid');
+        const cameraFeed = document.getElementById('camera-feed');
+        const countdownOverlay = document.getElementById('countdown-overlay');
+        const captureInfo = document.getElementById('capture-info');
+        const photoCanvas = document.getElementById('photo-canvas');
+        const manualCaptureBtn = document.getElementById('manual-capture-btn');
+        const uploadSlotInput = document.getElementById('upload-slot-input');
+        const uploadSlotLabel = document.querySelector('label[for="upload-slot-input"]');
+        const captureFilterOptions = document.getElementById('capture-filter-options');
+        
+        const frameOptions = document.getElementById('frame-options');
+        const filterOptions = document.getElementById('filter-options');
+        const customTextInput = document.getElementById('custom-text-input');
+        const downloadBtn = document.getElementById('download-btn');
         const photostripPreview = document.getElementById('photostrip-preview');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const qrcodeImg = document.getElementById('qrcode-img');
-        const stickerModal = document.getElementById('stickerModal');
-        const modalPhotoSlotsContainer = document.getElementById('modal-photo-slots-container');
-        const currentStickerEmoji = document.getElementById('current-sticker-emoji');
-        const applyStickerBtn = document.getElementById('applyStickerBtn');
-        const cancelStickerBtn = document.getElementById('cancelStickerBtn');
+        const photoContainer = document.getElementById('photo-container');
+        const footerText = document.getElementById('footer-text');
+        const footerTimestamp = document.getElementById('footer-timestamp');
+        const restartBtn = document.getElementById('restart-btn');
 
-        // --- Helper Functions ---
-
-        function showLoading(message = 'Memproses...') {
-            loadingOverlay.querySelector('p').textContent = message;
-            loadingOverlay.classList.add('active');
+        function goToPage(pageId) {
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
         }
 
-        function hideLoading() {
-            loadingOverlay.classList.remove('active');
+        function resetState() {
+            state = { layout: 0, photos: [], currentCaptureIndex: 0, frame: 'frame-none', filter: 'filter-none', text: '' };
+            stopCamera();
+            document.querySelector('.frame-thumb.active').classList.remove('active');
+            document.querySelector('.frame-thumb[data-frame="none"]').classList.add('active');
+            filterOptions.value = 'filter-none';
+            customTextInput.value = '';
+            captureFilterOptions.value = 'filter-none';
+            cameraFeed.className = '';
         }
 
-        function showStep(stepIndex) {
-            // Disable buttons to prevent multiple clicks during transition
-            document.querySelectorAll('.btn').forEach(btn => btn.disabled = true);
-
-            steps.forEach((step, index) => {
-                if (index === stepIndex) {
-                    step.classList.add('active');
-                } else {
-                    step.classList.remove('active');
-                }
-            });
-
-            currentStepIndex = stepIndex;
-
-            // Re-enable buttons after transition (adjust timeout as needed)
-            setTimeout(() => {
-                document.querySelectorAll('.btn').forEach(btn => btn.disabled = false);
-            }, 600); // Match CSS transition duration
-            
-            // Special actions for each step
-            if (stepIndex === 0) { // Home
-                resetPhotobooth();
-            } else if (stepIndex === 2) { // Capture Photo
-                startCamera();
-                updateCaptureState();
-            } else if (stepIndex === 3) { // Edit Photostrip
-                generatePhotostripSlots();
-                updatePhotostripPreviewColor(selectedStripColor);
-                renderPhotosInEditMode();
-                updateStickerPreview(); // Ensure stickers are shown if already applied
-            } else if (stepIndex === 4) { // Download
-                generateFinalPhotostrip();
-            }
-        }
-
-        function updateCaptureState() {
-            if (capturedPhotos.length === 0) {
-                capturedPhotoImg.style.display = 'none';
-                video.style.display = 'block';
-                captureBtn.style.display = 'block';
-                retakeBtn.style.display = 'none';
-                saveBtn.style.display = 'none';
-                nextStep3Btn.style.display = 'none';
-            } else {
-                capturedPhotoImg.src = capturedPhotos[capturedPhotos.length - 1]; // Show last captured
-                capturedPhotoImg.style.display = 'block';
-                video.style.display = 'none';
-                
-                captureBtn.style.display = 'none';
-                retakeBtn.style.display = 'block';
-                saveBtn.style.display = 'block';
-                nextStep3Btn.style.display = 'block';
-            }
-        }
-
-        function applyFilterToCanvas(canvas, context, img) {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            const pixels = imageData.data;
-
-            for (let i = 0; i < pixels.length; i += 4) {
-                let r = pixels[i];
-                let g = pixels[i + 1];
-                let b = pixels[i + 2];
-
-                switch (currentFilter) {
-                    case 'bw':
-                        const gray = (r + g + b) / 3;
-                        pixels[i] = gray;
-                        pixels[i + 1] = gray;
-                        pixels[i + 2] = gray;
-                        break;
-                    case 'vintage':
-                        pixels[i] = r * 0.9 + g * 0.2 + b * 0.1;
-                        pixels[i + 1] = r * 0.1 + g * 0.8 + b * 0.1;
-                        pixels[i + 2] = r * 0.1 + g * 0.1 + b * 0.7;
-                        break;
-                    case 'warm':
-                        pixels[i] = Math.min(255, r + 30);
-                        pixels[i + 1] = Math.min(255, g + 15);
-                        break;
-                    case 'cool':
-                        pixels[i + 1] = Math.min(255, g + 20);
-                        pixels[i + 2] = Math.min(255, b + 30);
-                        break;
-                    // 'normal' case does nothing, so it's fine if not explicitly handled
-                }
-            }
-            context.putImageData(imageData, 0, 0);
-            return canvas.toDataURL('image/png');
-        }
-
-        function generatePhotostripSlots() {
-            photostripSlotsContainer.innerHTML = ''; // Clear existing slots
-            photostripPreview.dataset.selectedLayout = selectedLayout; // Update data attribute for CSS
-
-            // Determine dimensions based on layout for consistency
-            let slotWidth, slotHeight;
-            if (selectedLayout == 2 || selectedLayout == 3) {
-                slotWidth = 200;
-                slotHeight = 150;
-                photostripSlotsContainer.style.flexDirection = 'column';
-                photostripSlotsContainer.style.alignItems = 'center';
-            } else if (selectedLayout == 4) {
-                slotWidth = 170;
-                slotHeight = 170;
-                photostripSlotsContainer.style.flexDirection = 'row';
-                photostripSlotsContainer.style.flexWrap = 'wrap';
-                photostripSlotsContainer.style.justifyContent = 'center';
-            } else if (selectedLayout == 6) {
-                slotWidth = 120;
-                slotHeight = 120;
-                photostripSlotsContainer.style.flexDirection = 'row';
-                photostripSlotsContainer.style.flexWrap = 'wrap';
-                photostripSlotsContainer.style.justifyContent = 'center';
-            }
-
-            for (let i = 0; i < selectedLayout; i++) {
-                const slot = document.createElement('div');
-                slot.classList.add('photo-slot');
-                slot.dataset.slotIndex = i;
-                slot.style.width = `${slotWidth}px`;
-                slot.style.height = `${slotHeight}px`;
-
-                // Add placeholder or captured photo
-                if (capturedPhotos[i]) {
-                    const img = document.createElement('img');
-                    img.src = capturedPhotos[i];
-                    slot.appendChild(img);
-                } else {
-                    slot.classList.add('empty');
-                }
-                
-                // Add sticker if applied to this slot
-                const existingSticker = appliedStickers.find(s => s.slotIndex === i);
-                if (existingSticker) {
-                    const stickerSpan = document.createElement('span');
-                    stickerSpan.classList.add('applied-sticker');
-                    stickerSpan.textContent = existingSticker.emoji;
-                    slot.appendChild(stickerSpan);
-                }
-
-                photostripSlotsContainer.appendChild(slot);
-            }
-        }
-
-        function updatePhotostripPreviewColor(color) {
-            photostripSlotsContainer.style.backgroundColor = color;
-            document.querySelectorAll('.photo-slot').forEach(slot => {
-                slot.style.borderColor = color;
-                // Update QR code container border
-                document.querySelector('.qrcode-container').style.borderColor = color;
-            });
-        }
-        
-        function renderPhotosInEditMode() {
-            // Update photo slots with captured photos
-            document.querySelectorAll('.photo-slot').forEach((slot, index) => {
-                if (capturedPhotos[index]) {
-                    slot.innerHTML = `<img src="${capturedPhotos[index]}" alt="Foto ${index + 1}">`;
-                    slot.classList.remove('empty');
-                } else {
-                    slot.innerHTML = '';
-                    slot.classList.add('empty');
-                }
-                // Re-add stickers
-                const existingSticker = appliedStickers.find(s => s.slotIndex === index);
-                if (existingSticker) {
-                    const stickerSpan = document.createElement('span');
-                    stickerSpan.classList.add('applied-sticker');
-                    stickerSpan.textContent = existingSticker.emoji;
-                    slot.appendChild(stickerSpan);
-                }
-            });
-        }
-
-        function updateStickerPreview() {
-            document.querySelectorAll('.photo-slot').forEach((slot, index) => {
-                let existingStickerElement = slot.querySelector('.applied-sticker');
-                const stickerData = appliedStickers.find(s => s.slotIndex === index);
-
-                if (stickerData) {
-                    if (existingStickerElement) {
-                        existingStickerElement.textContent = stickerData.emoji;
-                    } else {
-                        const stickerSpan = document.createElement('span');
-                        stickerSpan.classList.add('applied-sticker');
-                        stickerSpan.textContent = stickerData.emoji;
-                        slot.appendChild(stickerSpan);
-                    }
-                } else {
-                    if (existingStickerElement) {
-                        existingStickerElement.remove();
-                    }
-                }
-            });
-        }
-
-        async function generateFinalPhotostrip() {
-            showLoading('Menghasilkan fotostrip Anda...');
-            
-            // Create a temporary container for rendering
-            const tempStripContainer = document.createElement('div');
-            tempStripContainer.style.width = 'fit-content';
-            tempStripContainer.style.backgroundColor = selectedStripColor;
-            tempStripContainer.style.padding = '20px'; // Border-like padding
-            tempStripContainer.style.borderRadius = '20px';
-            tempStripContainer.style.display = 'flex';
-            tempStripContainer.style.gap = '10px';
-            tempStripContainer.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
-            tempStripContainer.style.position = 'absolute'; // Position off-screen
-            tempStripContainer.style.left = '-9999px';
-            tempStripContainer.style.top = '-9999px';
-            document.body.appendChild(tempStripContainer);
-
-            // Set flex direction based on layout
-            if (selectedLayout == 2 || selectedLayout == 3) {
-                tempStripContainer.style.flexDirection = 'column';
-            } else {
-                tempStripContainer.style.flexDirection = 'row';
-                tempStripContainer.style.flexWrap = 'wrap';
-                tempStripContainer.style.justifyContent = 'center';
-            }
-
-            for (let i = 0; i < selectedLayout; i++) {
-                const photoWrapper = document.createElement('div');
-                photoWrapper.style.backgroundColor = 'white';
-                photoWrapper.style.border = `2px solid ${selectedStripColor}`;
-                photoWrapper.style.borderRadius = '10px';
-                photoWrapper.style.overflow = 'hidden';
-                photoWrapper.style.position = 'relative'; // For stickers
-                photoWrapper.style.display = 'flex';
-                photoWrapper.style.alignItems = 'center';
-                photoWrapper.style.justifyContent = 'center';
-
-                // Set specific dimensions for final render
-                let finalWidth, finalHeight;
-                if (selectedLayout == 2 || selectedLayout == 3) { // Vertical strip
-                    finalWidth = 280; // Wider final image
-                    finalHeight = 200;
-                } else if (selectedLayout == 4) { // 2x2 grid
-                    finalWidth = 250;
-                    finalHeight = 250;
-                } else if (selectedLayout == 6) { // 2x3 grid
-                    finalWidth = 200;
-                    finalHeight = 200;
-                }
-                photoWrapper.style.width = `${finalWidth}px`;
-                photoWrapper.style.height = `${finalHeight}px`;
-
-                if (capturedPhotos[i]) {
-                    const img = document.createElement('img');
-                    img.src = capturedPhotos[i];
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    img.style.objectFit = 'cover';
-                    photoWrapper.appendChild(img);
-                } else {
-                    photoWrapper.textContent = 'Foto Hilang'; // Fallback
-                    photoWrapper.style.color = '#ccc';
-                }
-
-                // Add stickers
-                const sticker = appliedStickers.find(s => s.slotIndex === i);
-                if (sticker) {
-                    const stickerSpan = document.createElement('span');
-                    stickerSpan.textContent = sticker.emoji;
-                    stickerSpan.style.position = 'absolute';
-                    stickerSpan.style.fontSize = '4em'; // Larger for final output
-                    stickerSpan.style.textShadow = '0 2px 5px rgba(0,0,0,0.4)';
-                    stickerSpan.style.pointerEvents = 'none'; // Ensure it doesn't block events
-                    stickerSpan.style.zIndex = '10';
-                    // Center the sticker
-                    stickerSpan.style.left = '50%';
-                    stickerSpan.style.top = '50%';
-                    stickerSpan.style.transform = 'translate(-50%, -50%)';
-                    photoWrapper.appendChild(stickerSpan);
-                }
-
-                tempStripContainer.appendChild(photoWrapper);
-            }
-
-            // Use html2canvas to render the entire strip
-            html2canvas(tempStripContainer, {
-                scale: 2, // Increase scale for higher resolution
-                useCORS: true, // Important for images loaded from data URLs
-                logging: false, // Disable console logging
-                allowTaint: true // Allow tainted canvas for local image processing
-            }).then(canvas => {
-                const dataURL = canvas.toDataURL('image/png');
-                
-                // Set the download link for the button
-                document.getElementById('downloadStripBtn').onclick = () => {
-                    const a = document.createElement('a');
-                    a.href = dataURL;
-                    a.download = `fotostrip-modern-photobooth-${Date.now()}.png`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                };
-
-                // Generate QR code
-                const qr = new QRious({
-                    element: qrcodeImg,
-                    value: dataURL, // Use the image data URL
-                    size: 180,
-                    level: 'H',
-                    foreground: var_primary_value(), // Get primary color from CSS
-                    background: 'white'
-                });
-
-                document.body.removeChild(tempStripContainer); // Clean up temp container
-                hideLoading();
-            }).catch(error => {
-                console.error('Error generating photostrip:', error);
-                alert('Gagal menghasilkan fotostrip. Silakan coba lagi.');
-                document.body.removeChild(tempStripContainer);
-                hideLoading();
-            });
-        }
-
-        // Function to get CSS variable value dynamically
-        function var_primary_value() {
-            return getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
-        }
-
-        function resetPhotobooth() {
-            capturedPhotos = [];
-            appliedStickers = [];
-            selectedLayout = 3; // Reset to default
-            currentFilter = 'normal';
-            selectedStripColor = '#8a2be2';
-
-            // Reset UI elements
-            document.querySelectorAll('.layout-option').forEach(opt => opt.classList.remove('active'));
-            document.querySelector(`.layout-option[data-layout="${selectedLayout}"]`).classList.add('active');
-
-            document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('active'));
-            document.querySelector('.filter-option.normal').classList.add('active');
-
-            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
-            document.querySelector(`.color-option[data-color="${selectedStripColor}"]`).classList.add('active');
-
-            // Reset camera preview
-            video.srcObject = null;
-            capturedPhotoImg.src = '';
-            updateCaptureState();
-        }
-
-        // --- Event Listeners ---
-
-        // Navigation
-        document.getElementById('nextStep1').addEventListener('click', () => showStep(1));
-        document.getElementById('startBtn').addEventListener('click', () => showStep(1));
-        document.getElementById('homeBtn').addEventListener('click', () => showStep(0));
-        document.getElementById('restartBtn').addEventListener('click', () => showStep(0));
-        
-        document.getElementById('nextStep2').addEventListener('click', () => {
-            const activeLayout = document.querySelector('.layout-option.active');
-            if (activeLayout) {
-                selectedLayout = parseInt(activeLayout.dataset.layout);
-                capturedPhotos = new Array(selectedLayout).fill(null); // Initialize array for selected layout
-                showStep(2);
-            } else {
-                alert('Pilih salah satu layout terlebih dahulu!');
-            }
-        });
-
-        // Layout selection
-        document.querySelectorAll('.layout-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.layout-option').forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Camera functionality
-        let stream;
         async function startCamera() {
-            if (stream) { // Stop existing stream if any
-                stream.getTracks().forEach(track => track.stop());
-            }
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-                video.play();
-                updateCaptureState();
+                if (cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+                cameraFeed.srcObject = cameraStream;
             } catch (err) {
-                console.error("Error accessing camera: ", err);
-                alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin dan coba lagi.");
-                // Fallback to upload only if camera fails
-                captureBtn.style.display = 'none';
+                alert("Tidak bisa mengakses kamera. Pastikan Anda memberikan izin.");
+                goToPage('page-start');
             }
         }
 
-        captureBtn.addEventListener('click', function() {
-            if (!video.srcObject) {
-                alert("Kamera belum siap atau tidak dapat diakses.");
+        function stopCamera() {
+            if (cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
+        }
+
+        function prepareNextCaptureSlot() {
+            if (state.currentCaptureIndex >= state.layout) {
+                stopCamera();
+                renderEditPage();
+                goToPage('page-edit');
                 return;
             }
-            
-            shutterFlash.style.display = 'block'; // Show flash
-            setTimeout(() => {
-                shutterFlash.style.display = 'none'; // Hide flash
-            }, 200);
+            captureInfo.innerHTML = `Siapkan pose untuk <b>Foto ${state.currentCaptureIndex + 1} dari ${state.layout}</b>`;
+            manualCaptureBtn.disabled = false;
+            uploadSlotLabel.style.pointerEvents = 'auto';
+            uploadSlotLabel.style.opacity = 1;
+        }
 
-            const context = photoCanvas.getContext('2d');
-            photoCanvas.width = video.videoWidth;
-            photoCanvas.height = video.videoHeight;
-            
-            // Draw original (unfiltered) frame to canvas first
-            context.drawImage(video, 0, 0, photoCanvas.width, photoCanvas.height);
-            
-            // Apply filter and get data URL
-            const finalPhotoDataURL = applyFilterToCanvas(photoCanvas, context, video);
+        function addPhoto(imageDataUrl) {
+            state.photos.push(imageDataUrl);
+            state.currentCaptureIndex++;
+            prepareNextCaptureSlot();
+        }
 
-            // Store the captured photo
-            const emptySlotIndex = capturedPhotos.indexOf(null);
-            if (emptySlotIndex !== -1) {
-                capturedPhotos[emptySlotIndex] = finalPhotoDataURL;
-            } else {
-                capturedPhotos.push(finalPhotoDataURL); // Add if all slots full (e.g., re-capturing)
-            }
+        function startCountdownAndCapture() {
+            manualCaptureBtn.disabled = true;
+            uploadSlotLabel.style.pointerEvents = 'none';
+            uploadSlotLabel.style.opacity = 0.5;
+
+            let count = 3;
+            countdownOverlay.textContent = count;
+            countdownOverlay.style.display = 'flex';
             
-            updateCaptureState();
-        });
-        
-        retakeBtn.addEventListener('click', function() {
-            // Find the last captured photo and remove it
-            const lastPhotoIndex = capturedPhotos.length - 1;
-            if (lastPhotoIndex >= 0) {
-                capturedPhotos[lastPhotoIndex] = null; // Mark as empty
-                // Remove from the end if it's the last one
-                if (lastPhotoIndex === selectedLayout - 1) {
-                     capturedPhotos.pop();
+            const countdownInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownOverlay.textContent = count;
+                } else {
+                    clearInterval(countdownInterval);
+                    countdownOverlay.textContent = '📸';
+                    setTimeout(() => {
+                        const context = photoCanvas.getContext('2d');
+                        photoCanvas.width = cameraFeed.videoWidth;
+                        photoCanvas.height = cameraFeed.videoHeight;
+                        
+                        // Capture the RAW image without any filter burned in
+                        context.translate(photoCanvas.width, 0);
+                        context.scale(-1, 1);
+                        context.drawImage(cameraFeed, 0, 0, photoCanvas.width, photoCanvas.height);
+                        
+                        addPhoto(photoCanvas.toDataURL('image/jpeg'));
+                        countdownOverlay.style.display = 'none';
+                    }, 500);
                 }
-            }
-            updateCaptureState();
-        });
+            }, 1000);
+        }
         
-        saveBtn.addEventListener('click', function() {
-            // This button effectively just enables the next step.
-            alert('Foto berhasil ditambahkan ke fotostrip!');
-            nextStep3Btn.style.display = 'block'; // Show "Edit Fotostrip" button
+        function renderEditPage() {
+            photoContainer.innerHTML = '';
+            state.photos.forEach(photoSrc => {
+                const photoSlot = document.createElement('div');
+                photoSlot.className = `photo-slot ${state.frame}`;
+                const img = document.createElement('img');
+                img.src = photoSrc;
+                // Filter is applied here from the state
+                img.className = `photo-img ${state.filter}`;
+                photoSlot.appendChild(img);
+                photoContainer.appendChild(photoSlot);
+            });
+            footerText.textContent = state.text;
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            footerTimestamp.textContent = `${dateStr} - ${timeStr}`;
+        }
+        
+        // --- EVENT LISTENERS ---
+        startBtn.addEventListener('click', () => goToPage('page-layout'));
+        restartBtn.addEventListener('click', () => { resetState(); goToPage('page-start'); });
+
+        layoutOptionsGrid.addEventListener('click', async (e) => {
+            if (e.target.closest('.layout-card')) {
+                state.layout = parseInt(e.target.closest('.layout-card').dataset.count, 10);
+                goToPage('page-capture');
+                await startCamera();
+                prepareNextCaptureSlot();
+            }
         });
 
-        nextStep3Btn.addEventListener('click', () => {
-            // Check if enough photos are captured
-            const filledSlots = capturedPhotos.filter(photo => photo !== null).length;
-            if (filledSlots === selectedLayout) {
-                 // Stop camera stream before going to next step
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    stream = null;
-                }
-                showStep(3);
-            } else {
-                alert(`Anda perlu mengambil ${selectedLayout} foto untuk layout ini. Anda baru memiliki ${filledSlots} foto.`);
-            }
+        manualCaptureBtn.addEventListener('click', startCountdownAndCapture);
+
+        captureFilterOptions.addEventListener('change', (e) => {
+            cameraFeed.className = e.target.value === 'filter-none' ? '' : e.target.value;
         });
 
-        // Upload photo
-        uploadBtn.addEventListener('click', function() {
-            fileInput.click();
-        });
-        
-        fileInput.addEventListener('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
+        uploadSlotInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.onload = () => {
-                        const context = photoCanvas.getContext('2d');
-                        photoCanvas.width = img.width;
-                        photoCanvas.height = img.height;
-                        
-                        const finalPhotoDataURL = applyFilterToCanvas(photoCanvas, context, img);
-
-                        const emptySlotIndex = capturedPhotos.indexOf(null);
-                        if (emptySlotIndex !== -1) {
-                            capturedPhotos[emptySlotIndex] = finalPhotoDataURL;
-                        } else {
-                            capturedPhotos.push(finalPhotoDataURL);
-                        }
-                        updateCaptureState();
-                        e.target.value = ''; // Clear file input
-                    };
-                    img.src = event.target.result;
-                }
-                reader.readAsDataURL(e.target.files[0]);
+                reader.onload = (event) => {
+                    addPhoto(event.target.result);
+                };
+                reader.readAsDataURL(file);
             }
-        });
-        
-        // Filter selection
-        document.querySelectorAll('.filter-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-                currentFilter = this.dataset.filter;
-                // Re-apply filter to the currently displayed photo
-                if (capturedPhotoImg.style.display === 'block' && capturedPhotoImg.src) {
-                    const tempImg = new Image();
-                    tempImg.onload = () => {
-                        const context = photoCanvas.getContext('2d');
-                        photoCanvas.width = tempImg.width;
-                        photoCanvas.height = tempImg.height;
-                        capturedPhotoImg.src = applyFilterToCanvas(photoCanvas, context, tempImg);
-                    };
-                    // To re-apply filter, we need the *original* unfiltered image data
-                    // This is a simplification; in a real app, you'd store original image and apply filter on demand.
-                    // For this example, we'll just re-draw what's currently on img
-                    tempImg.src = capturedPhotoImg.src; // This will re-apply filter on top of potentially already filtered image
-                                                        // A more robust solution would store original and filtered versions
-                }
-            });
+            e.target.value = '';
         });
 
-        // Color selection
-        document.getElementById('color-options').addEventListener('click', function(event) {
-            const target = event.target.closest('.color-option');
-            if (target) {
-                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
-                target.classList.add('active');
-                selectedStripColor = target.dataset.color;
-                updatePhotostripPreviewColor(selectedStripColor);
+        frameOptions.addEventListener('click', (e) => {
+            if (e.target.classList.contains('frame-thumb')) {
+                document.querySelector('.frame-thumb.active').classList.remove('active');
+                e.target.classList.add('active');
+                state.frame = e.target.dataset.frame;
+                renderEditPage();
             }
         });
 
-        // Sticker selection (Open modal)
-        let selectedStickerEmoji = '';
-        document.getElementById('sticker-options').addEventListener('click', function(event) {
-            const target = event.target.closest('.sticker');
-            if (target) {
-                // Remove active from other stickers
-                document.querySelectorAll('.sticker').forEach(s => s.classList.remove('active'));
-                target.classList.add('active');
-                selectedStickerEmoji = target.dataset.emoji;
-                currentStickerEmoji.textContent = selectedStickerEmoji;
-                
-                // Populate modal photo slots
-                modalPhotoSlotsContainer.innerHTML = '';
-                capturedPhotos.forEach((photoDataUrl, index) => {
-                    if (photoDataUrl) {
-                        const modalSlot = document.createElement('div');
-                        modalSlot.classList.add('modal-photo-slot');
-                        modalSlot.dataset.slotIndex = index;
-                        const img = document.createElement('img');
-                        img.src = photoDataUrl;
-                        modalSlot.appendChild(img);
-                        
-                        // Show existing sticker on modal preview
-                        const existingSticker = appliedStickers.find(s => s.slotIndex === index);
-                        if (existingSticker) {
-                            const stickerSpan = document.createElement('span');
-                            stickerSpan.classList.add('applied-sticker');
-                            stickerSpan.textContent = existingSticker.emoji;
-                            modalSlot.appendChild(stickerSpan);
-                        }
+        filterOptions.addEventListener('change', (e) => {
+            state.filter = e.target.value;
+            renderEditPage();
+        });
 
-                        modalSlot.addEventListener('click', () => {
-                            modalSlot.classList.toggle('selected');
-                        });
-                        modalPhotoSlotsContainer.appendChild(modalSlot);
-                    }
+        customTextInput.addEventListener('input', (e) => {
+            state.text = e.target.value;
+            renderEditPage();
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const loader = downloadBtn.querySelector('.loader');
+            const btnText = downloadBtn.querySelector('.btn-text');
+            loader.style.display = 'inline-block';
+            btnText.style.display = 'none';
+            downloadBtn.disabled = true;
+
+            html2canvas(photostripPreview, { backgroundColor: '#ffffff', useCORS: true, scale: 2 })
+                .then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `photobooth-${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    goToPage('page-final');
+                })
+                .catch(err => {
+                    alert("Gagal membuat file gambar. Silakan coba lagi.");
+                })
+                .finally(() => {
+                    loader.style.display = 'none';
+                    btnText.style.display = 'inline-block';
+                    downloadBtn.disabled = false;
                 });
-                stickerModal.classList.add('active');
-            }
         });
 
-        // Sticker Modal Buttons
-        cancelStickerBtn.addEventListener('click', () => {
-            stickerModal.classList.remove('active');
-            document.querySelectorAll('.sticker').forEach(s => s.classList.remove('active')); // Deselect sticker
-        });
-
-        applyStickerBtn.addEventListener('click', () => {
-            const selectedModalSlots = document.querySelectorAll('.modal-photo-slot.selected');
-            selectedModalSlots.forEach(slot => {
-                const slotIndex = parseInt(slot.dataset.slotIndex);
-                // Remove existing sticker for this slot if any
-                appliedStickers = appliedStickers.filter(s => s.slotIndex !== slotIndex);
-                // Add new sticker
-                appliedStickers.push({ slotIndex: slotIndex, emoji: selectedStickerEmoji });
-            });
-            updateStickerPreview(); // Update the main photostrip preview
-            stickerModal.classList.remove('active');
-            document.querySelectorAll('.sticker').forEach(s => s.classList.remove('active')); // Deselect sticker
-        });
-
-        // Next Step 4 (Download)
-        document.getElementById('nextStep4').addEventListener('click', () => showStep(4));
-
-        // --- Initial setup ---
-        showStep(0); // Start at the landing page
-        
+    });
     </script>
 </body>
 </html>
