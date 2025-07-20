@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photobooth Online v3 (Polished)</title>
+    <title>Photobooth Online v5 (Frame Fixed)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,7 +69,6 @@
             transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
-        /* --- SHARED COMPONENTS --- */
         h1 { font-family: var(--font-display); color: var(--primary-color); font-size: 3rem; margin-bottom: 0.5rem; }
         h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
         p { max-width: 500px; color: var(--subtle-text); margin-bottom: 2rem; line-height: 1.6; }
@@ -90,13 +89,11 @@
         .button.secondary { background-color: var(--secondary-color); color: var(--primary-color); font-weight: 600; }
         .button.secondary:hover { background-color: #e0e7ff; }
 
-        /* --- PAGE SPECIFIC STYLES --- */
         #page-layout .layout-options-grid { display: flex; gap: 1.5rem; justify-content: center; }
         .layout-card { padding: 2rem; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
         .layout-card:hover { border-color: var(--primary-color); transform: scale(1.05); box-shadow: 0 5px 20px var(--shadow-color); }
         .layout-card span { font-size: 2.5rem; font-weight: 700; display: block; color: var(--primary-color); }
 
-        /* PAGE CAPTURE */
         #page-capture .capture-wrapper { position: relative; width: 100%; max-width: 560px; aspect-ratio: 4 / 3; background: #111827; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         #camera-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); transition: filter 0.3s ease; }
         #capture-info { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
@@ -106,7 +103,6 @@
         .dropdown { width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); font-size: 1rem; background-color: white; }
         .capture-controls > .control-group { flex-basis: 100%; }
 
-        /* PAGE EDIT (POLISHED) */
         #page-edit { flex-direction: row; gap: 2rem; justify-content: space-around; align-items: flex-start; }
         .edit-controls-panel { width: 350px; text-align: left; }
         .preview-panel { padding: 1.5rem; background-color: #f9fafb; border-radius: 16px; border: 1px solid var(--border-color); }
@@ -116,13 +112,12 @@
         #photostrip-preview-wrapper { width: 250px; }
         #photostrip-preview { background-color: white; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); border-radius: 8px; }
         #photo-container { display: flex; flex-direction: column; gap: 10px; }
-        .photo-slot { width: 100%; aspect-ratio: 4 / 3; background-color: #eef2ff; overflow: hidden; }
-        .photo-slot .photo-img { width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s ease; }
+        .photo-slot { width: 100%; aspect-ratio: 4 / 3; background-color: #eef2ff; overflow: hidden; display: flex; justify-content: center; align-items: center; } 
+        .photo-slot .photo-img { width: 100%; height: 100%; object-fit: cover; transition: all 0.3s ease; }
         
-        /* FOOTER RE-STYLED */
         .strip-footer { padding: 12px 5px 5px 5px; text-align: center; }
-        #footer-text { font-family: var(--font-display); font-size: 1.05rem; /* Reduced */ color: var(--primary-color); min-height: 18px; /* Reduced */ word-wrap: break-word; }
-        #footer-timestamp { font-size: 0.7rem; /* Reduced */ color: var(--subtle-text); min-height: 12px; /* Reduced */ margin-top: 4px; }
+        #footer-text { font-family: var(--font-display); font-size: 1.05rem; color: var(--primary-color); min-height: 18px; word-wrap: break-word; }
+        #footer-timestamp { font-size: 0.7rem; color: var(--subtle-text); min-height: 12px; margin-top: 4px; }
         
         input[type="text"] { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.9rem; font-family: var(--font-primary); }
         .thumbnail-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 0.75rem; }
@@ -133,12 +128,14 @@
         .frame-thumb[data-frame="frame-2"] { border: 5px solid #60a5fa; }
         .frame-thumb[data-frame="frame-3"] { border: 5px dotted #a78bfa; }
         .frame-thumb[data-frame="frame-4"] { border: 5px double #facc15; }
-        .frame-1 .photo-img { border: 8px solid #f472b6; padding: 3px; }
-        .frame-2 .photo-img { border: 8px solid #60a5fa; padding: 3px; }
-        .frame-3 .photo-img { border: 8px dotted #a78bfa; padding: 3px; }
-        .frame-4 .photo-img { border: 8px double #facc15; padding: 3px; }
 
-        /* TOGGLE SWITCH */
+        /* --- FRAME FIX --- */
+        /* Gaya bingkai sekarang diterapkan langsung ke gambar di dalam slot yang memiliki kelas bingkai */
+        .photo-slot.frame-1 .photo-img { border: 8px solid #f472b6; }
+        .photo-slot.frame-2 .photo-img { border: 8px solid #60a5fa; }
+        .photo-slot.frame-3 .photo-img { border: 8px dotted #a78bfa; }
+        .photo-slot.frame-4 .photo-img { border: 8px double #facc15; }
+
         .toggle-group { display: flex; align-items: center; gap: 0.75rem; }
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -171,11 +168,11 @@
 
     <div class="main-container">
         <div id="page-start" class="page active">
-            <h1>Photobooth V3</h1>
-            <p>Rasakan pengalaman photobooth online yang lebih baik. Desain baru, lebih cepat, dan kontrol penuh di tanganmu.</p>
-            <button id="start-btn" class="button primary">Mulai Sekarang ✨</button>
+            <h1>Photobooth V5</h1>
+            <p>Versi final dengan perbaikan render. Nikmati hasil photostrip yang tajam dan sesuai dengan pratinjau.</p>
+            <button id="start-btn" class="button primary">Mulai Sekarang 🌟</button>
         </div>
-
+        
         <div id="page-layout" class="page">
             <h2>Langkah 1: Pilih Layout</h2>
             <p>Berapa banyak foto yang ingin kamu ambil untuk satu strip?</p>
@@ -268,11 +265,11 @@
             <p>Photostrip-mu telah berhasil diunduh. Jangan ragu untuk membuat kenangan baru lagi!</p>
             <button id="restart-btn" class="button secondary">Buat Lagi</button>
         </div>
+
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- STATE OBJECT ---
         let state = {};
         const getInitialState = () => ({
             layout: 0,
@@ -286,13 +283,11 @@
 
         let cameraStream = null;
 
-        // --- DOM ELEMENT SELECTION ---
         const pages = document.querySelectorAll('.page');
         const startBtn = document.getElementById('start-btn');
         const restartBtn = document.getElementById('restart-btn');
         const layoutOptionsGrid = document.querySelector('.layout-options-grid');
         
-        // Capture Page Elements
         const cameraFeed = document.getElementById('camera-feed');
         const countdownOverlay = document.getElementById('countdown-overlay');
         const captureInfo = document.getElementById('capture-info');
@@ -302,7 +297,6 @@
         const uploadSlotLabel = document.querySelector('label[for="upload-slot-input"]');
         const captureFilterOptions = document.getElementById('capture-filter-options');
         
-        // Edit Page Elements
         const frameOptions = document.getElementById('frame-options');
         const filterOptions = document.getElementById('filter-options');
         const customTextInput = document.getElementById('custom-text-input');
@@ -313,7 +307,6 @@
         const footerText = document.getElementById('footer-text');
         const footerTimestamp = document.getElementById('footer-timestamp');
         
-        // --- CORE FUNCTIONS ---
         const goToPage = (pageId) => {
             pages.forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
@@ -322,7 +315,6 @@
         const resetApp = () => {
             state = getInitialState();
             stopCamera();
-            // Reset UI
             document.querySelector('.frame-thumb.active')?.classList.remove('active');
             document.querySelector('.frame-thumb[data-frame="none"]').classList.add('active');
             filterOptions.value = 'filter-none';
@@ -345,10 +337,8 @@
         };
 
         const stopCamera = () => {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
+            if (cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
         };
 
         const prepareNextCaptureSlot = () => {
@@ -404,10 +394,20 @@
             photoContainer.innerHTML = '';
             state.photos.forEach(photoSrc => {
                 const photoSlot = document.createElement('div');
-                photoSlot.className = `photo-slot ${state.frame}`;
+                // --- FIX JAVASCRIPT ---
+                // Menerapkan kelas bingkai ke elemen kontainer .photo-slot
+                photoSlot.className = 'photo-slot'; // Reset ke kelas dasar
+                if (state.frame !== 'frame-none') {
+                    photoSlot.classList.add(state.frame);
+                }
+                
                 const img = document.createElement('img');
                 img.src = photoSrc;
-                img.className = `photo-img ${state.filter}`;
+                img.className = 'photo-img'; // Reset ke kelas dasar
+                if (state.filter !== 'filter-none') {
+                    img.classList.add(state.filter);
+                }
+                
                 photoSlot.appendChild(img);
                 photoContainer.appendChild(photoSlot);
             });
@@ -421,6 +421,45 @@
                 footerTimestamp.textContent = `${dateStr} - ${timeStr}`;
             } else {
                 footerTimestamp.style.display = 'none';
+            }
+        };
+        
+        const triggerDownload = async () => {
+            const loader = downloadBtn.querySelector('.loader');
+            const btnText = downloadBtn.querySelector('.btn-text');
+            loader.style.display = 'inline-block';
+            btnText.style.display = 'none';
+            downloadBtn.disabled = true;
+
+            const targetElement = document.getElementById('photostrip-preview');
+
+            try {
+                const canvas = await html2canvas(targetElement, {
+                    backgroundColor: '#ffffff',
+                    useCORS: true,
+                    scale: 3, 
+                    onclone: (clonedDocument) => {
+                        const clonedSlots = clonedDocument.querySelectorAll('.photo-slot');
+                        clonedSlots.forEach(slot => {
+                            slot.style.aspectRatio = 'auto';
+                            slot.style.height = `${slot.offsetWidth * 0.75}px`;
+                        });
+                    }
+                });
+
+                const link = document.createElement('a');
+                link.download = `photobooth-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+                goToPage('page-final');
+
+            } catch (err) {
+                console.error("html2canvas error:", err);
+                alert("Gagal membuat file gambar. Terjadi masalah saat rendering.");
+            } finally {
+                loader.style.display = 'none';
+                btnText.style.display = 'inline-block';
+                downloadBtn.disabled = false;
             }
         };
         
@@ -456,7 +495,7 @@
         frameOptions.addEventListener('click', (e) => {
             const thumb = e.target.closest('.frame-thumb');
             if (thumb) {
-                document.querySelector('.frame-thumb.active').classList.remove('active');
+                document.querySelector('.frame-thumb.active')?.classList.remove('active');
                 thumb.classList.add('active');
                 state.frame = thumb.dataset.frame;
                 renderEditPage();
@@ -478,30 +517,7 @@
             renderEditPage();
         });
 
-        downloadBtn.addEventListener('click', () => {
-            const loader = downloadBtn.querySelector('.loader');
-            const btnText = downloadBtn.querySelector('.btn-text');
-            loader.style.display = 'inline-block';
-            btnText.style.display = 'none';
-            downloadBtn.disabled = true;
-
-            html2canvas(photostripPreview, { backgroundColor: '#ffffff', useCORS: true, scale: 3 })
-                .then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `photobooth-${Date.now()}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    goToPage('page-final');
-                })
-                .catch(err => {
-                    alert("Gagal membuat file gambar. Silakan coba lagi.");
-                })
-                .finally(() => {
-                    loader.style.display = 'none';
-                    btnText.style.display = 'inline-block';
-                    downloadBtn.disabled = false;
-                });
-        });
+        downloadBtn.addEventListener('click', triggerDownload);
 
         // --- INITIALIZATION ---
         resetApp();
