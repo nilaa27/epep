@@ -1,404 +1,798 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Take instant photobooth-style photos online. Customize with over 100 frame colors, add stickers and frames, and download high-quality photo strips instantly.">
-    <meta name="keywords" content="photobooth, online photobooth, tiktok photobooth, webcamtoy, photobooth-io">
-    <title>Xlordbooth | Modern Online Photobooth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Pilih layout foto favoritmu untuk memulai sesi photobooth online.">
+    <title>Pixlord | Pilih Layout Foto</title>
     
-    <link rel="canonical" href="https://www.photobooth-io.cc">
-    <link rel="icon" href="assets/icons/photobooth-new-logo.png">
+    <link rel="canonical" href="https://pict.xlord.web.id/layout.html">
+    <link rel="icon" href="https://via.placeholder.com/32x32/0D9488/FFFFFF?text=P">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <script src="https://kit.fontawesome.com/889828c10b.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
     <style>
-        /* Modern CSS Reset & Base Styles */
+        /* === VARIABEL TEMA === */
         :root {
-            --color-primary: #E83E8C;
-            --color-primary-light: #FBCFE8;
-            --color-primary-glow: rgba(232, 62, 140, 0.5); /* Warna untuk efek cahaya, dibuat sedikit lebih pekat */
-            --color-dark: #1F2937;
-            --color-light: #F9FAFB;
-            --color-gray: #6B7280;
-            --color-white: #FFFFFF;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --font-family-main: 'Poppins', sans-serif;
+            /* Warna Dasar */
+            --bg-color: #2c2f36;
+            --shadow-dark: #212429;
+            --shadow-light: #373a43;
+            --text-color: #e0e5ec;
+            --text-light: #97a1b3;
+            --primary: #0D9488;
+            --primary-light: #14b8a6;
+            --primary-dark: #0f766e;
+            --accent: #8b5cf6;
+            --danger: #ef4444;
+            
+            /* Transisi */
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-snappy: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            
+            /* Border Radius */
+            --border-radius-main: 20px;
+            --border-radius-inner: 12px;
+            --border-radius-small: 8px;
+            
+            /* Elevasi */
+            --elevation-1: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --elevation-2: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --elevation-3: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        [data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --shadow-dark: #d9dde2;
+            --shadow-light: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
         }
 
-        html {
-            font-size: 62.5%;
+        /* === RESET & BASE STYLES === */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html { 
+            font-size: 62.5%; 
             scroll-behavior: smooth;
         }
-
+        
         body {
-            font-family: var(--font-family-main);
-            background-color: var(--color-light);
-            color: var(--color-dark);
-            line-height: 1.6;
-            font-size: 1.6rem;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .container {
-            max-width: 1200px;
-            width: 90%;
-            margin: 0 auto;
-        }
-
-        /* --- Header & Navigation --- */
-        .main-header {
-            background-color: var(--color-white);
-            padding: 1.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow-md);
-        }
-
-        .main-header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 2.4rem;
-            font-weight: 700;
-            color: var(--color-dark);
-        }
-        
-        .logo .highlight {
-            color: var(--color-primary);
-        }
-
-        .main-nav {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-        }
-        
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 2.5rem;
-            font-size: 1.5rem;
-            font-weight: 500;
-        }
-
-        .nav-links a {
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.current-nav {
-            color: var(--color-primary);
-        }
-
-        .github-link {
-            font-size: 2.4rem;
-            color: var(--color-gray);
-            transition: color 0.3s ease;
-        }
-        .github-link:hover {
-            color: var(--color-dark);
-        }
-
-        /* --- Animated Hamburger Menu Button --- */
-        .hamburger-btn {
-            display: none;
-            width: 30px;
-            height: 24px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem; 
+            background: var(--bg-color); 
+            color: var(--text-color);
+            line-height: 1.7; 
+            transition: background-color 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
             position: relative;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 1001;
+            min-height: 100vh;
+            padding-bottom: 80px;
         }
-
-        .hamburger-btn .bar {
-            display: block;
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.1) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        body.sidebar-open { overflow: hidden; }
+        body.sidebar-open::before {
+            content: ''; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.5); 
+            z-index: 998; 
+            backdrop-filter: blur(2px);
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            width: 90%; 
+            margin: 0 auto; 
+        }
+        
+        /* === TYPOGRAPHY === */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        /* === NAVBAR MODERN === */
+        .main-header { 
+            position: sticky; 
+            top: 15px; 
+            z-index: 1000; 
+            margin: 0 auto 15px auto; 
+            width: 95%; 
+            max-width: 980px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            transition: top 0.4s ease, transform 0.4s ease, width 0.4s ease;
+        }
+        
+        .header-scrolled {
+            top: 0;
+            width: 100%;
+            max-width: 100%;
+            border-radius: 0;
+            margin: 0;
+            padding: 5px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 30px;
+            background: rgba(44, 47, 54, 0.7); 
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-main); 
+            box-shadow: var(--elevation-2);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: var(--transition-smooth);
+        }
+        
+        [data-theme="light"] .header-container { 
+            background: rgba(240, 242, 245, 0.7); 
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .logo { 
+            font-size: 2.4rem; 
+            font-weight: 800; 
+            color: var(--text-color); 
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo .highlight { 
+            color: var(--primary); 
+            position: relative;
+        }
+        
+        .logo .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
             width: 100%;
             height: 3px;
-            background-color: var(--color-dark);
-            border-radius: 3px;
-            position: absolute;
-            left: 0;
-            transition: all 0.4s ease;
+            background: var(--primary);
+            border-radius: 2px;
+            transform: scaleX(0.8);
+            transition: var(--transition-smooth);
         }
-
-        .hamburger-btn .bar.top { top: 0; }
-        .hamburger-btn .bar.middle { top: 50%; transform: translateY(-50%); }
-        .hamburger-btn .bar.bottom { bottom: 0; }
         
-        .hamburger-btn.is-active .bar.top { top: 50%; transform: translateY(-50%) rotate(45deg); }
-        .hamburger-btn.is-active .bar.middle { opacity: 0; }
-        .hamburger-btn.is-active .bar.bottom { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
+        .logo:hover .highlight::after {
+            transform: scaleX(1);
+        }
         
-        /* --- Hero Section --- */
-        #hero {
+        .main-nav { 
+            display: flex; 
+            align-items: center; 
+            gap: 2rem; 
+        }
+        
+        .nav-links { 
+            list-style: none; 
+            display: flex; 
+            gap: 2.5rem; 
+            font-size: 1.5rem; 
+            font-weight: 500; 
+        }
+        
+        .nav-links a { 
+            position: relative;
+            color: var(--text-light); 
+            transition: color 0.3s ease; 
+            text-decoration: none;
+            padding: 8px 0;
+            font-weight: 600;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: var(--transition-smooth);
+        }
+        
+        .nav-links a:hover { 
+            color: var(--text-color); 
+        }
+        
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+        
+        .theme-toggle-btn {
+            background: var(--bg-color); 
+            width: 45px; 
+            height: 45px; 
+            border-radius: 50%; 
             display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            min-height: calc(100vh - 75px);
-            padding: 4rem 0;
+            align-items: center; 
+            justify-content: center; 
+            border: none; 
+            cursor: pointer;
+            color: var(--text-color); 
+            box-shadow: var(--elevation-1);
+            transition: var(--transition-smooth);
             position: relative;
             overflow: hidden;
         }
         
-        /* --- CAHAYA PINK BERDENYUT DI BELAKANG --- */
-        .hero-glow-bg {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 40vw;
-            height: 40vw;
-            max-width: 500px;
-            max-height: 500px;
-            background: radial-gradient(circle, var(--color-primary-glow), transparent 70%);
-            border-radius: 50%;
-            filter: blur(100px);
-            transform: translate(-50%, -50%);
-            z-index: 0; /* Paling belakang */
-            animation: pulsate-glow 7s ease-in-out infinite;
-        }
-
-        @keyframes pulsate-glow {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-        }
-
-        .hero-content {
-            max-width: 800px;
-            position: relative;
-            z-index: 2; /* Di atas gambar dan cahaya denyut */
-        }
-
-        .coming-soon-badge {
-            display: inline-block;
-            background-color: var(--color-primary-light);
-            color: var(--color-primary);
-            padding: 0.6rem 1.5rem;
-            border-radius: 999px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-        }
-
-        .hero-header {
-            font-size: 6.4rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-subheader {
-            font-size: 2rem;
-            color: var(--color-gray);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .main-button {
-            font-family: var(--font-family-main);
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            border: 2px solid var(--color-primary);
-            padding: 1.4rem 4rem;
-            border-radius: 999px;
-            font-size: 1.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: 0 0 15px var(--color-primary-glow);
-        }
-
-        .main-button:hover {
-            background-color: #d8337c;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px -5px var(--color-primary-glow), 0 0 20px var(--color-primary-glow);
-        }
-
-        /* --- Animated Background Preview Images --- */
-        .hero-images-bg {
+        .theme-toggle-btn::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* Di atas cahaya denyut, di bawah teks */
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: var(--transition-smooth);
         }
-
-        .hero-images-bg img {
-            position: absolute;
-            width: 15vw;
-            max-width: 180px;
-            min-width: 100px;
-            border-radius: 8px;
-            animation: gentle-float 8s ease-in-out infinite;
-            filter: drop-shadow(0 4px 15px rgba(232, 62, 140, 0.2)); /* Cahaya gambar sedikit lebih redup */
-        }
-
-        @keyframes gentle-float {
-            0% { transform: translateY(0px) rotate(var(--initial-rotate)); }
-            50% { transform: translateY(-20px) rotate(var(--final-rotate)); }
-            100% { transform: translateY(0px) rotate(var(--initial-rotate)); }
-        }
-
-        .preview-1 { --initial-rotate: -15deg; --final-rotate: -12deg; top: 15%; left: 10%; animation-duration: 10s; }
-        .preview-2 { --initial-rotate: -5deg; --final-rotate: -8deg; top: 40%; left: 20%; animation-duration: 8s; animation-delay: -2s; }
-        .preview-3 { --initial-rotate: 15deg; --final-rotate: 18deg; top: 20%; right: 12%; animation-duration: 9s; }
-        .preview-4 { --initial-rotate: 5deg; --final-rotate: 2deg; top: 55%; right: 18%; animation-duration: 11s; animation-delay: -4s; }
         
-        /* --- Responsive Design --- */
-        @media (max-width: 1024px) {
-            .hero-images-bg img { width: 18vw; }
-            .preview-1 { left: 5%; }
-            .preview-2 { left: 15%; top: 45%; }
-            .preview-3 { right: 5%; }
-            .preview-4 { right: 15%; top: 60%; }
+        .theme-toggle-btn:hover::before {
+            opacity: 0.1;
+        }
+        
+        .theme-toggle-btn:hover { 
+            transform: scale(1.05) rotate(15deg); 
+            box-shadow: var(--elevation-2);
+        }
+        
+        .theme-toggle-btn i { 
+            position: relative;
+            z-index: 1;
+        }
+        
+        .theme-toggle-btn i.fa-sun { display: none; }
+        [data-theme="light"] .theme-toggle-btn i.fa-moon { display: none; }
+        [data-theme="light"] .theme-toggle-btn i.ffa-sun { display: block; }
+        
+        /* === HAMBURGER & SIDEBAR === */
+        .hamburger-menu {
+            display: none; 
+            cursor: pointer; 
+            width: 48px; 
+            height: 48px; 
+            justify-content: center; 
+            align-items: center;
+            position: relative; 
+            z-index: 1003; 
+            background: var(--bg-color); 
+            border: none; 
+            border-radius: 50%;
+            box-shadow: var(--elevation-1);
+            transition: var(--transition-smooth);
+        }
+        
+        .hamburger-menu:hover {
+            box-shadow: var(--elevation-2);
+            transform: scale(1.05);
+        }
+        
+        .hamburger-menu .bar { 
+            display: block; 
+            width: 22px; 
+            height: 2px; 
+            background-color: var(--text-color); 
+            border-radius: 3px; 
+            position: absolute; 
+            left: 13px; 
+            transition: var(--transition-snappy); 
+        }
+        
+        .bar.top { top: 16px; } 
+        .bar.middle { top: 22.5px; } 
+        .bar.bottom { top: 29px; }
+        
+        body.sidebar-open .bar.top { top: 22.5px; transform: rotate(45deg); }
+        body.sidebar-open .bar.middle { opacity: 0; transform: translateX(10px); }
+        body.sidebar-open .bar.bottom { top: 22.5px; transform: rotate(-45deg); }
+        
+        .sidebar {
+            position: fixed; 
+            top: 0; 
+            right: -320px; 
+            width: 300px; 
+            height: 100%;
+            background: rgba(44, 47, 54, 0.95); 
+            backdrop-filter: blur(10px);
+            box-shadow: -10px 0px 30px rgba(0,0,0,0.2); 
+            z-index: 999;
+            padding: 80px 30px 30px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px;
+            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        [data-theme="light"] .sidebar {
+            background: rgba(240, 242, 245, 0.95);
+        }
+        
+        .sidebar.active { right: 0; }
+        
+        .close-sidebar-btn {
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            background: transparent; 
+            border: none;
+            color: var(--text-light); 
+            cursor: pointer; 
+            font-size: 3rem; 
+            line-height: 1;
+            transition: var(--transition-smooth);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-sidebar-btn:hover { 
+            color: var(--primary); 
+            transform: rotate(90deg); 
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .sidebar-nav { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        
+        .sidebar-nav a { 
+            color: var(--text-light); 
+            text-decoration: none; 
+            font-size: 1.8rem; 
+            font-weight: 500; 
+            padding: 12px 20px; 
+            border-radius: var(--border-radius-inner); 
+            transition: var(--transition-smooth); 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .sidebar-nav a i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-nav a:hover { 
+            color: var(--primary); 
+            background: rgba(255,255,255,0.05);
+            transform: translateX(5px);
+        }
+        
+        /* === CONTENT SECTION === */
+        .content-section {
+            padding: 5rem 0 8rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .page-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            line-height: 1.1;
+            position: relative;
+            display: inline-block;
+            margin-top: 2rem;
+        }
+        
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .page-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-light);
+            margin: 3rem auto 5rem;
+            max-width: 600px;
+            font-weight: 400;
+        }
+        
+        /* === LAYOUT GRID === */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .layout-card {
+            background: var(--bg-color);
+            border-radius: var(--border-radius-main);
+            padding: 2.5rem;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            box-shadow: var(--elevation-2);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+        }
+        
+        .layout-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition-smooth);
+        }
+        
+        .layout-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--elevation-3);
+        }
+        
+        .layout-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .layout-card:active {
+            transform: translateY(0);
+            box-shadow: inset 7px 7px 15px var(--shadow-dark), inset -7px -7px 15px var(--shadow-light);
+        }
+        
+        .layout-card .image-frame {
+            background: var(--bg-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-inner);
+            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+            margin-bottom: 2rem;
+            display: inline-block;
+            transition: var(--transition-smooth);
+        }
+        
+        .layout-card:hover .image-frame {
+            transform: scale(1.03);
+        }
+        
+        .layout-card img {
+            width: 100%;
+            max-width: 180px;
+            display: block;
+            border-radius: 5px;
+            transition: var(--transition-smooth);
+            filter: grayscale(20%);
+        }
+        
+        .layout-card:hover img {
+            filter: grayscale(0);
+        }
+        
+        .layout-label {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .layout-description {
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+        
+        /* === FOOTER === */
+        .main-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 0;
+            background: rgba(44, 47, 54, 0.5);
+            backdrop-filter: blur(5px);
+            text-align: center;
+            font-size: 1.4rem;
+            color: var(--text-light);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        [data-theme="light"] .main-footer {
+            background: rgba(240, 242, 245, 0.5);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        /* === RESPONSIVE === */
+        @media (max-width: 992px) {
+            .layout-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .page-title {
+                font-size: 4rem;
+            }
         }
 
         @media (max-width: 768px) {
             html { font-size: 58%; }
+            .main-nav { display: none; }
+            .hamburger-menu { display: flex; }
+            .header-container { padding: 10px 20px; }
+            .main-header { width: 100%; top: 0; border-radius: 0; }
+            .page-title { font-size: 3.2rem; }
+            
+            .sidebar {
+                width: 280px;
+            }
+        }
 
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                position: fixed;
-                top: 0;
-                right: 0;
-                width: 70%;
-                height: 100vh;
-                background-color: var(--color-white);
-                padding-top: 10rem;
-                padding-left: 3rem;
-                box-shadow: var(--shadow-md);
-                transform: translateX(100%);
-                transition: transform 0.4s ease-in-out;
+        @media (max-width: 576px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
             
-            .nav-links.is-active { display: flex; transform: translateX(0); }
-            body.no-scroll { overflow: hidden; }
-            .hamburger-btn { display: block; }
-
-            .hero-header { font-size: 4.8rem; }
-            .hero-subheader { font-size: 1.8rem; }
-
-            .hero-images-bg img { width: 25vw; }
-            .preview-1 { top: 10%; left: 2%; }
-            .preview-4 { top: 65%; right: 2%; }
-            .preview-2, .preview-3 { display: none; }
-
-            .hero-glow-bg { width: 60vw; height: 60vw; }
+            .page-title {
+                font-size: 2.8rem;
+            }
+            
+            .page-subtitle {
+                font-size: 1.6rem;
+                margin: 2rem auto 4rem;
+            }
+            
+            .layout-card {
+                padding: 2rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header class="main-header">
-        <div class="container">
-            <a href="#" class="logo">Xlord<span class="highlight">booth</span></a>
+    <header class="main-header" id="main-header" data-aos="fade-down">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-camera"></i>
+                pix<span class="highlight">lord</span>
+            </a>
             <nav class="main-nav">
-                <ul class="nav-links" id="nav-menu">
-                    <li><a href="#" class="current-nav">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Contact</a></li>
+                <ul class="nav-links" id="nav-menu-desktop">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="index.html#about">Tentang</a></li>
+                    <li><a href="index.html#features">Fitur</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                    <li><a href="index.html#contact">Kontak</a></li>
                 </ul>
-                <a href="https://github.com/judiemosinabre" target="_blank" class="github-link" aria-label="GitHub Profile">
-                    <i class="fab fa-github"></i>
-                </a>
             </nav>
-            <button class="hamburger-btn" id="hamburger-button" aria-label="menu" aria-expanded="false" aria-controls="nav-menu">
-                <span class="bar top"></span>
-                <span class="bar middle"></span>
-                <span class="bar bottom"></span>
-            </button>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
+                    <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+                </button>
+                <button class="hamburger-menu" id="hamburger-menu" aria-label="Buka Menu">
+                    <span class="bar top"></span><span class="bar middle"></span><span class="bar bottom"></span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <main>
-        <section id="hero">
-            <div class="hero-glow-bg"></div>
-            
-            <div class="hero-images-bg">
-                <img src="assets/preview-img/preview6.png" alt="Photobooth strip example 1" class="preview-1" loading="lazy">
-                <img src="assets/preview-img/preview4.png" alt="Photobooth strip example 2" class="preview-2" loading="lazy">
-                <img src="assets/preview-img/preview3.png" alt="Photobooth strip example 3" class="preview-3" loading="lazy">
-                <img src="assets/preview-img/preview2.png" alt="Photobooth strip example 4" class="preview-4" loading="lazy">
-            </div>
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar-btn" id="close-sidebar-btn">&times;</button>
+        <nav class="sidebar-nav" id="nav-menu-mobile">
+            <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
+            <a href="index.html#about"><i class="fas fa-info-circle"></i> Tentang Kami</a>
+            <a href="index.html#features"><i class="fas fa-star"></i> Fitur</a>
+            <a href="index.html#testimonials"><i class="fas fa-comments"></i> Testimoni</a>
+            <a href="index.html#faq"><i class="fas fa-question-circle"></i> FAQ</a>
+            <a href="index.html#contact"><i class="fas fa-envelope"></i> Kontak</a>
+        </nav>
+    </div>
 
-            <div class="container hero-content">
-                <span class="coming-soon-badge">✨ New Filters & Stickers Coming Soon!</span>
-                <h1 class="hero-header">Capture Moments, Create Memories.</h1>
-                <p class="hero-subheader">
-                    Your free online photobooth. Instantly create and download fun, high-quality photo strips anytime, anywhere.
-                </p>
-                <button id="home-start" class="main-button">
-                    START <i class="fas fa-camera"></i>
-                </button>
+    <main>
+        <section class="content-section">
+            <div class="container">
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h1 class="page-title">Pilih Layout Favoritmu</h1>
+                    <p class="page-subtitle">Pilih gaya untuk memulai. Kamu punya 3 detik untuk setiap pose! Hasil foto akan dikirim ke email Anda setelah sesi selesai.</p>
+                </div>
+                
+                <div class="layout-grid">
+                    <button class="layout-card" id="layout1Btn" data-aos="fade-up" data-aos-delay="200">
+                        <div class="image-frame">
+                            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=300&w=300" alt="Layout A: 3 Pose">
+                        </div>
+                        <h2 class="layout-label">Layout A</h2>
+                        <p class="layout-description">Strip 6x2 (3 Pose)</p>
+                    </button>
+                    <button class="layout-card" id="layout2Btn" data-aos="fade-up" data-aos-delay="300">
+                        <div class="image-frame">
+                             <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=300&w=300" alt="Layout B: 4 Pose">
+                        </div>
+                        <h2 class="layout-label">Layout B</h2>
+                        <p class="layout-description">Strip 6x2 (4 Pose)</p>
+                    </button>
+                    <button class="layout-card" id="layout3Btn" data-aos="fade-up" data-aos-delay="400">
+                        <div class="image-frame">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=300&w=300" alt="Layout C: 2 Pose">
+                        </div>
+                        <h2 class="layout-label">Layout C</h2>
+                        <p class="layout-description">Strip 6x2 (2 Pose)</p>
+                    </button>
+                    <button class="layout-card" id="layout4Btn" data-aos="fade-up" data-aos-delay="500">
+                        <div class="image-frame">
+                             <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=300&w=300" alt="Layout D: 6 Pose">
+                        </div>
+                        <h2 class="layout-label">Layout D</h2>
+                        <p class="layout-description">Strip 6x4 (6 Pose)</p>
+                    </button>
+                </div>
             </div>
         </section>
     </main>
-
+    
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2023 PixLord Photobooth. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburgerButton = document.getElementById('hamburger-button');
-            const navMenu = document.getElementById('nav-menu');
-            const body = document.body;
-
-            if (hamburgerButton && navMenu) {
-                hamburgerButton.addEventListener('click', () => {
-                    hamburgerButton.classList.toggle('is-active');
-                    navMenu.classList.toggle('is-active');
-                    body.classList.toggle('no-scroll');
-                    const isExpanded = hamburgerButton.getAttribute('aria-expanded') === 'true';
-                    hamburgerButton.setAttribute('aria-expanded', !isExpanded);
-                });
-            }
-
-            navMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (navMenu.classList.contains('is-active')) {
-                        hamburgerButton.classList.remove('is-active');
-                        navMenu.classList.remove('is-active');
-                        body.classList.remove('no-scroll');
-                        hamburgerButton.setAttribute('aria-expanded', 'false');
-                    }
-                });
+        document.addEventListener('DOMContentLoaded', () => { 
+            // Inisialisasi AOS
+            AOS.init({ 
+                duration: 800, 
+                once: false, 
+                offset: 50,
+                easing: 'ease-out-back'
             });
 
-            const homeStartButton = document.getElementById('home-start');
-            if (homeStartButton) {
-                homeStartButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    alert('Navigating to Choose Layout page!');
-                    // window.location.href = 'chooseLayout.html';
-                });
+            const docElement = document.documentElement;
+            const body = document.body;
+            const header = document.getElementById('main-header');
+
+            // --- Theme Toggle ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            docElement.setAttribute('data-theme', currentTheme);
+            
+            themeToggle.addEventListener('click', () => {
+                const newTheme = docElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                docElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Tambahkan animasi saat mengganti tema
+                themeToggle.style.transform = 'rotate(360deg) scale(1.1)';
+                setTimeout(() => {
+                    themeToggle.style.transform = '';
+                }, 500);
+            });
+
+            // --- Scroll Effect untuk Navbar ---
+            let lastScrollY = window.scrollY;
+            
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                
+                // Efek sticky header saat scroll
+                if (currentScrollY > 100) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+                
+                // Hide header saat scroll down, show saat scroll up
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    header.style.transform = 'translateY(-100%) translateX(-50%)';
+                } else {
+                    header.style.transform = 'translateY(0) translateX(-50%)';
+                }
+                
+                lastScrollY = currentScrollY;
+            });
+
+            // --- Sidebar Logic ---
+            const hamburger = document.getElementById('hamburger-menu');
+            const sidebar = document.getElementById('sidebar');
+            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+            
+            const toggleSidebar = () => {
+                body.classList.toggle('sidebar-open');
+                sidebar.classList.toggle('active');
+                
+                // Animasi hamburger icon
+                if (body.classList.contains('sidebar-open')) {
+                    hamburger.style.transform = 'rotate(90deg)';
+                } else {
+                    hamburger.style.transform = '';
+                }
+            };
+
+            hamburger.addEventListener('click', toggleSidebar);
+            closeSidebarBtn.addEventListener('click', toggleSidebar);
+            sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+                if (body.classList.contains('sidebar-open')) {
+                    toggleSidebar();
+                }
+            }));
+
+            // --- Layout Button Click Handlers ---
+            const layoutMapping = {
+                'layout1Btn': 'canvas.html',
+                'layout2Btn': 'canvas4.html',
+                'layout3Btn': 'canvas2.html',
+                'layout4Btn': 'canvas6.html'
+            };
+
+            for (const [btnId, url] of Object.entries(layoutMapping)) {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('click', function() {
+                        // Animasi tombol saat diklik
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 300);
+                    });
+                }
             }
+            
+            // --- Animasi Hover pada Menu Navigasi ---
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.color = getComputedStyle(document.documentElement)
+                        .getPropertyValue('--primary');
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.color = '';
+                });
+            });
         });
     </script>
 
