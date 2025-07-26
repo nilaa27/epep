@@ -14,10 +14,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
     <style>
         /* === TEMA & VARIABEL UTAMA === */
+        /* Variabel ini digunakan untuk konsistensi tema di seluruh halaman */
         :root {
             --bg-color: #2c2f36;
             --navbar-bg: rgba(33, 36, 41, 0.4);
@@ -35,6 +37,7 @@
             --border-radius-inner: 12px;
         }
 
+        /* Variabel untuk Tema Terang (Light Mode) */
         [data-theme="light"] {
             --bg-color: #f0f2f5;
             --navbar-bg: rgba(255, 255, 255, 0.5);
@@ -45,11 +48,15 @@
             --text-light: #666666;
         }
 
+        /* === GAYA GLOBAL === */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
         html { font-size: 62.5%; }
         body {
-            font-size: 1.6rem; background: var(--bg-color); color: var(--text-color);
-            line-height: 1.7; transition: background-color 0.5s ease, color 0.5s ease;
+            font-size: 1.6rem; 
+            background: var(--bg-color); 
+            color: var(--text-color);
+            line-height: 1.7; 
+            transition: background-color 0.5s ease, color 0.5s ease;
             overflow-x: hidden;
         }
         .container { max-width: 1200px; width: 90%; margin: 0 auto; }
@@ -66,6 +73,9 @@
             transition: var(--transition-smooth);
         }
         .navbar {
+            /* Menggunakan Grid untuk layouting presisi */
+            /* Kolom 1 (kiri) dan 3 (kanan) fleksibel (1fr), kolom 2 (tengah) menyesuaikan isinya (auto) */
+            /* Ini memastikan menu di kolom 2 selalu pas di tengah */
             display: grid;
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
@@ -113,7 +123,6 @@
             z-index: 1;
             transition: all 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
-        
         .navbar-right {
             grid-column: 3;
             justify-self: end;
@@ -154,7 +163,7 @@
         [data-theme="light"] .theme-toggle-btn i.fa-sun { display: block; }
         .theme-toggle-btn-mobile-wrapper { display: none; }
 
-        /* --- Tombol Global & Section --- */
+        /* === TOMBOL GLOBAL & SECTION === */
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 14px 28px; border-radius: var(--border-radius-inner); font-size: 1.6rem; font-weight: 600; text-decoration: none; cursor: pointer; border: none; color: var(--text-light); background: var(--bg-color); transition: var(--transition-smooth); box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); }
         .btn:hover { color: var(--primary); transform: translateY(-3px); }
         .btn.primary { color: #ffffff; background: var(--primary); }
@@ -162,7 +171,7 @@
         .section-title { font-size: 4rem; font-weight: 800; text-align: center; margin-bottom: 1.5rem; color: var(--text-color); }
         .section-subtitle { font-size: 1.8rem; color: var(--text-light); text-align: center; max-width: 700px; margin: 0 auto 5rem auto; }
         
-        /* --- Hero Section & Preview Images --- */
+        /* === HERO SECTION === */
         #hero { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 100vh; padding: 4rem 0; position: relative; overflow: hidden; }
         .hero-glow-bg { position: absolute; top: 50%; left: 50%; width: 40vw; height: 40vw; max-width: 500px; max-height: 500px; background: radial-gradient(circle, rgba(13, 148, 136, 0.4), transparent 70%); border-radius: 50%; filter: blur(100px); transform: translate(-50%, -50%); z-index: 0; animation: pulsate-glow 7s ease-in-out infinite; }
         @keyframes pulsate-glow { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } }
@@ -179,7 +188,7 @@
         .preview-3 { --initial-rotate: 15deg; --final-rotate: 18deg;  top: 20%; right: 12%; animation-duration: 9s; }
         .preview-4 { --initial-rotate: 5deg; --final-rotate: 2deg;   top: 65%; right: 15%; animation-duration: 11s; animation-delay: -4s; }
         
-        /* --- CSS Lainnya --- */
+        /* === GAYA KONTEN LAINNYA === */
         .about-grid { display: grid; grid-template-columns: 1fr; gap: 5rem; align-items: center; } .about-text { text-align: center; max-width: 700px; margin: 0 auto; } .about-text h3 { font-size: 2.8rem; color: var(--primary); margin-bottom: 1rem; }
         .steps-container, .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; }
         .step-card, .feature-card { background: var(--bg-color); padding: 35px 30px; text-align: center; border-radius: var(--border-radius-main); box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light); }
@@ -228,7 +237,8 @@
         .social-links a:hover { color: var(--primary); transform: translateY(-3px); }
         .copyright { font-size: 1.3rem; color: var(--text-light); opacity: 0.7; }
 
-        /* === RESPONSIVE (BREAKPOINT DIUBAH) === */
+        /* === RESPONSIVE === */
+        /* Breakpoint diubah ke 768px, agar menu tetap tampil di tablet */
         @media (max-width: 768px) {
             html { font-size: 58%; }
             .hero-header { font-size: 4.8rem; }
@@ -261,10 +271,10 @@
                 pointer-events: none;
                 transform-origin: top center;
                 transition: transform 0.3s ease, opacity 0.3s ease;
-                display: none; /* Sembunyi by default */
+                display: none;
             }
             .navbar-menu.active {
-                display: flex; /* Tampil saat aktif */
+                display: flex;
                 transform: translateY(0) scale(1);
                 opacity: 1;
                 pointer-events: auto;
@@ -279,377 +289,279 @@
             .navbar-right .theme-toggle-btn { display: none; }
             .theme-toggle-btn-mobile-wrapper { display: block; margin-top: 1rem; text-align: center; }
         }
-
     </style>
 </head>
 <body>
 
-<header class="main-header">
-    <nav class="navbar container">
-        <a href="#hero" class="navbar-logo">pict<span class="highlight">lord</span></a>
-        
-        <ul class="navbar-menu" id="navbar-menu">
-            <li><a href="#hero" class="current-nav">Beranda</a></li>
-            <li><a href="#about">Tentang</a></li>
-            <li><a href="#how-it-works">Cara Kerja</a></li>
-            <li><a href="#features">Fitur</a></li>
-            <li><a href="#testimonials">Testimoni</a></li>
-            <li><a href="#faq">FAQ</a></li>
-            <li><a href="#contact">Kontak</a></li>
-            <div class="nav-highlight"></div>
-            <li class="theme-toggle-btn-mobile-wrapper"> 
-                <button class="theme-toggle-btn" id="theme-toggle-mobile" aria-label="Ubah Tema">
+    <header class="main-header">
+        <nav class="navbar container">
+            <a href="#hero" class="navbar-logo">pict<span class="highlight">lord</span></a>
+            
+            <ul class="navbar-menu" id="navbar-menu">
+                <li><a href="#hero" class="current-nav">Beranda</a></li>
+                <li><a href="#about">Tentang</a></li>
+                <li><a href="#how-it-works">Cara Kerja</a></li>
+                <li><a href="#features">Fitur</a></li>
+                <li><a href="#testimonials">Testimoni</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Kontak</a></li>
+                <div class="nav-highlight"></div>
+                <li class="theme-toggle-btn-mobile-wrapper"> 
+                    <button class="theme-toggle-btn" id="theme-toggle-mobile" aria-label="Ubah Tema">
+                        <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="navbar-right">
+                <a href="layout.html" class="navbar-cta">Mulai <i class="fas fa-camera"></i></a>
+                <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
                     <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
                 </button>
-            </li>
-        </ul>
-
-        <div class="navbar-right">
-            <a href="layout.html" class="navbar-cta">Mulai <i class="fas fa-camera"></i></a>
-            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
-                <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
-            </button>
-            <button class="hamburger-menu" id="hamburger-menu" aria-label="Buka Menu">
-                <span class="bar top"></span><span class="bar middle"></span><span class="bar bottom"></span>
-            </button>
-        </div>
-    </nav>
-</header>
-
-<div class="main-content">
-    <main>
-        <section id="hero">
-            <div class="hero-glow-bg"></div>
-            <div class="hero-images-bg">
-                <img src="/assets/preview-img/preview6.png" alt="Contoh strip photobooth 1" class="preview-1" data-aos="fade-up" data-aos-delay="200">
-                <img src="/assets/preview-img/preview4.png" alt="Contoh strip photobooth 2" class="preview-2" data-aos="fade-up" data-aos-delay="400">
-                <img src="/assets/preview-img/preview3.png" alt="Contoh strip photobooth 3" class="preview-3" data-aos="fade-up" data-aos-delay="600">
-                <img src="/assets/preview-img/preview2.png" alt="Contoh strip photobooth 4" class="preview-4" data-aos="fade-up" data-aos-delay="800">
+                <button class="hamburger-menu" id="hamburger-menu" aria-label="Buka Menu">
+                    <span class="bar top"></span><span class="bar middle"></span><span class="bar bottom"></span>
+                </button>
             </div>
-            <div class="container hero-content" data-aos="fade-up">
-                <a href="https://instagram.com/off.xlord" target="_blank" class="instagram-badge">
-                    <i class="fab fa-instagram"></i>
-                    <span>Ikuti kami di Instagram</span>
-                </a>
-                <h1 class="hero-header">Abadikan Momen, Ciptakan Kenangan.</h1>
-                <p class="hero-subheader">Photobooth online gratis dengan desain profesional yang dinamis. Buat dan unduh strip foto seru berkualitas tinggi secara instan.</p>
-                <a href="layout.html" class="btn primary">MULAI SEKARANG &nbsp; <i class="fas fa-camera"></i></a>
-            </div>
-        </section>
-        
-        <section id="about" class="page-section">
-             <div class="container" data-aos="fade-up">
-                <h2 class="section-title">Tentang pictlord</h2>
-                <p class="section-subtitle">Membawa keseruan photobooth klasik ke layar Anda, dengan sentuhan modern dan elegan.</p>
-                <div class="about-grid">
-                    <div class="about-text">
-                        <h3>Dari Ide Menjadi Kenyataan</h3>
-                        <p>pictlord lahir dari ide sederhana: semua orang suka photobooth, tetapi tidak selalu mudah ditemukan. Kami ingin menciptakan alat online yang gratis, menyenangkan, dan mudah digunakan yang memungkinkan Anda mengabadikan momen spontan bersama teman dan keluarga, di mana pun Anda berada.</p>
-                        <p>Cukup buka situs kami, bergaya di depan kamera, dan dapatkan strip foto yang dirancang dengan indah dalam hitungan detik. Tanpa registrasi, tanpa ribet.</p>
-                    </div>
-                    </div>
-            </div>
-        </section>
-
-         <section id="how-it-works" class="page-section">
-            <div class="container" data-aos="fade-up">
-                <h2 class="section-title">Hanya 3 Langkah Mudah</h2>
-                <p class="section-subtitle">Proses yang simpel untuk hasil yang maksimal.</p>
-                <div class="steps-container">
-                    <div class="step-card" data-aos="fade-right"><div class="step-icon"><i class="fas fa-camera-retro"></i></div><h3>1. Ambil Foto</h3><p>Aktifkan kameramu, pasang pose terbaikmu, dan biarkan kami menangkap 4 momen spesialmu.</p></div>
-                    <div class="step-card" data-aos="fade-up"><div class="step-icon"><i class="fas fa-magic-wand-sparkles"></i></div><h3>2. Kreasikan</h3><p>Pilih dari ratusan warna bingkai, filter aesthetic, dan stiker lucu untuk menghias fotomu.</p></div>
-                    <div class="step-card" data-aos="fade-left"><div class="step-icon"><i class="fas fa-share-alt"></i></div><h3>3. Simpan & Bagikan</h3><p>Unduh strip fotomu dalam kualitas tinggi atau langsung bagikan ke media sosial favoritmu.</p></div>
+        </nav>
+    </header>
+    <div class="main-content">
+        <main>
+            <section id="hero">
+                <div class="hero-glow-bg"></div>
+                <div class="hero-images-bg">
+                    <img src="https://photobooth-io.cc/assets/preview-img/preview6.png" alt="Contoh strip photobooth 1" class="preview-1" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://photobooth-io.cc/assets/preview-img/preview4.png" alt="Contoh strip photobooth 2" class="preview-2" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://photobooth-io.cc/assets/preview-img/preview3.png" alt="Contoh strip photobooth 3" class="preview-3" data-aos="fade-up" data-aos-delay="600">
+                    <img src="https://photobooth-io.cc/assets/preview-img/preview2.png" alt="Contoh strip photobooth 4" class="preview-4" data-aos="fade-up" data-aos-delay="800">
                 </div>
-            </div>
-        </section>
-        
-        <section id="features" class="page-section">
-            <div class="container" data-aos="fade-up">
-                <h2 class="section-title">Fitur Andalan Kami</h2>
-                <p class="section-subtitle">Kami menyediakan semua yang Anda butuhkan untuk membuat photobooth yang sempurna.</p>
-                <div class="features-grid">
-                    <div class="feature-card" data-aos="fade-up" data-aos-delay="0"><div class="feature-icon"><i class="fas fa-palette"></i></div><h4>Ratusan Warna Bingkai</h4><p>Sesuaikan warna bingkai strip fotomu agar cocok dengan gayamu. Pilihan tak terbatas!</p></div>
-                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100"><div class="feature-icon"><i class="fas fa-icons"></i></div><h4>Filter & Stiker Lucu</h4><p>Tambahkan sentuhan personal dengan koleksi filter aesthetic dan stiker yang terus kami perbarui.</p></div>
-                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200"><div class="feature-icon"><i class="fas fa-bolt"></i></div><h4>Instan & Tanpa Login</h4><p>Tidak perlu mendaftar atau login. Langsung gunakan dan dapatkan hasilnya dalam sekejap.</p></div>
-                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300"><div class="feature-icon"><i class="fas fa-gem"></i></div><h4>Kualitas Tinggi</h4><p>Unduh fotomu dalam resolusi tinggi yang siap dicetak atau dipajang di media sosial.</p></div>
+                <div class="container hero-content" data-aos="fade-up">
+                    <a href="https://instagram.com/off.xlord" target="_blank" class="instagram-badge">
+                        <i class="fab fa-instagram"></i>
+                        <span>Ikuti kami di Instagram</span>
+                    </a>
+                    <h1 class="hero-header">Abadikan Momen, Ciptakan Kenangan.</h1>
+                    <p class="hero-subheader">Photobooth online gratis dengan desain profesional yang dinamis. Buat dan unduh strip foto seru berkualitas tinggi secara instan.</p>
+                    <a href="layout.html" class="btn primary">MULAI SEKARANG &nbsp; <i class="fas fa-camera"></i></a>
                 </div>
-            </div>
-        </section>
-
-        <section id="testimonials" class="page-section">
-            <div class="container">
-                <div class="testimonial-header" data-aos="fade-up">
-                    <div>
-                        <h2 class="section-title" style="text-align: left; margin-bottom: 0;">Kata Mereka</h2>
-                        <p class="section-subtitle" style="text-align: left; margin: 0; max-width: none;">Suara dari komunitas kreatif kami.</p>
-                    </div>
-                    <button class="btn" id="add-testimonial-btn"><i class="fas fa-plus"></i> Beri Testimoni</button>
-                </div>
-                <div class="testimonial-grid" id="testimonial-grid" data-aos="fade-up" data-aos-delay="200"></div>
-            </div>
-        </section>
-        
-        <section id="faq" class="page-section">
-            <div class="container" data-aos="fade-up">
-                <h2 class="section-title">Tanya Jawab Umum</h2>
-                <p class="section-subtitle">Punya pertanyaan? Mungkin jawabannya ada di sini.</p>
-                <div class="faq-container">
-                    <details class="faq-item" data-aos="fade-up"><summary class="faq-question">Apakah layanan ini benar-benar gratis?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Tentu saja! pictlord 100% gratis untuk digunakan. Anda bisa membuat dan mengunduh photostrip sebanyak yang Anda mau tanpa biaya apa pun.</p></details>
-                    <details class="faq-item" data-aos="fade-up"><summary class="faq-question">Apakah foto saya aman?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Sangat aman. Kami tidak pernah menyimpan foto Anda di server kami. Semua proses pengambilan dan pengeditan foto dilakukan langsung di browser Anda. Setelah Anda menutup halaman, foto tersebut hilang.</p></details>
-                    <details class="faq-item" data-aos="fade-up"><summary class="faq-question">Bisakah saya menggunakannya di HP?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Ya! pictlord dirancang untuk berfungsi dengan baik di semua perangkat, baik itu desktop, tablet, maupun mobile, selama perangkat Anda memiliki kamera dan browser modern.</p></details>
-                    <details class="faq-item" data-aos="fade-up"><summary class="faq-question">Bagaimana cara mengganti warna bingkai?<i class="fas fa-chevron-down faq-arrow"></i></summary><p class="faq-answer">Setelah mengambil 4 foto, Anda akan masuk ke halaman editor. Di sana, Anda akan menemukan color picker yang memungkinkan Anda memilih dari jutaan warna untuk bingkai foto Anda.</p></details>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="page-section">
-            <div class="container" style="text-align: center;" data-aos="fade-up">
-                <h2 class="section-title">Hubungi Kami</h2>
-                <p class="section-subtitle">Punya pertanyaan, saran, atau hanya ingin menyapa? Kami akan senang mendengar dari Anda!</p>
-                <button class="btn primary" id="open-contact-modal-btn"><i class="fas fa-paper-plane"></i> &nbsp; Kirim Pesan</button>
-            </div>
-        </section>
-    </main>
-
-    <footer class="main-footer">
-        <div class="container">
-            <div class="social-links">
-                <a href="https://github.com/judiemosinabre" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://instagram.com/off.xlord" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            </div>
-            <p class="copyright">&copy; 2025 pictlord. Seluruh Hak Cipta Dilindungi.</p>
-        </div>
-    </footer>
-</div>
-
-<div class="modal-overlay" id="contact-modal">
-    <div class="modal-content">
-        <button class="modal-close-btn">&times;</button>
-        <h2>Hubungi Kami</h2>
-        <p class="modal-subtitle">Isi form di bawah untuk mengirim pesan kepada kami.</p>
-        <form id="contact-form">
-            <div class="form-group"><input type="text" id="contact-name" class="form-input" placeholder=" " required><label for="contact-name" class="form-label">Nama</label></div>
-            <div class="form-group"><input type="email" id="contact-email" class="form-input" placeholder=" " required><label for="contact-email" class="form-label">Email</label></div>
-            <div class="form-group"><textarea id="contact-message" class="form-input" placeholder=" " required></textarea><label for="contact-message" class="form-label">Pesan Anda</label></div>
-            <div class="modal-button-group"><button type="submit" class="btn primary">Kirim</button></div>
-        </form>
+            </section>
+            </main>
     </div>
-</div>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    
+    <script>
+        // Menunggu seluruh konten halaman dimuat sebelum menjalankan skrip
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- INISIALISASI AOS (ANIMATION ON SCROLL) ---
+            AOS.init({
+                duration: 800,
+                once: false,
+                offset: 120
+            });
 
-<div class="modal-overlay" id="testimonial-modal">
-    <div class="modal-content">
-        <button class="modal-close-btn">&times;</button>
-        <h2>Bagikan Pengalaman Anda</h2>
-        <p class="modal-subtitle">Ceritakan pendapat Anda tentang layanan kami.</p>
-        <form id="testimonial-form">
-            <div class="form-group"><input type="text" id="testimonial-name" class="form-input" placeholder=" " required><label for="testimonial-name" class="form-label">Nama Lengkap</label></div>
-            <div class="form-group"><input type="text" id="testimonial-position" class="form-input" placeholder=" " required><label for="testimonial-position" class="form-label">Posisi (cth: Pelajar, Desainer)</label></div>
-            <div class="form-group"><textarea id="testimonial-text" class="form-input" placeholder=" " required></textarea><label for="testimonial-text" class="form-label">Testimoni Anda</label></div>
-            <div class="form-group rating-group"><label>Rating Anda</label><div class="star-rating-input" data-rating="0"><i class="fas fa-star" data-value="1"></i><i class="fas fa-star" data-value="2"></i><i class="fas fa-star" data-value="3"></i><i class="fas fa-star" data-value="4"></i><i class="fas fa-star" data-value="5"></i></div></div>
-            <div class="modal-button-group"><button type="submit" class="btn primary">Kirim</button></div>
-        </form>
-    </div>
-</div>
+            // --- SELEKSI ELEMEN DOM ---
+            // Mengambil semua elemen yang akan dimanipulasi agar lebih efisien
+            const body = document.body;
+            const docElement = document.documentElement;
+            const hamburger = document.getElementById('hamburger-menu');
+            const navbarMenu = document.getElementById('navbar-menu');
+            const navItems = document.querySelectorAll('#navbar-menu > li:not(.theme-toggle-btn-mobile-wrapper)');
+            const navLinks = document.querySelectorAll('#navbar-menu a');
+            const highlight = document.querySelector('.nav-highlight');
+            const themeToggles = [document.getElementById('theme-toggle'), document.getElementById('theme-toggle-mobile')];
 
-<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    AOS.init({
-        duration: 800,
-        once: false,
-        offset: 120
-    });
+            // --- LOGIKA ANIMASI HIGHLIGHT BLOCK PADA MENU ---
+            // Fungsi ini menghitung ukuran & posisi item menu, lalu menggerakkan highlight
+            function moveHighlight(target) {
+                if (!highlight || !target) return;
+                highlight.style.width = `${target.offsetWidth}px`;
+                highlight.style.height = `${target.offsetHeight}px`;
+                highlight.style.left = `${target.offsetLeft}px`;
+            }
 
-    const body = document.body;
-    const docElement = document.documentElement;
-    const hamburger = document.getElementById('hamburger-menu');
-    const navbarMenu = document.getElementById('navbar-menu');
-    const navItems = document.querySelectorAll('#navbar-menu > li:not(.theme-toggle-btn-mobile-wrapper)');
-    const navLinks = document.querySelectorAll('#navbar-menu a');
-    const highlight = document.querySelector('.nav-highlight');
-    const themeToggles = [document.getElementById('theme-toggle'), document.getElementById('theme-toggle-mobile')];
+            // Pindahkan highlight saat kursor mouse di atas item menu
+            navItems.forEach(item => {
+                item.addEventListener('mouseover', () => moveHighlight(item));
+            });
 
-    function moveHighlight(target) {
-        if (!highlight || !target) return;
-        highlight.style.width = `${target.offsetWidth}px`;
-        highlight.style.height = `${target.offsetHeight}px`;
-        highlight.style.left = `${target.offsetLeft}px`;
-    }
+            // Kembalikan highlight ke item yang sedang aktif saat kursor meninggalkan menu
+            navbarMenu.addEventListener('mouseleave', () => {
+                const activeItem = document.querySelector('.navbar-menu a.current-nav');
+                if (activeItem) {
+                    moveHighlight(activeItem.parentElement);
+                }
+            });
 
-    navItems.forEach(item => {
-        const link = item.querySelector('a');
-        if (link) {
-            item.addEventListener('mouseover', () => moveHighlight(item));
-        }
-    });
-
-    navbarMenu.addEventListener('mouseleave', () => {
-        const activeItem = document.querySelector('.navbar-menu a.current-nav');
-        if (activeItem) {
-            moveHighlight(activeItem.parentElement);
-        }
-    });
-
-    if (hamburger && navbarMenu) {
-        const toggleMenu = () => {
-            hamburger.classList.toggle('active');
-            navbarMenu.classList.toggle('active');
-        };
-        hamburger.addEventListener('click', toggleMenu);
-        navLinks.forEach(link => {
-            if (link.closest('.theme-toggle-btn-mobile-wrapper') === null) {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth <= 768 && navbarMenu.classList.contains('active')) {
-                        toggleMenu();
+            // --- LOGIKA HAMBURGER MENU UNTUK TAMPILAN MOBILE ---
+            if (hamburger && navbarMenu) {
+                const toggleMenu = () => {
+                    hamburger.classList.toggle('active');
+                    navbarMenu.classList.toggle('active');
+                };
+                hamburger.addEventListener('click', toggleMenu);
+                
+                // Tutup menu mobile jika salah satu link diklik
+                navLinks.forEach(link => {
+                    if (link.closest('.theme-toggle-btn-mobile-wrapper') === null) {
+                        link.addEventListener('click', () => {
+                            if (window.innerWidth <= 768 && navbarMenu.classList.contains('active')) {
+                                toggleMenu();
+                            }
+                        });
                     }
                 });
             }
-        });
-    }
 
-    const applyTheme = (theme) => {
-        docElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-    };
-    themeToggles.forEach(toggle => {
-        if(toggle) {
-            toggle.addEventListener('click', () => {
-                const newTheme = docElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                applyTheme(newTheme);
+            // --- LOGIKA PENGUBAH TEMA (DARK/LIGHT MODE) ---
+            const applyTheme = (theme) => {
+                docElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme); // Simpan pilihan tema
+            };
+
+            themeToggles.forEach(toggle => {
+                if(toggle) {
+                    toggle.addEventListener('click', () => {
+                        const newTheme = docElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                        applyTheme(newTheme);
+                    });
+                }
             });
-        }
-    });
-    applyTheme(localStorage.getItem('theme') || 'dark');
-    
-
-    const sections = document.querySelectorAll('.main-content section[id]');
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.id;
-                navLinks.forEach(link => link.classList.remove('current-nav'));
-                const activeLink = document.querySelector(`.navbar-menu a[href="#${id}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('current-nav');
-                    if (window.innerWidth > 768) {
-                       moveHighlight(activeLink.parentElement);
+            // Terapkan tema yang tersimpan saat halaman dimuat
+            applyTheme(localStorage.getItem('theme') || 'dark');
+            
+            // --- LOGIKA SCROLL-SPY (NAVIGASI AKTIF SAAT SCROLL) ---
+            const sections = document.querySelectorAll('.main-content section[id]');
+            // IntersectionObserver memantau section mana yang sedang terlihat di layar
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        navLinks.forEach(link => link.classList.remove('current-nav'));
+                        const activeLink = document.querySelector(`.navbar-menu a[href="#${id}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('current-nav');
+                            // Pindahkan highlight ke link yang aktif (hanya di desktop)
+                            if (window.innerWidth > 768) {
+                               moveHighlight(activeLink.parentElement);
+                            }
+                        }
                     }
-                }
-            }
-        });
-    }, { rootMargin: '-40% 0px -60% 0px' });
-    sections.forEach(section => observer.observe(section));
-    
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const activeItem = document.querySelector('.navbar-menu a.current-nav');
-        if (activeItem) {
-           moveHighlight(activeItem.parentElement);
-        }
-      }, 100);
-    });
-
-
-    const setupModal = (modalId, openBtnId) => {
-        const modal = document.getElementById(modalId);
-        const openBtn = document.getElementById(openBtnId);
-        if (!modal || !openBtn) return { open: ()=>{}, close: ()=>{} };
-        const closeBtns = modal.querySelectorAll('.modal-close-btn');
-        const form = modal.querySelector('form');
-        
-        const open = () => { modal.classList.add('is-visible'); body.style.overflow = 'hidden'; };
-        const close = () => { 
-            modal.classList.remove('is-visible'); 
-            body.style.overflow = 'auto';
-            if (form) {
-                form.reset();
-                if(form.id === 'testimonial-form'){
-                    const starContainer = form.querySelector('.star-rating-input');
-                    starContainer.dataset.rating = "0";
-                    starContainer.className = 'star-rating-input';
-                }
-            }
-        };
-        openBtn.addEventListener('click', open);
-        closeBtns.forEach(btn => btn.addEventListener('click', close));
-        modal.addEventListener('click', e => { if (e.target === modal) close(); });
-        return { open, close, modal };
-    };
-    const contactModal = setupModal('contact-modal', 'open-contact-modal-btn');
-    const testimonialModal = setupModal('testimonial-modal', 'add-testimonial-btn');
-
-    const showToast = (message) => {
-        document.querySelector('.toast-notification')?.remove();
-        const toast = document.createElement('div');
-        toast.className = 'toast-notification';
-        toast.innerHTML = `<i class="fas fa-check-circle"></i><p>${message}</p>`;
-        body.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 100);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            toast.addEventListener('transitionend', () => toast.remove(), { once: true });
-        }, 4000);
-    };
-    
-    document.getElementById('contact-form')?.addEventListener('submit', e => {
-        e.preventDefault();
-        showToast('Pesan berhasil terkirim!');
-        contactModal.close();
-    });
-
-    const testimonialGrid = document.getElementById('testimonial-grid');
-    const testimonialForm = document.getElementById('testimonial-form');
-    if (testimonialGrid && testimonialForm) {
-        const initialTestimonials = [
-            { name: 'Saraswati D.', position: 'Event Planner', rating: 5, text: "Sangat seru! Saya dan teman-teman menggunakan ini saat kumpul online. Kualitasnya luar biasa untuk web." },
-            { name: 'Budi R.', position: 'Mahasiswa', rating: 4, text: "Sangat simpel dan efektif. Saya butuh strip foto cepat untuk proyek mading dan pictlord sangat membantu." },
-            { name: 'Cantika T.', position: 'Desainer Grafis', rating: 5, text: "Ini website favorit baruku. Gratis, tidak perlu daftar, dan hasilnya instan. Pekerjaan yang fantastis!" }
-        ];
-        const createTestimonialCard = (data) => {
-            const card = document.createElement('div');
-            card.className = 'testimonial-card';
-            card.setAttribute('data-aos', 'fade-up');
-            const ratingHTML = Array.from({length: 5}, (_, i) => `<i class="fas fa-star" style="color: ${i < data.rating ? 'var(--star-color)' : 'var(--text-light)'}; opacity: ${i < data.rating ? 1 : 0.3};"></i>`).join('');
-            card.innerHTML = `<div class="testimonial-rating">${ratingHTML}</div><p class="testimonial-text">"${data.text}"</p><div class="author-details"><div class="author-name">${data.name}</div><div class="author-position">${data.position}</div></div>`;
-            return card;
-        };
-        initialTestimonials.forEach(t => testimonialGrid.appendChild(createTestimonialCard(t)));
-
-        const starContainer = testimonialForm.querySelector('.star-rating-input');
-        if (starContainer) {
-            const stars = starContainer.querySelectorAll('i');
-            const resetStars = () => {
-                starContainer.className = 'star-rating-input';
-                if (starContainer.dataset.rating > 0) starContainer.classList.add(`rating-${starContainer.dataset.rating}`);
-            }
-            stars.forEach(star => {
-                star.addEventListener('mouseover', () => {
-                    starContainer.className = 'star-rating-input';
-                    starContainer.classList.add(`rating-${star.dataset.value}`);
                 });
-                star.addEventListener('mouseout', resetStars);
-                star.addEventListener('click', () => { 
-                    starContainer.dataset.rating = star.dataset.value; 
-                    resetStars();
-                });
+            }, { rootMargin: '-40% 0px -60% 0px' }); // Opsi ini membuat section aktif saat berada di tengah layar
+            
+            sections.forEach(section => observer.observe(section));
+            
+            // --- INISIALISASI POSISI HIGHLIGHT SAAT HALAMAN DIMUAT ---
+            window.addEventListener('load', () => {
+              // Diberi sedikit jeda untuk memastikan font dan elemen lain sudah termuat sempurna
+              setTimeout(() => {
+                const activeItem = document.querySelector('.navbar-menu a.current-nav');
+                if (activeItem) {
+                   moveHighlight(activeItem.parentElement);
+                }
+              }, 100);
             });
-        }
-        
-        testimonialForm.addEventListener('submit', e => {
-            e.preventDefault();
-            const name = document.getElementById('testimonial-name').value;
-            const position = document.getElementById('testimonial-position').value;
-            const text = document.getElementById('testimonial-text').value;
-            const rating = parseInt(starContainer.dataset.rating) || 0;
-            if (!name || !position || !text || rating === 0) { alert('Harap isi semua kolom dan berikan rating.'); return; }
-            const newCard = createTestimonialCard({ name, position, text, rating });
-            testimonialGrid.prepend(newCard);
-            setTimeout(() => AOS.refreshHard(), 50); 
-            showToast(`Terima kasih atas testimoninya, ${name}!`);
-            testimonialModal.close();
+
+            // --- LOGIKA MODAL & NOTIFIKASI TOAST (TIDAK DIUBAH) ---
+            const setupModal = (modalId, openBtnId) => {
+                const modal = document.getElementById(modalId);
+                const openBtn = document.getElementById(openBtnId);
+                if (!modal || !openBtn) return { open: ()=>{}, close: ()=>{} };
+                const closeBtns = modal.querySelectorAll('.modal-close-btn');
+                const form = modal.querySelector('form');
+                
+                const open = () => { modal.classList.add('is-visible'); body.style.overflow = 'hidden'; };
+                const close = () => { 
+                    modal.classList.remove('is-visible'); 
+                    body.style.overflow = 'auto';
+                    if (form) {
+                        form.reset();
+                        if(form.id === 'testimonial-form'){
+                            const starContainer = form.querySelector('.star-rating-input');
+                            starContainer.dataset.rating = "0";
+                            starContainer.className = 'star-rating-input';
+                        }
+                    }
+                };
+                openBtn.addEventListener('click', open);
+                closeBtns.forEach(btn => btn.addEventListener('click', close));
+                modal.addEventListener('click', e => { if (e.target === modal) close(); });
+                return { open, close, modal };
+            };
+            const contactModal = setupModal('contact-modal', 'open-contact-modal-btn');
+            const testimonialModal = setupModal('testimonial-modal', 'add-testimonial-btn');
+            const showToast = (message) => {
+                document.querySelector('.toast-notification')?.remove();
+                const toast = document.createElement('div');
+                toast.className = 'toast-notification';
+                toast.innerHTML = `<i class="fas fa-check-circle"></i><p>${message}</p>`;
+                body.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 100);
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+                }, 4000);
+            };
+            document.getElementById('contact-form')?.addEventListener('submit', e => {
+                e.preventDefault();
+                showToast('Pesan berhasil terkirim!');
+                contactModal.close();
+            });
+
+            // --- LOGIKA TESTIMONI (TIDAK DIUBAH) ---
+            const testimonialGrid = document.getElementById('testimonial-grid');
+            const testimonialForm = document.getElementById('testimonial-form');
+            if (testimonialGrid && testimonialForm) {
+                const initialTestimonials = [
+                    { name: 'Saraswati D.', position: 'Event Planner', rating: 5, text: "Sangat seru! Saya dan teman-teman menggunakan ini saat kumpul online. Kualitasnya luar biasa untuk web." },
+                    { name: 'Budi R.', position: 'Mahasiswa', rating: 4, text: "Sangat simpel dan efektif. Saya butuh strip foto cepat untuk proyek mading dan pictlord sangat membantu." },
+                    { name: 'Cantika T.', position: 'Desainer Grafis', rating: 5, text: "Ini website favorit baruku. Gratis, tidak perlu daftar, dan hasilnya instan. Pekerjaan yang fantastis!" }
+                ];
+                const createTestimonialCard = (data) => {
+                    const card = document.createElement('div');
+                    card.className = 'testimonial-card';
+                    card.setAttribute('data-aos', 'fade-up');
+                    const ratingHTML = Array.from({length: 5}, (_, i) => `<i class="fas fa-star" style="color: ${i < data.rating ? 'var(--star-color)' : 'var(--text-light)'}; opacity: ${i < data.rating ? 1 : 0.3};"></i>`).join('');
+                    card.innerHTML = `<div class="testimonial-rating">${ratingHTML}</div><p class="testimonial-text">"${data.text}"</p><div class="author-details"><div class="author-name">${data.name}</div><div class="author-position">${data.position}</div></div>`;
+                    return card;
+                };
+                initialTestimonials.forEach(t => testimonialGrid.appendChild(createTestimonialCard(t)));
+
+                const starContainer = testimonialForm.querySelector('.star-rating-input');
+                if (starContainer) {
+                    const stars = starContainer.querySelectorAll('i');
+                    const resetStars = () => {
+                        starContainer.className = 'star-rating-input';
+                        if (starContainer.dataset.rating > 0) starContainer.classList.add(`rating-${starContainer.dataset.rating}`);
+                    }
+                    stars.forEach(star => {
+                        star.addEventListener('mouseover', () => {
+                            starContainer.className = 'star-rating-input';
+                            starContainer.classList.add(`rating-${star.dataset.value}`);
+                        });
+                        star.addEventListener('mouseout', resetStars);
+                        star.addEventListener('click', () => { 
+                            starContainer.dataset.rating = star.dataset.value; 
+                            resetStars();
+                        });
+                    });
+                }
+                testimonialForm.addEventListener('submit', e => {
+                    e.preventDefault();
+                    const name = document.getElementById('testimonial-name').value;
+                    const position = document.getElementById('testimonial-position').value;
+                    const text = document.getElementById('testimonial-text').value;
+                    const rating = parseInt(starContainer.dataset.rating) || 0;
+                    if (!name || !position || !text || rating === 0) { alert('Harap isi semua kolom dan berikan rating.'); return; }
+                    const newCard = createTestimonialCard({ name, position, text, rating });
+                    testimonialGrid.prepend(newCard);
+                    setTimeout(() => AOS.refreshHard(), 50); 
+                    showToast(`Terima kasih atas testimoninya, ${name}!`);
+                    testimonialModal.close();
+                });
+            }
         });
-    }
-});
-</script>
+    </script>
+
 </body>
 </html>
