@@ -1,261 +1,560 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="Ambil foto ala photobooth instan secara online. Kreasikan dengan filter, stiker, dan unduh strip foto berkualitas tinggi secara gratis.">
-    <meta name="keywords" content="photobooth, photobooth online, foto box, pictlord, webcamtoy, photobooth aesthetic">
-    <title>pictlord | Photobooth Online Modern & Aesthetic</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Take instant photobooth-style photos online with a modern Neumorphic design. Upload your own images, customize with filters, mirror your camera, and download high-quality photo strips instantly.">
+    <meta name="keywords" content="photobooth, online photobooth, mirror camera, neumorphic photobooth, webcamtoy, tiktok photobooth, dark mode photobooth, upload photo, picapica, digibooth, pictlord">
+    <title>pictlord | Dynamic & Elegant</title>
     <link rel="canonical" href="https://pict.xlord.web.id">
-    <link rel="icon" href="https://via.placeholder.com/32x32/0D9488/FFFFFF?text=P">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-
+    <meta property="og:title" content="pictlord | Free Online Photobooth Anytime, Anywhere">
+    <meta property="og:description" content="Take instant photobooth-style photos online with a modern Neumorphic design. Upload your own images, customize with filters, mirror your camera, and download high-quality photo strips instantly.">
+    <meta property="og:image" content="assets/home-mockup.png">
+    <meta property="og:url" content="https://pict.xlord.web.id">
+    <meta property="og:type" content="website">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/icons/photobooth-new-logo.png">
     <style>
-        /* === TEMA & VARIABEL UTAMA === */
         :root {
-            --bg-color: #2c2f36;
-            --navbar-bg: rgba(33, 36, 41, 0.4);
-            --navbar-mobile-bg: rgba(44, 47, 54, 0.85);
-            --shadow-dark: #212429;
-            --shadow-light: #373a43;
-            --text-color: #e0e5ec;
-            --text-light: #97a1b3;
-            --primary: #0D9488;
-            --primary-dark: #0f766e;
-            --star-color: #f59e0b;
-            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --transition-snappy: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            --border-radius-main: 20px;
-            --border-radius-inner: 12px;
+            --light-bg: #e0e5ec;
+            --light-text: #555;
+            --light-shadow-dark: #a3b1c6;
+            --light-shadow-light: #ffffff;
+            --light-accent: #E28585;
+            --light-inset-shadow-dark: rgba(163, 177, 198, 0.6);
+            --light-inset-shadow-light: rgba(255, 255, 255, 1);
         }
 
-        [data-theme="light"] {
-            --bg-color: #f0f2f5;
-            --navbar-bg: rgba(255, 255, 255, 0.5);
-            --navbar-mobile-bg: rgba(240, 242, 245, 0.9);
-            --shadow-dark: #d9dde2;
-            --shadow-light: #ffffff;
-            --text-color: #333333;
-            --text-light: #666666;
+        .dark-mode {
+            --light-bg: #2d343c;
+            --light-text: #e0e5ec;
+            --light-shadow-dark: #242a30;
+            --light-shadow-light: #363e48;
+            --light-accent: #ff85a1;
+            --light-inset-shadow-dark: rgba(36, 42, 48, 0.6);
+            --light-inset-shadow-light: rgba(54, 62, 72, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         html { font-size: 62.5%; }
+
         body {
-            font-size: 1.6rem; 
-            background: var(--bg-color); 
-            color: var(--text-color);
-            line-height: 1.7; 
-            transition: background-color 0.5s ease, color 0.5s ease;
-            overflow-x: hidden;
-        }
-        .container { max-width: 1200px; width: 90%; margin: 0 auto; }
-        
-        /* === HEADER & NAVBAR === */
-        .main-header {
-            position: fixed;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 95%;
-            max-width: 1200px;
-            z-index: 1000;
-            transition: var(--transition-smooth);
-        }
-        .navbar {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 0.8rem 1.5rem;
-            background: var(--navbar-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 999px;
-            border: 1px solid var(--shadow-light);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            min-height: 100vh;
+            padding: 20px;
         }
-        .navbar-logo {
-            grid-column: 1;
-            justify-self: start;
-            font-size: 2.2rem; font-weight: 700; color: var(--text-color); text-decoration: none;
+
+        /* --- Header --- */
+        #main-header {
+            width: 95%;
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #384048;
+            border-radius: 50px;
+            animation: fadeInUp 0.5s ease-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .navbar-logo .highlight { color: var(--primary); }
-        .navbar-menu {
-            grid-column: 2;
-            list-style: none; display: flex; align-items: center; gap: 0.5rem;
-            margin: 0; padding: 0;
-            position: relative;
-        }
-        .navbar-menu li { list-style: none; }
-        .navbar-menu a {
-            color: var(--text-light); text-decoration: none; font-size: 1.5rem; font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 999px;
-            display: block;
-            position: relative;
-            z-index: 2;
-            transition: color 0.3s ease;
-        }
-        .navbar-menu a:hover { color: var(--text-color); }
-        .navbar-menu a.current-nav { 
-            color: #ffffff; 
+
+        .side-logo {
+            font-size: 2.3rem;
             font-weight: 600;
+            color: #e0e5ec;
+            text-decoration: none;
+            padding-left: 15px;
         }
-        .nav-highlight {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: var(--primary);
-            border-radius: 999px;
-            z-index: 1;
-            transition: all 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+
+        .side-logo span {
+            color: #20c997;
         }
-        .navbar-right {
-            grid-column: 3;
-            justify-self: end;
-            display: flex; align-items: center; gap: 1.5rem;
-        }
-        .navbar-cta {
-            padding: 10px 22px; border-radius: 999px; font-size: 1.4rem; font-weight: 600;
-            text-decoration: none; cursor: pointer; border: none; color: #ffffff;
-            background: var(--primary); transition: var(--transition-smooth);
-            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3); display: inline-flex;
-            align-items: center; gap: 8px;
-        }
-        .navbar-cta:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .hamburger-menu {
-            display: none; cursor: pointer; width: 40px; height: 40px; justify-content: center; align-items: center;
-            background: transparent; border: none; position: relative; z-index: 1002;
-        }
-        .hamburger-menu .bar {
-            display: block; width: 22px; height: 2px; background-color: var(--text-color);
-            border-radius: 3px; position: absolute;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .bar.top { transform: translateY(-7px); }
-        .bar.bottom { transform: translateY(7px); }
-        .hamburger-menu.active .bar.top { transform: translateY(0) rotate(45deg); }
-        .hamburger-menu.active .bar.middle { transform: scaleX(0); opacity: 0; }
-        .hamburger-menu.active .bar.bottom { transform: translateY(0) rotate(-45deg); }
+
+        .header-buttons { display: flex; align-items: center; }
         
-        .theme-toggle-btn {
-            background: var(--bg-color); width: 40px; height: 40px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; border: none; cursor: pointer;
-            color: var(--text-color); box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
-            transition: var(--transition-smooth);
+        #theme-toggle {
+            width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            background-color: #2d343c; color: #e0e5ec;
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
-        .theme-toggle-btn:hover { color: var(--primary); transform: scale(1.05); }
-        .theme-toggle-btn i.fa-sun { display: none; }
-        [data-theme="light"] .theme-toggle-btn i.fa-moon { display: none; }
-        [data-theme="light"] .theme-toggle-btn i.fa-sun { display: block; }
-        .theme-toggle-btn-mobile-wrapper { display: none; }
+        #theme-toggle:active { transform: scale(0.95); background-color: rgba(0, 0, 0, 0.4); }
+        #theme-toggle svg {
+            width: 20px; height: 20px; stroke: currentColor; stroke-width: 2;
+            transition: opacity 0.3s ease;
+        }
+        #sun-icon { display: block; } #moon-icon { display: none; }
+        .dark-mode #sun-icon { display: none; } .dark-mode #moon-icon { display: block; }
 
-        /* === Konten Lainnya (Tidak diubah) === */
-        /* ... */
+        body:not(.dark-mode) #main-header { background-color: #f0f2f5; border: 1px solid rgba(0, 0, 0, 0.1); }
+        body:not(.dark-mode) .side-logo { color: #333; }
+        body:not(.dark-mode) #theme-toggle { background-color: #e4e6eb; color: #333; }
 
-        /* === RESPONSIVE === */
-        /* Breakpoint untuk tablet dan di bawahnya (1024px) */
-        @media (max-width: 1024px) {
-            .navbar {
-                display: flex;
-                justify-content: space-between;
-                padding: 0.8rem 1.5rem;
-            }
-            .navbar-menu {
-                position: absolute;
-                top: calc(100% + 1rem);
-                left: 0; right: 0;
-                width: 90%; max-width: 400px; /* Batasi lebar menu mobile */
-                margin: auto;
-                flex-direction: column;
-                align-items: stretch;
-                padding: 1.5rem;
-                background: var(--navbar-mobile-bg);
-                backdrop-filter: blur(10px);
-                border-radius: var(--border-radius-main);
-                box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-                border: 1px solid var(--shadow-light);
-                transform: translateY(-20px) scale(0.95);
-                opacity: 0;
-                pointer-events: none;
-                transform-origin: top center;
-                transition: transform 0.3s ease, opacity 0.3s ease;
-                display: none;
-            }
-            .navbar-menu.active {
-                display: flex;
-                transform: translateY(0) scale(1);
-                opacity: 1;
-                pointer-events: auto;
-            }
-            .navbar-menu > li { display: block; }
-            .navbar-menu a { text-align: center; }
-            .nav-highlight { display: none; }
-            .navbar-menu a.current-nav { background-color: var(--primary); border-radius: var(--border-radius-inner); }
-            
-            .hamburger-menu { display: flex; }
-            .navbar-cta { display: none; }
-            .navbar-right .theme-toggle-btn { display: none; }
-            .theme-toggle-btn-mobile-wrapper { display: block; margin-top: 1rem; text-align: center; }
+        /* --- Main Content --- */
+        #main-section { display: flex; justify-content: center; align-items: center; width: 100%; }
+        .canvas-centered { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
+        
+        /* --- Camera & Photos --- */
+        .camera-container {
+            display: flex; flex-direction: row; justify-content: center;
+            align-items: flex-start; gap: 20px; flex-wrap: wrap;
+            animation: fadeInUp 0.5s ease-out 0.1s; animation-fill-mode: both;
+        }
+        #videoContainer {
+            position: relative; width: 100%; max-width: 640px; border-radius: 20px;
+            overflow: hidden;
+            box-shadow: inset 5px 5px 15px var(--light-shadow-dark), inset -5px -5px 15px var(--light-shadow-light);
+            background: #000;
+        }
+        video { 
+            width: 100%; display: block; border-radius: 20px; 
+            transition: transform 0.4s ease, filter 0.3s ease; 
+        }
+        video.mirrored { transform: scaleX(-1); }
+        
+        #photoContainer { display: flex; flex-direction: column; gap: 15px; }
+        .photo {
+            width: 160px; height: 120px; border-radius: 12px; object-fit: cover;
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+            animation: zoomIn 0.4s ease-out;
+        }
+        
+        /* --- UI Elements & Buttons --- */
+        .neumorphic-btn {
+            border: none; background: var(--light-bg); color: var(--light-text);
+            font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .neumorphic-btn:hover { color: var(--light-accent); }
+        .neumorphic-btn:active, .neumorphic-btn.active {
+            box-shadow: inset 5px 5px 10px var(--light-shadow-dark), inset -5px -5px 10px var(--light-shadow-light);
+            color: var(--light-accent); transform: scale(0.98);
+        }
+        .neumorphic-btn:disabled { color: #999; cursor: not-allowed; }
+        .neumorphic-btn img { width: 20px; filter: var(--icon-filter); }
+
+        .action-buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        #startBtn, #doneBtn, #uploadBtn { font-size: 1.6rem; padding: 12px 25px; border-radius: 30px; }
+        #doneBtn { display: none; }
+        #mirrorBtn { width: 50px; height: 50px; border-radius: 50%; }
+        
+        /* --- Controls & Options --- */
+        #progressCounter { font-size: 2.2rem; font-weight: 600; }
+        .controls-panel {
+            display: flex; flex-direction: column; gap: 20px; align-items: center;
+            padding: 20px; border-radius: 20px; background: var(--light-bg);
+            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
+            animation: fadeInUp 0.5s ease-out 0.2s; animation-fill-mode: both;
+        }
+        .options-label { font-size: 1.5rem; font-weight: 500; margin-bottom: -10px; }
+        .filter-container { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .filterBtn { width: 45px; height: 45px; border-radius: 50%; }
+
+        #normalFilterId, #sepiaFilterId, #bnwFilterId, #vintageFilterId, #grayFilterId, #smoothFilterId { background-size: cover; }
+        #normalFilterId { background-image: url(assets/normal-icon.jpg); } #sepiaFilterId { background-image: url(assets/sepiaBg.jpg); }
+        #bnwFilterId { background-image: url(assets/bnw-icon.jpg); } #vintageFilterId { background-image: url(assets/vintage-icon.jpg); }
+        #grayFilterId { background-image: url(assets/grayscale-icon.jpg); } #smoothFilterId { background-image: url(assets/smooth-icon.jpg); }
+        
+        .sepia { filter: sepia(1); }
+        .grayscale { filter: grayscale(1) contrast(1.2); }
+        .vintage { filter: sepia(0.6) contrast(1.1) brightness(0.9); }
+        .gray { filter: grayscale(1); }
+        .smooth { filter: contrast(0.95) brightness(1.05); }
+
+        .custom-select {
+            padding: 8px 15px; border-radius: 10px; border: none; background: var(--light-bg);
+            box-shadow: inset 3px 3px 7px var(--light-shadow-dark), inset -3px -3px 7px var(--light-shadow-light);
+            color: var(--light-text); font-size: 1.4rem; -webkit-appearance: none; appearance: none; cursor: pointer;
         }
 
-        /* Breakpoint untuk mobile (768px) */
-        @media (max-width: 768px) {
-            html { font-size: 58%; }
-            .hero-header { font-size: 4.8rem; }
-            .section-title { font-size: 3.6rem; }
-            .preview-2, .preview-3 { display: none; }
-            .about-grid, .privacy-points { grid-template-columns: 1fr; }
-            .main-header { width: 90%; }
+        /* --- Overlays & Modals --- */
+        #countdownText, #flash, #blackScreen { position: absolute; z-index: 10; }
+        #countdownText {
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 10rem; font-weight: 600; color: rgba(255, 255, 255, 0.8);
+            display: none; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); animation: zoomIn 0.3s ease-in-out;
+        }
+        #flash { top: 0; left: 0; width: 100vw; height: 100vh; background: white; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; }
+        #blackScreen {
+            top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a;
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.8rem; transition: opacity 1s ease-in-out;
+        }
+        
+        /* --- Retake Modal --- */
+        #retakeModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000; animation: zoomIn 0.3s ease;
+        }
+        .modal-content {
+            background-color: var(--light-bg); padding: 30px; border-radius: 20px;
+            text-align: center; box-shadow: 10px 10px 20px rgba(0,0,0,0.2); animation: fadeInUp 0.4s ease;
+        }
+        .modal-content h3 { font-size: 2rem; margin-bottom: 20px; }
+        #modal-photo-selection { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap;}
+        .modal-photo {
+            width: 120px; height: 90px; object-fit: cover; border-radius: 10px; cursor: pointer;
+            border: 4px solid transparent; transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .modal-photo:hover { transform: scale(1.05); } .modal-photo.selected { border-color: var(--light-accent); }
+        .modal-buttons { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        #confirmRetakeCameraBtn, #confirmRetakeUploadBtn, #cancelRetakeBtn { padding: 10px 20px; font-size: 1.4rem; border-radius: 20px; }
+        
+        @media only screen and (max-width: 1024px) {
+            .camera-container { flex-direction: column; align-items: center; }
+            #photoContainer { flex-direction: row; margin-top: 20px; width: 100%; justify-content: center; flex-wrap: wrap; }
+            .photo { width: 120px; height: 90px; }
+        }
+        @media only screen and (max-width: 540px) {
+            html { font-size: 55%; } body { padding: 10px; }
+            #photoContainer { gap: 10px; } .photo { width: 100px; height: 75px; }
+            .modal-photo { width: 80px; height: 60px; } #countdownText { font-size: 8rem; }
         }
     </style>
 </head>
 <body>
-
-    <header class="main-header">
-        <nav class="navbar container">
-            <a href="#hero" class="navbar-logo">pict<span class="highlight">lord</span></a>
-            
-            <ul class="navbar-menu" id="navbar-menu">
-                <li><a href="#hero" class="current-nav">Beranda</a></li>
-                <li><a href="#about">Tentang</a></li>
-                <li><a href="#how-it-works">Cara Kerja</a></li>
-                <li><a href="#features">Fitur</a></li>
-                <li><a href="#testimonials">Testimoni</a></li>
-                <li><a href="#faq">FAQ</a></li>
-                <li><a href="#contact">Kontak</a></li>
-                <div class="nav-highlight"></div>
-                <li class="theme-toggle-btn-mobile-wrapper"> 
-                    <button class="theme-toggle-btn" id="theme-toggle-mobile" aria-label="Ubah Tema">
-                        <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
-                    </button>
-                </li>
-            </ul>
-
-            <div class="navbar-right">
-                <a href="layout.html" class="navbar-cta">Mulai <i class="fas fa-camera"></i></a>
-                <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
-                    <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
-                </button>
-                <button class="hamburger-menu" id="hamburger-menu" aria-label="Buka Menu">
-                    <span class="bar top"></span><span class="bar middle"></span><span class="bar bottom"></span>
-                </button>
-            </div>
-        </nav>
-    </header>
-    <div class="main-content">
+    <header id="main-header">
+        <a href="#" class="side-logo">pict<span>lord</span></a>
+        <div class="header-buttons">
+            <button id="theme-toggle">
+                <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
         </div>
-    
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-        // ... Skrip lengkap Anda di sini ...
-    </script>
+    </header>
 
+    <main id="main-section">
+        <div class="canvas-centered">
+            <div class="camera-container">
+                <div id="videoContainer">
+                    <video id="video" autoplay playsinline class="mirrored"></video>
+                    <div id="flash"></div>
+                    <div id="blackScreen">Waiting for camera access...</div>
+                    <div id="countdownText">3</div>
+                </div>
+                <div id="photoContainer"></div>
+            </div>
+            
+            <p id="progressCounter">0/3</p>
+
+            <div class="controls-panel">
+                <div class="filter-container">
+                    <button id="mirrorBtn" class="neumorphic-btn active">
+                        <img src="images/mirror-icon.svg" alt="Mirror Icon">
+                    </button>
+                    <button id="vintageFilterId" class="neumorphic-btn filterBtn" data-filter="vintage"></button>
+                    <button id="grayFilterId" class="neumorphic-btn filterBtn" data-filter="gray"></button>
+                    <button id="smoothFilterId" class="neumorphic-btn filterBtn" data-filter="smooth"></button>
+                    <button id="bnwFilterId" class="neumorphic-btn filterBtn" data-filter="grayscale"></button>
+                    <button id="sepiaFilterId" class="neumorphic-btn filterBtn" data-filter="sepia"></button>
+                    <button id="normalFilterId" class="neumorphic-btn filterBtn active" data-filter="none"></button>
+                </div>
+
+                <div>
+                    <select name="timerOptions" id="timerOptions" class="custom-select">
+                        <option value="3">3 Second Timer</option>
+                        <option value="5">5 Second Timer</option>
+                        <option value="10">10 Second Timer</option>
+                    </select>
+                </div>
+                
+                <div class="action-buttons">
+                    <input type="file" id="uploadInput" accept="image/*" style="display:none;">
+                    <button id="uploadBtn" class="neumorphic-btn">
+                        <img src="assets/icons/upload-icon.png" alt="Upload Icon">
+                        Upload
+                    </button>
+                    <button id="startBtn" class="neumorphic-btn">START</button>
+                    <button id="doneBtn" class="neumorphic-btn">DONE</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="retakeModal">
+        <div class="modal-content">
+            <h3>Which photo would you like to retake?</h3>
+            <div id="modal-photo-selection"></div>
+            <div class="modal-buttons">
+                <input type="file" id="retakeUploadInput" accept="image/*" style="display:none;">
+                <button id="cancelRetakeBtn" class="neumorphic-btn">Cancel</button>
+                <button id="confirmRetakeUploadBtn" class="neumorphic-btn" disabled>Retake with Upload</button>
+                <button id="confirmRetakeCameraBtn" class="neumorphic-btn" disabled>Retake with Camera</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const video = document.getElementById('video');
+            const mirrorBtn = document.getElementById('mirrorBtn');
+            const blackScreen = document.getElementById('blackScreen');
+            const countdownText = document.getElementById('countdownText');
+            const progressCounter = document.getElementById('progressCounter');
+            const startBtn = document.getElementById('startBtn');
+            const doneBtn = document.getElementById('doneBtn');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadInput = document.getElementById('uploadInput');
+            const flash = document.getElementById('flash');
+            const photoContainer = document.getElementById('photoContainer');
+            const filterButtons = document.querySelectorAll('.filterBtn');
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            // Retake Modal Elements
+            const retakeModal = document.getElementById('retakeModal');
+            const modalPhotoSelection = document.getElementById('modal-photo-selection');
+            const confirmRetakeCameraBtn = document.getElementById('confirmRetakeCameraBtn');
+            const confirmRetakeUploadBtn = document.getElementById('confirmRetakeUploadBtn');
+            const retakeUploadInput = document.getElementById('retakeUploadInput');
+            const cancelRetakeBtn = document.getElementById('cancelRetakeBtn');
+
+            // --- State Variables ---
+            const canvas = document.createElement('canvas');
+            let images = [];
+            let isCapturing = false;
+            let selectedRetakeIndex = -1;
+            let isVideoMirrored = true;
+            let currentFilter = 'none';
+
+            // --- Theme Manager ---
+            const applyTheme = (theme) => { document.body.classList.toggle('dark-mode', theme === 'dark'); };
+            themeToggle.addEventListener('click', () => {
+                const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+            applyTheme(localStorage.getItem('theme') || 'dark');
+
+            // --- Camera & Photobooth Logic ---
+            const startCamera = async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => { 
+                        video.play(); 
+                        setTimeout(() => { 
+                            blackScreen.style.opacity = 0; 
+                            setTimeout(() => blackScreen.style.display = 'none', 1000); 
+                        }, 500); 
+                    };
+                } catch (err) { 
+                    console.error("Camera Access Denied", err); 
+                    blackScreen.textContent = "Please enable camera permissions."; 
+                }
+            };
+            
+            const showCountdown = async () => {
+                const selectedValue = parseInt(document.getElementById("timerOptions").value, 10);
+                countdownText.style.display = "block";
+                for (let count = selectedValue; count > 0; count--) {
+                    countdownText.textContent = count;
+                    countdownText.style.animation = 'none';
+                    void countdownText.offsetWidth; // Trigger reflow
+                    countdownText.style.animation = 'zoomIn 0.3s ease-in-out';
+                    await new Promise(res => setTimeout(res, 1000));
+                }
+                countdownText.style.display = "none";
+            };
+
+            const capturePhoto = async () => {
+                flash.style.opacity = 1; 
+                setTimeout(() => flash.style.opacity = 0, 200);
+                if (video.videoWidth === 0) { 
+                    console.error("Video not ready."); 
+                    return null; 
+                }
+
+                const ctx = canvas.getContext('2d');
+                canvas.width = video.videoWidth; 
+                canvas.height = video.videoHeight;
+                ctx.save();
+                if (isVideoMirrored) {
+                    ctx.translate(canvas.width, 0);
+                    ctx.scale(-1, 1);
+                }
+                const videoComputedStyle = window.getComputedStyle(video);
+                if (videoComputedStyle.filter !== 'none') {
+                    ctx.filter = videoComputedStyle.filter;
+                }
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                ctx.restore();
+                await new Promise(res => setTimeout(res, 100));
+                return canvas.toDataURL('image/png');
+            };
+
+            const updatePhotoDisplay = () => {
+                photoContainer.innerHTML = '';
+                images.forEach(imageData => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageData; 
+                    imgElement.classList.add('photo');
+                    photoContainer.appendChild(imgElement);
+                });
+                progressCounter.textContent = `${images.length}/3`;
+                startBtn.innerHTML = (images.length === 3) ? 'Retake' : 'START';
+                doneBtn.style.display = (images.length === 3) ? 'flex' : 'none';
+                uploadBtn.style.display = (images.length === 3) ? 'none' : 'flex';
+            };
+            
+            const startPhotoboothSession = async () => {
+                if (isCapturing) return;
+                if (images.length === 3) { 
+                    openRetakeModal(); 
+                    return; 
+                }
+                isCapturing = true; 
+                startBtn.disabled = true; 
+                images = [];
+                updatePhotoDisplay(); 
+                startBtn.innerHTML = 'Capturing...';
+                for (let i = 0; i < 3; i++) {
+                    await showCountdown();
+                    const imageData = await capturePhoto();
+                    if (imageData) { 
+                        images.push(imageData); 
+                        updatePhotoDisplay(); 
+                    }
+                    if (i < 2) await new Promise(res => setTimeout(res, 500));
+                }
+                isCapturing = false; 
+                startBtn.disabled = false;
+                updatePhotoDisplay();
+            };
+
+            const handleImageUpload = (event) => {
+                const file = event.target.files[0];
+                if (!file || !file.type.startsWith("image/") || images.length >= 3) {
+                    uploadInput.value = null; return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => { 
+                    images.push(e.target.result); 
+                    updatePhotoDisplay(); 
+                };
+                reader.readAsDataURL(file);
+                uploadInput.value = null;
+            };
+
+            const openRetakeModal = () => {
+                modalPhotoSelection.innerHTML = '';
+                images.forEach((imgData, index) => {
+                    const img = document.createElement('img');
+                    img.src = imgData; 
+                    img.classList.add('modal-photo'); 
+                    img.dataset.index = index;
+                    img.addEventListener('click', () => {
+                        document.querySelectorAll('.modal-photo').forEach(p => p.classList.remove('selected'));
+                        img.classList.add('selected'); 
+                        selectedRetakeIndex = index; 
+                        confirmRetakeCameraBtn.disabled = false;
+                        confirmRetakeUploadBtn.disabled = false;
+                    });
+                    modalPhotoSelection.appendChild(img);
+                });
+                retakeModal.style.display = 'flex';
+            };
+
+            const closeRetakeModal = () => { 
+                retakeModal.style.display = 'none'; 
+                selectedRetakeIndex = -1; 
+                confirmRetakeCameraBtn.disabled = true; 
+                confirmRetakeUploadBtn.disabled = true;
+            };
+            
+            const executeRetakeCamera = async () => {
+                if (selectedRetakeIndex === -1 || isCapturing) return;
+                isCapturing = true;
+                closeRetakeModal(); 
+                await showCountdown();
+                const newImageData = await capturePhoto();
+                if (newImageData) { 
+                    images[selectedRetakeIndex] = newImageData; 
+                    updatePhotoDisplay(); 
+                }
+                isCapturing = false;
+            };
+            
+            const handleRetakeUpload = (event) => {
+                const file = event.target.files[0];
+                if (!file || !file.type.startsWith("image/") || selectedRetakeIndex === -1) {
+                    retakeUploadInput.value = null; return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => { 
+                    images[selectedRetakeIndex] = e.target.result; 
+                    updatePhotoDisplay();
+                    closeRetakeModal();
+                };
+                reader.readAsDataURL(file);
+                retakeUploadInput.value = null;
+            };
+
+            // --- Event Listeners ---
+            startBtn.addEventListener('click', startPhotoboothSession);
+            uploadBtn.addEventListener('click', () => uploadInput.click());
+            uploadInput.addEventListener('change', handleImageUpload);
+            
+            mirrorBtn.addEventListener('click', () => {
+                isVideoMirrored = !isVideoMirrored;
+                video.classList.toggle('mirrored', isVideoMirrored);
+                mirrorBtn.classList.toggle('active', isVideoMirrored);
+            });
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    if (currentFilter !== 'none') video.classList.remove(currentFilter);
+                    currentFilter = button.dataset.filter;
+                    if (currentFilter !== 'none') video.classList.add(currentFilter);
+                });
+            });
+            
+            doneBtn.addEventListener('click', () => {
+                if (images.length === 3) {
+                    sessionStorage.setItem('photoArray', JSON.stringify(images));
+                    window.location.href = 'customize.html';
+                } else {
+                    alert("Please take or upload 3 photos first.");
+                }
+            });
+
+            confirmRetakeCameraBtn.addEventListener('click', executeRetakeCamera);
+            confirmRetakeUploadBtn.addEventListener('click', () => retakeUploadInput.click());
+            retakeUploadInput.addEventListener('change', handleRetakeUpload);
+            cancelRetakeBtn.addEventListener('click', closeRetakeModal);
+            
+            window.addEventListener("beforeunload", () => { 
+                if (video.srcObject) video.srcObject.getTracks().forEach(track => track.stop()); 
+            });
+
+            // --- Initialization ---
+            startCamera();
+            updatePhotoDisplay();
+        });
+    </script>
 </body>
 </html>
