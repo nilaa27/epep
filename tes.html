@@ -1,283 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Take instant photobooth-style photos online with a modern Neumorphic design. Upload your own images, customize with filters, mirror your camera, and download high-quality photo strips instantly.">
-    <meta name="keywords" content="photobooth, online photobooth, mirror camera, neumorphic photobooth, webcamtoy, tiktok photobooth, dark mode photobooth, upload photo, picapica, digibooth, pictlord">
-    <title>pictlord | Dynamic & Elegant</title>
-    <link rel="canonical" href="https://pict.xlord.web.id">
-    <meta property="og:title" content="pictlord | Free Online Photobooth Anytime, Anywhere">
-    <meta property="og:description" content="Take instant photobooth-style photos online with a modern Neumorphic design. Upload your own images, customize with filters, mirror your camera, and download high-quality photo strips instantly.">
-    <meta property="og:image" content="assets/home-mockup.png">
-    <meta property="og:url" content="https://pict.xlord.web.id">
-    <meta property="og:type" content="website">
+    <title>pictlord | Versi Final Stabil</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="icon" href="assets/icons/photobooth-new-logo.png">
     <style>
         :root {
-            --light-bg: #e0e5ec;
-            --light-text: #555;
-            --light-shadow-dark: #a3b1c6;
-            --light-shadow-light: #ffffff;
-            --light-accent: #E28585;
-            --light-inset-shadow-dark: rgba(163, 177, 198, 0.6);
-            --light-inset-shadow-light: rgba(255, 255, 255, 1);
+            --light-bg: #e0e5ec; --light-text: #555; --light-shadow-dark: #a3b1c6; --light-shadow-light: #ffffff; --light-accent: #E28585; --light-inset-shadow-dark: rgba(163, 177, 198, 0.6); --light-inset-shadow-light: rgba(255, 255, 255, 1);
         }
-
         .dark-mode {
-            --light-bg: #2d343c;
-            --light-text: #e0e5ec;
-            --light-shadow-dark: #242a30;
-            --light-shadow-light: #363e48;
-            --light-accent: #ff85a1;
-            --light-inset-shadow-dark: rgba(36, 42, 48, 0.6);
-            --light-inset-shadow-light: rgba(54, 62, 72, 1);
+            --light-bg: #2d343c; --light-text: #e0e5ec; --light-shadow-dark: #242a30; --light-shadow-light: #363e48; --light-accent: #ff85a1; --light-inset-shadow-dark: rgba(36, 42, 48, 0.6); --light-inset-shadow-light: rgba(54, 62, 72, 1);
         }
-
-        /* --- Animations --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes zoomIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { font-size: 62.5%; }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--light-text);
-            transition: background-color 0.3s ease, color 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        /* --- Header --- */
-        #main-header {
-            width: 95%;
-            max-width: 500px;
-            margin: 2rem auto;
-            padding: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #384048; /* Dark solid background like the image */
-            border-radius: 50px;
-            animation: fadeInUp 0.5s ease-out;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Thin border line */
-        }
-
-        .side-logo {
-            font-size: 2.3rem;
-            font-weight: 600;
-            color: #e0e5ec; /* Set logo color to light for dark header */
-            text-decoration: none;
-            padding-left: 15px;
-        }
-
-        .side-logo span {
-            color: #20c997; /* Warna untuk 'lord' */
-        }
-
-        .header-buttons {
-            display: flex;
-            align-items: center;
-        }
-        
-        #theme-toggle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #2d343c; /* Darker circle for the button */
-            color: #e0e5ec; /* Color for the SVG icon stroke */
-            transition: background-color 0.2s ease, transform 0.2s ease;
-        }
-
-        #theme-toggle:active {
-            transform: scale(0.95);
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        #theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor; /* Inherit color from the button */
-            stroke-width: 2;
-            transition: opacity 0.3s ease;
-        }
-
-        #sun-icon { display: block; }
-        #moon-icon { display: none; }
-        .dark-mode #sun-icon { display: none; }
-        .dark-mode #moon-icon { display: block; }
-
-        /* Switch logo color in light mode */
-        body:not(.dark-mode) #main-header {
-            background-color: #f0f2f5;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        body:not(.dark-mode) .side-logo {
-            color: #333;
-        }
-        body:not(.dark-mode) #theme-toggle {
-            background-color: #e4e6eb;
-            color: #333;
-        }
-
-        /* --- Main Content --- */
+        body { font-family: 'Poppins', sans-serif; background-color: var(--light-bg); color: var(--light-text); transition: background-color 0.3s ease, color 0.3s ease; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        #main-header { width: 95%; max-width: 500px; margin: 2rem auto; padding: 8px; display: flex; justify-content: space-between; align-items: center; background-color: #384048; border-radius: 50px; animation: fadeInUp 0.5s ease-out; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .side-logo { font-size: 2.3rem; font-weight: 600; color: #e0e5ec; text-decoration: none; padding-left: 15px; }
+        .side-logo span { color: #20c997; }
+        .header-buttons { display: flex; align-items: center; }
+        #theme-toggle { width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; background-color: #2d343c; color: #e0e5ec; transition: background-color 0.2s ease, transform 0.2s ease; }
+        #theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; }
+        #sun-icon { display: block; } #moon-icon { display: none; }
+        .dark-mode #sun-icon { display: none; } .dark-mode #moon-icon { display: block; }
+        body:not(.dark-mode) #main-header { background-color: #f0f2f5; border: 1px solid rgba(0, 0, 0, 0.1); }
+        body:not(.dark-mode) .side-logo { color: #333; }
+        body:not(.dark-mode) #theme-toggle { background-color: #e4e6eb; color: #333; }
         #main-section { display: flex; justify-content: center; align-items: center; width: 100%; }
         .canvas-centered { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
-        
-        /* --- Camera & Photos --- */
-        .camera-container {
-            display: flex; flex-direction: row; justify-content: center;
-            align-items: flex-start; gap: 20px; flex-wrap: wrap;
-            animation: fadeInUp 0.5s ease-out 0.1s; animation-fill-mode: both;
-        }
-        #videoContainer {
-            position: relative; width: 100%; max-width: 640px; border-radius: 20px;
-            overflow: hidden;
-            box-shadow: inset 5px 5px 15px var(--light-shadow-dark), inset -5px -5px 15px var(--light-shadow-light);
-            background: #000;
-        }
-        video {
-            width: 100%;
-            display: block;
-            border-radius: 20px;
-            transition: transform 0.4s ease, filter 0.3s ease; /* Added filter transition */
-        }
+        .camera-container { display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 20px; flex-wrap: wrap; animation: fadeInUp 0.5s ease-out 0.1s; animation-fill-mode: both; }
+        #videoContainer { position: relative; width: 100%; max-width: 640px; border-radius: 20px; overflow: hidden; box-shadow: inset 5px 5px 15px var(--light-shadow-dark), inset -5px -5px 15px var(--light-shadow-light); background: #000; }
+        video { width: 100%; display: block; border-radius: 20px; transition: transform 0.4s ease, filter 0.3s ease; }
         video.mirrored { transform: scaleX(-1); }
-
-        /* --- FIX: ADDED CSS RULES FOR VIDEO FILTERS --- */
         video.sepia { filter: sepia(1); }
         video.grayscale { filter: grayscale(1); }
         video.vintage { filter: sepia(0.5) contrast(1.2) brightness(0.9); }
-        video.gray { filter: grayscale(1); } /* 'gray' and 'grayscale' can be the same */
+        video.gray { filter: grayscale(1); }
         video.smooth { filter: brightness(1.1) contrast(1.1) saturate(1.2); }
-        
         #photoContainer { display: flex; flex-direction: column; gap: 15px; }
-        .photo {
-            width: 160px; height: 120px; border-radius: 12px; object-fit: cover;
-            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
-            animation: zoomIn 0.4s ease-out;
-        }
-        
-        /* --- UI Elements & Buttons --- */
-        .neumorphic-btn {
-            border: none; background: var(--light-bg); color: var(--light-text);
-            font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        .photo { width: 160px; height: 120px; border-radius: 12px; object-fit: cover; box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light); animation: zoomIn 0.4s ease-out; background-color: var(--light-bg); }
+        .neumorphic-btn { border: none; background: var(--light-bg); color: var(--light-text); font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.2s ease-in-out; box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light); display: flex; align-items: center; justify-content: center; gap: 8px; }
         .neumorphic-btn:hover { color: var(--light-accent); }
-        .neumorphic-btn:active, .neumorphic-btn.active {
-            box-shadow: inset 5px 5px 10px var(--light-shadow-dark), inset -5px -5px 10px var(--light-shadow-light);
-            color: var(--light-accent); transform: scale(0.98);
-        }
-        .neumorphic-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            box-shadow: inset 2px 2px 5px var(--light-shadow-dark), inset -2px -2px 5px var(--light-shadow-light);
-        }
-        .neumorphic-btn img { width: 20px; filter: var(--icon-filter); }
-
+        .neumorphic-btn:active, .neumorphic-btn.active { box-shadow: inset 5px 5px 10px var(--light-inset-shadow-dark), inset -5px -5px 10px var(--light-inset-shadow-light); color: var(--light-accent); transform: scale(0.98); }
+        .neumorphic-btn:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: inset 2px 2px 5px var(--light-shadow-dark), inset -2px -2px 5px var(--light-shadow-light); }
+        .neumorphic-btn img { width: 20px; height: 20px; }
         .action-buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        /* --- UPDATE: Added Reset Button to this group in HTML --- */
         #startBtn, #doneBtn, #uploadBtn, #resetBtn { font-size: 1.6rem; padding: 12px 25px; border-radius: 30px; }
         #doneBtn, #resetBtn { display: none; }
         #mirrorBtn { width: 50px; height: 50px; border-radius: 50%; }
-        
-        /* --- Controls & Options --- */
-        #progressCounter { font-size: 2.2rem; font-weight: 600; }
-        .controls-panel {
-            display: flex; flex-direction: column; gap: 20px; align-items: center;
-            padding: 20px; border-radius: 20px; background: var(--light-bg);
-            box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light);
-            animation: fadeInUp 0.5s ease-out 0.2s; animation-fill-mode: both;
-        }
-        .options-label { font-size: 1.5rem; font-weight: 500; margin-bottom: -10px; }
+        #progressCounter { font-size: 2.2rem; font-weight: 600; margin-top: 1rem; }
+        .controls-panel { display: flex; flex-direction: column; gap: 20px; align-items: center; padding: 20px; border-radius: 20px; background: var(--light-bg); box-shadow: 5px 5px 10px var(--light-shadow-dark), -5px -5px 10px var(--light-shadow-light); animation: fadeInUp 0.5s ease-out 0.2s; animation-fill-mode: both; margin-top: 1.5rem; }
         .filter-container { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
-        .filterBtn { width: 45px; height: 45px; border-radius: 50%; }
-        /* Filter icon paths */
-        #normalFilterId, #sepiaFilterId, #bnwFilterId, #vintageFilterId, #grayFilterId, #smoothFilterId { background-size: cover; }
-        #normalFilterId { background-image: url(assets/normal-icon.jpg); } #sepiaFilterId { background-image: url(assets/sepiaBg.jpg); }
-        #bnwFilterId { background-image: url(assets/bnw-icon.jpg); } #vintageFilterId { background-image: url(assets/vintage-icon.jpg); }
-        #grayFilterId { background-image: url(assets/grayscale-icon.jpg); } #smoothFilterId { background-image: url(assets/smooth-icon.jpg); }
-        
-        .custom-select {
-            padding: 8px 15px; border-radius: 10px; border: none; background: var(--light-bg);
-            box-shadow: inset 3px 3px 7px var(--light-shadow-dark), inset -3px -3px 7px var(--light-shadow-light);
-            color: var(--light-text); font-size: 1.4rem; -webkit-appearance: none; appearance: none; cursor: pointer;
-        }
-
-        /* --- Overlays & Modals --- */
+        .filterBtn { width: 45px; height: 45px; border-radius: 50%; background-size: cover; border: 2px solid transparent; }
+        .filterBtn.active { border-color: var(--light-accent); }
         #countdownText, #flash, #blackScreen { position: absolute; z-index: 10; }
-        #countdownText {
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 10rem; font-weight: 600; color: rgba(255, 255, 255, 0.8);
-            display: none; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); animation: zoomIn 0.3s ease-in-out;
-        }
+        #countdownText { top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 10rem; font-weight: 600; color: rgba(255, 255, 255, 0.9); display: none; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); animation: zoomIn 0.3s ease-in-out; }
         #flash { top: 0; left: 0; width: 100vw; height: 100vh; background: white; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; }
-        #blackScreen {
-            top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a;
-            border-radius: 20px; display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1.8rem; transition: opacity 1s ease-in-out;
-        }
-        
-        /* --- Retake Modal --- */
-        #retakeModal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
-            display: none; justify-content: center; align-items: center;
-            z-index: 1000; animation: zoomIn 0.3s ease;
-        }
-        .modal-content {
-            background-color: var(--light-bg); padding: 30px; border-radius: 20px;
-            text-align: center; box-shadow: 10px 10px 20px rgba(0,0,0,0.2); animation: fadeInUp 0.4s ease;
-        }
+        #blackScreen { top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; transition: opacity 1s ease-in-out; text-align: center; padding: 10px; }
+        #retakeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; animation: zoomIn 0.3s ease; }
+        .modal-content { background-color: var(--light-bg); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 10px 10px 20px rgba(0,0,0,0.2); animation: fadeInUp 0.4s ease; }
         .modal-content h3 { font-size: 2rem; margin-bottom: 20px; }
-        #modal-photo-selection { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; }
-        .modal-photo {
-            width: 120px; height: 90px; object-fit: cover; border-radius: 10px; cursor: pointer;
-            border: 4px solid transparent; transition: border-color 0.2s ease, transform 0.2s ease;
-        }
+        #modal-photo-selection { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
+        .modal-photo { width: 120px; height: 90px; object-fit: cover; border-radius: 10px; cursor: pointer; border: 4px solid transparent; transition: border-color 0.2s ease, transform 0.2s ease; }
         .modal-photo:hover { transform: scale(1.05); } .modal-photo.selected { border-color: var(--light-accent); }
         .modal-buttons { display: flex; gap: 15px; justify-content: center; }
         #confirmRetakeBtn, #cancelRetakeBtn { padding: 10px 25px; font-size: 1.5rem; border-radius: 20px; }
-        
-        /* --- Responsive Design --- */
-        @media only screen and (max-width: 1024px) {
-            .camera-container { flex-direction: column; align-items: center; }
-            #photoContainer { flex-direction: row; margin-top: 20px; width: 100%; justify-content: center; flex-wrap: wrap; }
-            .photo { width: 120px; height: 90px; }
-        }
-        @media only screen and (max-width: 540px) {
-            html { font-size: 55%; } body { padding: 10px; }
-            #photoContainer { gap: 10px; } .photo { width: 100px; height: 75px; }
-            .modal-photo { width: 80px; height: 60px; } #countdownText { font-size: 8rem; }
-        }
+        @media only screen and (max-width: 1024px) { .camera-container { flex-direction: column; align-items: center; } #photoContainer { flex-direction: row; margin-top: 20px; width: 100%; justify-content: center; flex-wrap: wrap; } .photo { width: 120px; height: 90px; } }
+        @media only screen and (max-width: 540px) { html { font-size: 55%; } body { padding: 10px; } #photoContainer { gap: 10px; } .photo { width: 100px; height: 75px; } .modal-photo { width: 80px; height: 60px; } #countdownText { font-size: 8rem; } }
     </style>
 </head>
 <body>
     <header id="main-header">
         <a href="#" class="side-logo">pict<span>lord</span></a>
         <div class="header-buttons">
-            <button id="theme-toggle">
+            <button id="theme-toggle" title="Ganti Tema">
                 <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                 <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
             </button>
@@ -290,7 +89,7 @@
                 <div id="videoContainer">
                     <video id="video" autoplay playsinline class="mirrored"></video>
                     <div id="flash"></div>
-                    <div id="blackScreen">Waiting for camera access...</div>
+                    <div id="blackScreen">Menunggu akses kamera...</div>
                     <div id="countdownText">3</div>
                 </div>
                 <div id="photoContainer"></div>
@@ -299,35 +98,26 @@
             <p id="progressCounter">0/3</p>
 
             <div class="controls-panel">
-                <div class="filter-container">
-                    <button id="mirrorBtn" class="neumorphic-btn active">
-                        <img src="images/mirror-icon.svg" alt="Mirror Icon">
+                 <div class="filter-container">
+                    <button id="mirrorBtn" class="neumorphic-btn active" title="Cerminkan Kamera">
+                        <img src="assets/mirror-icon.svg" alt="Mirror Icon">
                     </button>
-                    <button id="vintageFilterId" class="neumorphic-btn filterBtn" data-filter="vintage"></button>
-                    <button id="grayFilterId" class="neumorphic-btn filterBtn" data-filter="gray"></button>
-                    <button id="smoothFilterId" class="neumorphic-btn filterBtn" data-filter="smooth"></button>
-                    <button id="bnwFilterId" class="neumorphic-btn filterBtn" data-filter="grayscale"></button>
-                    <button id="sepiaFilterId" class="neumorphic-btn filterBtn" data-filter="sepia"></button>
-                    <button id="normalFilterId" class="neumorphic-btn filterBtn active" data-filter="none"></button>
-                </div>
-
-                <div>
-                    <select name="timerOptions" id="timerOptions" class="custom-select">
-                        <option value="3">3 Second Timer</option>
-                        <option value="5">5 Second Timer</option>
-                        <option value="10">10 Second Timer</option>
-                    </select>
+                    <button id="vintageFilterId" class="neumorphic-btn filterBtn" data-filter="vintage" title="Vintage" style="background-image: url(assets/vintage-icon.jpg)"></button>
+                    <button id="grayFilterId" class="neumorphic-btn filterBtn" data-filter="gray" title="Grayscale" style="background-image: url(assets/grayscale-icon.jpg)"></button>
+                    <button id="bnwFilterId" class="neumorphic-btn filterBtn" data-filter="grayscale" title="Hitam Putih" style="background-image: url(assets/bnw-icon.jpg)"></button>
+                    <button id="sepiaFilterId" class="neumorphic-btn filterBtn" data-filter="sepia" title="Sepia" style="background-image: url(assets/sepiaBg.jpg)"></button>
+                    <button id="normalFilterId" class="neumorphic-btn filterBtn active" data-filter="none" title="Normal" style="background-image: url(assets/normal-icon.jpg)"></button>
                 </div>
                 
                 <div class="action-buttons">
-                    <input type="file" id="uploadInput" accept="image/*" multiple style="display:none;">
+                    <input type="file" id="uploadInput" accept="image/*" style="display:none;">
                     <button id="uploadBtn" class="neumorphic-btn">
                         <img src="assets/icons/upload-icon.png" alt="Upload Icon">
-                        Upload
+                        Unggah
                     </button>
-                    <button id="startBtn" class="neumorphic-btn">START</button>
-                    <button id="resetBtn" class="neumorphic-btn">Reset</button>
-                    <button id="doneBtn" class="neumorphic-btn">DONE</button>
+                    <button id="startBtn" class="neumorphic-btn">MULAI</button>
+                    <button id="resetBtn" class="neumorphic-btn">Ulangi Semua</button>
+                    <button id="doneBtn" class="neumorphic-btn">SELESAI</button>
                 </div>
             </div>
         </div>
@@ -335,11 +125,11 @@
 
     <div id="retakeModal">
         <div class="modal-content">
-            <h3>Which photo would you like to retake?</h3>
+            <h3>Foto mana yang ingin dihapus?</h3>
             <div id="modal-photo-selection"></div>
             <div class="modal-buttons">
-                <button id="cancelRetakeBtn" class="neumorphic-btn">Cancel</button>
-                <button id="confirmRetakeBtn" class="neumorphic-btn" disabled>Retake Selected</button>
+                <button id="cancelRetakeBtn" class="neumorphic-btn">Batal</button>
+                <button id="confirmRetakeBtn" class="neumorphic-btn" disabled>Hapus Foto Ini</button>
             </div>
         </div>
     </div>
@@ -348,7 +138,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- DOM Elements ---
             const video = document.getElementById('video');
-            const mirrorBtn = document.getElementById('mirrorBtn');
             const blackScreen = document.getElementById('blackScreen');
             const countdownText = document.getElementById('countdownText');
             const progressCounter = document.getElementById('progressCounter');
@@ -356,17 +145,16 @@
             const doneBtn = document.getElementById('doneBtn');
             const uploadBtn = document.getElementById('uploadBtn');
             const uploadInput = document.getElementById('uploadInput');
-            const resetBtn = document.getElementById('resetBtn'); // <-- FIX: Reset button element
+            const resetBtn = document.getElementById('resetBtn');
             const flash = document.getElementById('flash');
             const photoContainer = document.getElementById('photoContainer');
-            const filterButtons = document.querySelectorAll('.filterBtn');
-            const themeToggle = document.getElementById('theme-toggle');
-            
-            // Retake Modal Elements
             const retakeModal = document.getElementById('retakeModal');
             const modalPhotoSelection = document.getElementById('modal-photo-selection');
             const confirmRetakeBtn = document.getElementById('confirmRetakeBtn');
             const cancelRetakeBtn = document.getElementById('cancelRetakeBtn');
+            const themeToggle = document.getElementById('theme-toggle');
+            const mirrorBtn = document.getElementById('mirrorBtn');
+            const filterButtons = document.querySelectorAll('.filterBtn');
 
             // --- State Variables ---
             const canvas = document.createElement('canvas');
@@ -374,32 +162,23 @@
             let isCapturing = false;
             let selectedRetakeIndex = -1;
             let isVideoMirrored = true;
-            let currentFilter = 'none';
 
-            // --- Theme Manager ---
+            // --- FUNGSI INTI ---
+
             const applyTheme = (theme) => { document.body.classList.toggle('dark-mode', theme === 'dark'); };
-            themeToggle.addEventListener('click', () => {
-                const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
-                localStorage.setItem('theme', newTheme);
-                applyTheme(newTheme);
-            });
-            applyTheme(localStorage.getItem('theme') || 'dark');
 
-            // --- Camera & Photobooth Logic ---
             const startCamera = async () => {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
                     video.srcObject = stream;
                     video.onloadedmetadata = () => { video.play(); setTimeout(() => { blackScreen.style.opacity = 0; setTimeout(() => blackScreen.style.display = 'none', 1000); }, 500); };
-                } catch (err) { console.error("Camera Access Denied", err); blackScreen.textContent = "Please enable camera permissions."; }
+                } catch (err) { console.error("Error Akses Kamera:", err); blackScreen.textContent = "Izin kamera ditolak. Mohon aktifkan izin kamera pada pengaturan browser Anda dan segarkan halaman."; }
             };
-            
+
             const showCountdown = async () => {
-                const selectedValue = parseInt(document.getElementById("timerOptions").value, 10);
                 countdownText.style.display = "block";
-                for (let count = selectedValue; count > 0; count--) {
+                for (let count = 3; count > 0; count--) {
                     countdownText.textContent = count;
-                    countdownText.style.animation = 'none'; void countdownText.offsetWidth; countdownText.style.animation = 'zoomIn 0.3s ease-in-out';
                     await new Promise(res => setTimeout(res, 1000));
                 }
                 countdownText.style.display = "none";
@@ -407,92 +186,123 @@
 
             const capturePhoto = async () => {
                 flash.style.opacity = 1; setTimeout(() => flash.style.opacity = 0, 200);
-                if (video.videoWidth === 0) { console.error("Video not ready."); return null; }
-
+                if (video.videoWidth === 0) { console.error("Video belum siap."); return null; }
                 const ctx = canvas.getContext('2d');
                 canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-                
-                ctx.translate(canvas.width, 0); ctx.scale(-1, 1); // Always draw mirrored to match preview
-                
+                ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
                 const videoFilters = window.getComputedStyle(video).filter;
                 if (videoFilters !== 'none') ctx.filter = videoFilters;
-                
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                if(!isVideoMirrored) { // If the video display is NOT mirrored, un-mirror the canvas for the final image
-                    ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
-                    ctx.filter = videoFilters;
+                if (!isVideoMirrored) {
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                    if (videoFilters !== 'none') ctx.filter = videoFilters;
                     ctx.drawImage(canvas, 0, 0);
                 }
-
-                await new Promise(res => setTimeout(res, 100));
-                return canvas.toDataURL('image/jpeg', 0.9); // Use jpeg for smaller size
+                return canvas.toDataURL('image/jpeg', 0.9);
             };
 
-            // FIX: More robust UI update function
+            /**
+             * PERBAIKAN TOTAL: Fungsi updatePhotoDisplay ditulis ulang agar lebih stabil.
+             * Logika ini sekarang akan selalu menggambar 3 slot, baik berisi foto atau placeholder.
+             * Ini memperbaiki bug pada tombol "Ulangi Semua".
+             */
             const updatePhotoDisplay = () => {
                 photoContainer.innerHTML = '';
-                images.forEach(imageData => {
-                    const imgElement = document.createElement('img');
-                    imgElement.src = imageData; imgElement.classList.add('photo');
-                    photoContainer.appendChild(imgElement);
-                });
-                progressCounter.textContent = `${images.length}/3`;
-                
-                const hasPhotos = images.length > 0;
-                const isFull = images.length === 3;
+                // 1. Loop sebanyak 3 kali untuk membuat 3 slot.
+                for (let i = 0; i < 3; i++) {
+                    const imageData = images[i];
+                    if (imageData) {
+                        // Jika ada gambar di posisi ini, tampilkan.
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imageData;
+                        imgElement.classList.add('photo');
+                        photoContainer.appendChild(imgElement);
+                    } else {
+                        // Jika tidak ada, tampilkan placeholder.
+                        const placeholder = document.createElement('div');
+                        placeholder.classList.add('photo');
+                        placeholder.style.cssText = 'background-color: transparent; box-shadow: none; border: 2px dashed var(--light-text);';
+                        photoContainer.appendChild(placeholder);
+                    }
+                }
 
-                startBtn.innerHTML = isFull ? 'Retake' : 'START';
-                startBtn.style.display = isFull ? 'flex' : 'flex';
+                // 2. Perbarui status tombol berdasarkan jumlah foto.
+                progressCounter.textContent = `${images.length}/3`;
+                const isFull = images.length === 3;
+                const hasPhotos = images.length > 0;
+
+                startBtn.innerHTML = isFull ? 'ULANGI FOTO' : 'MULAI';
                 doneBtn.style.display = isFull ? 'flex' : 'none';
                 uploadBtn.style.display = isFull ? 'none' : 'flex';
-                resetBtn.style.display = hasPhotos && !isFull ? 'flex' : 'none';
-
-                if (isCapturing) {
-                    startBtn.disabled = true;
-                    uploadBtn.disabled = true;
-                    resetBtn.disabled = true;
-                } else {
-                    startBtn.disabled = false;
-                    uploadBtn.disabled = false;
-                    resetBtn.disabled = false;
-                }
+                resetBtn.style.display = hasPhotos && !isCapturing ? 'flex' : 'none';
+                
+                startBtn.disabled = isCapturing;
+                uploadBtn.disabled = isCapturing || isFull;
+                resetBtn.disabled = isCapturing;
             };
-            
-            // FIX: REWRITTEN photobooth session logic to be non-destructive
+
             const startPhotoboothSession = async () => {
                 if (isCapturing) return;
-                if (images.length === 3) { openRetakeModal(); return; }
-
+                if (images.length === 3) {
+                    openRetakeModal();
+                    return;
+                }
                 isCapturing = true;
-                updatePhotoDisplay(); // Disable buttons
-                startBtn.innerHTML = 'Capturing...';
-
+                updatePhotoDisplay();
                 const photosToTake = 3 - images.length;
                 for (let i = 0; i < photosToTake; i++) {
                     await showCountdown();
                     const imageData = await capturePhoto();
                     if (imageData) { images.push(imageData); }
                     updatePhotoDisplay();
-                    if (images.length < 3) await new Promise(res => setTimeout(res, 500));
+                    if(images.length < 3) await new Promise(res => setTimeout(res, 500));
                 }
                 isCapturing = false;
-                updatePhotoDisplay(); // Re-enable buttons
+                updatePhotoDisplay();
+            };
+
+            const openRetakeModal = () => {
+                modalPhotoSelection.innerHTML = '';
+                images.forEach((imgData, index) => {
+                    const img = document.createElement('img');
+                    img.src = imgData;
+                    img.classList.add('modal-photo');
+                    img.dataset.index = index;
+                    img.addEventListener('click', () => {
+                        document.querySelectorAll('.modal-photo').forEach(p => p.classList.remove('selected'));
+                        img.classList.add('selected');
+                        selectedRetakeIndex = index;
+                        confirmRetakeBtn.disabled = false;
+                    });
+                    modalPhotoSelection.appendChild(img);
+                });
+                retakeModal.style.display = 'flex';
             };
             
+            const closeRetakeModal = () => {
+                retakeModal.style.display = 'none';
+                selectedRetakeIndex = -1;
+                confirmRetakeBtn.disabled = true;
+            };
+            
+            const executeRetake = () => {
+                if (selectedRetakeIndex === -1) return;
+                images.splice(selectedRetakeIndex, 1);
+                closeRetakeModal();
+                updatePhotoDisplay();
+            };
+
             const handleImageUpload = (event) => {
                 const files = event.target.files;
                 if (!files.length) return;
-                
-                const remainingSlots = 3 - images.length;
-                if (files.length > remainingSlots) {
-                    alert(`You can only upload ${remainingSlots} more photos.`);
+                const spaceAvailable = 3 - images.length;
+                if (files.length > spaceAvailable) {
+                    alert(`Anda hanya bisa mengunggah ${spaceAvailable} foto lagi.`);
                 }
-
-                for (let i = 0; i < Math.min(files.length, remainingSlots); i++) {
+                for (let i = 0; i < Math.min(files.length, spaceAvailable); i++) {
                     const file = files[i];
                     if (file.type.startsWith("image/")) {
-                         const reader = new FileReader();
+                        const reader = new FileReader();
                         reader.onload = (e) => {
                             images.push(e.target.result);
                             updatePhotoDisplay();
@@ -500,85 +310,61 @@
                         reader.readAsDataURL(file);
                     }
                 }
-                uploadInput.value = null; // Reset input
+                uploadInput.value = null;
             };
-
-            // FIX: Simplified the retake modal logic. It was mostly correct before.
-            const openRetakeModal = () => {
-                modalPhotoSelection.innerHTML = '';
-                images.forEach((imgData, index) => {
-                    const img = document.createElement('img');
-                    img.src = imgData; img.classList.add('modal-photo'); img.dataset.index = index;
-                    img.addEventListener('click', () => {
-                        document.querySelectorAll('.modal-photo').forEach(p => p.classList.remove('selected'));
-                        img.classList.add('selected'); selectedRetakeIndex = index; confirmRetakeBtn.disabled = false;
-                    });
-                    modalPhotoSelection.appendChild(img);
-                });
-                retakeModal.style.display = 'flex';
-            };
-            const closeRetakeModal = () => { retakeModal.style.display = 'none'; selectedRetakeIndex = -1; confirmRetakeBtn.disabled = true; };
             
-            const executeRetake = async () => {
-                if (selectedRetakeIndex === -1 || isCapturing) return;
-                isCapturing = true;
-                closeRetakeModal();
-                updatePhotoDisplay(); // Show disabled state on buttons
-                
-                await showCountdown();
-                const newImageData = await capturePhoto();
-                if (newImageData) { images[selectedRetakeIndex] = newImageData; }
-                
-                isCapturing = false;
-                updatePhotoDisplay(); // Update UI and re-enable buttons
-            };
-
-            // --- Event Listeners ---
+            // --- EVENT LISTENERS ---
+            themeToggle.addEventListener('click', () => {
+                const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
             startBtn.addEventListener('click', startPhotoboothSession);
-            resetBtn.addEventListener('click', () => {
-                if (confirm("Are you sure you want to start over? All photos will be deleted.")) {
+            resetBtn.addEventListener('click', () => { 
+                if (confirm("Anda yakin ingin menghapus semua foto?")) { 
                     images = [];
                     updatePhotoDisplay();
-                }
+                } 
             });
             uploadBtn.addEventListener('click', () => uploadInput.click());
             uploadInput.addEventListener('change', handleImageUpload);
-            mirrorBtn.addEventListener('click', () => {
-                isVideoMirrored = !isVideoMirrored;
-                video.classList.toggle('mirrored', isVideoMirrored);
-                mirrorBtn.classList.toggle('active', isVideoMirrored);
+            mirrorBtn.addEventListener('click', () => { 
+                isVideoMirrored = !isVideoMirrored; 
+                video.classList.toggle('mirrored', isVideoMirrored); 
+                mirrorBtn.classList.toggle('active', isVideoMirrored); 
             });
-            
-            // FIX: Correctly apply filter classes to video element
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    currentFilter = button.dataset.filter;
-                    
-                    // Reset all filter classes before applying the new one
+            filterButtons.forEach(button => { 
+                button.addEventListener('click', () => { 
+                    filterButtons.forEach(btn => btn.classList.remove('active')); 
+                    button.classList.add('active'); 
+                    const filterName = button.dataset.filter; 
                     video.classList.remove('sepia', 'grayscale', 'vintage', 'gray', 'smooth');
-                    if (currentFilter !== "none") {
-                       video.classList.add(currentFilter);
+                    if (filterName !== "none") {
+                       video.classList.add(filterName);
                     }
-                });
-            });
-            
-            doneBtn.addEventListener('click', () => {
-                if (images.length === 3) {
-                    sessionStorage.setItem('photoArray', JSON.stringify(images));
-                    window.location.href = 'customize.html';
-                } else {
-                    alert("Please take or upload 3 photos first.");
-                }
+                }); 
             });
             confirmRetakeBtn.addEventListener('click', executeRetake);
-            cancelRetakeBtn.addEventListener('click', closeRetakeModal);
+            cancelRetakeBtn.addEventListener('click', closeRetakeBtn);
+
+            // PERBAIKAN: Tombol Selesai sekarang berfungsi
+            doneBtn.addEventListener('click', () => {
+                if (images.length === 3) {
+                    // Simpan array foto ke sessionStorage
+                    sessionStorage.setItem('photoArray', JSON.stringify(images));
+                    // Arahkan ke halaman customize.html
+                    window.location.href = 'customize.html';
+                } else {
+                    alert("Harap ambil 3 foto terlebih dahulu.");
+                }
+            });
+
             window.addEventListener("beforeunload", () => { if (video.srcObject) { video.srcObject.getTracks().forEach(track => track.stop()); } });
 
-            // --- Initialization ---
+            // --- INISIALISASI ---
+            applyTheme(localStorage.getItem('theme') || 'dark');
             startCamera();
-            updatePhotoDisplay(); // Initial UI setup
+            updatePhotoDisplay();
         });
     </script>
 </body>
