@@ -69,44 +69,74 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #384048;
+            background-color: #384048; /* Dark solid background like the image */
             border-radius: 50px;
             animation: fadeInUp 0.5s ease-out;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Thin border line */
         }
 
         .side-logo {
             font-size: 2.3rem;
             font-weight: 600;
-            color: #e0e5ec;
+            color: #e0e5ec; /* Set logo color to light for dark header */
             text-decoration: none;
             padding-left: 15px;
         }
 
         .side-logo span {
-            color: #20c997;
+            color: #20c997; /* Warna untuk 'lord' */
         }
 
-        .header-buttons { display: flex; align-items: center; }
+        .header-buttons {
+            display: flex;
+            align-items: center;
+        }
         
         #theme-toggle {
-            width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
-            display: flex; justify-content: center; align-items: center;
-            background-color: #2d343c; color: #e0e5ec;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #2d343c; /* Darker circle for the button */
+            color: #e0e5ec; /* Color for the SVG icon stroke */
             transition: background-color 0.2s ease, transform 0.2s ease;
         }
-        #theme-toggle:active { transform: scale(0.95); background-color: rgba(0, 0, 0, 0.4); }
+
+        #theme-toggle:active {
+            transform: scale(0.95);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
         #theme-toggle svg {
-            width: 20px; height: 20px; stroke: currentColor; stroke-width: 2;
+            width: 20px;
+            height: 20px;
+            stroke: currentColor; /* Inherit color from the button */
+            stroke-width: 2;
             transition: opacity 0.3s ease;
         }
-        #sun-icon { display: block; } #moon-icon { display: none; }
-        .dark-mode #sun-icon { display: none; } .dark-mode #moon-icon { display: block; }
 
-        body:not(.dark-mode) #main-header { background-color: #f0f2f5; border: 1px solid rgba(0, 0, 0, 0.1); }
-        body:not(.dark-mode) .side-logo { color: #333; }
-        body:not(.dark-mode) #theme-toggle { background-color: #e4e6eb; color: #333; }
+        #sun-icon { display: block; }
+        #moon-icon { display: none; }
+        .dark-mode #sun-icon { display: none; }
+        .dark-mode #moon-icon { display: block; }
+
+        /* Switch logo color in light mode */
+        body:not(.dark-mode) #main-header {
+            background-color: #f0f2f5;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body:not(.dark-mode) .side-logo {
+            color: #333;
+        }
+        body:not(.dark-mode) #theme-toggle {
+            background-color: #e4e6eb;
+            color: #333;
+        }
 
         /* --- Main Content --- */
         #main-section { display: flex; justify-content: center; align-items: center; width: 100%; }
@@ -124,11 +154,20 @@
             box-shadow: inset 5px 5px 15px var(--light-shadow-dark), inset -5px -5px 15px var(--light-shadow-light);
             background: #000;
         }
-        video { 
-            width: 100%; display: block; border-radius: 20px; 
-            transition: transform 0.4s ease, filter 0.3s ease; 
+        video {
+            width: 100%;
+            display: block;
+            border-radius: 20px;
+            transition: transform 0.4s ease, filter 0.3s ease; /* Added filter transition */
         }
         video.mirrored { transform: scaleX(-1); }
+
+        /* --- FIX: ADDED CSS RULES FOR VIDEO FILTERS --- */
+        video.sepia { filter: sepia(1); }
+        video.grayscale { filter: grayscale(1); }
+        video.vintage { filter: sepia(0.5) contrast(1.2) brightness(0.9); }
+        video.gray { filter: grayscale(1); } /* 'gray' and 'grayscale' can be the same */
+        video.smooth { filter: brightness(1.1) contrast(1.1) saturate(1.2); }
         
         #photoContainer { display: flex; flex-direction: column; gap: 15px; }
         .photo {
@@ -150,12 +189,17 @@
             box-shadow: inset 5px 5px 10px var(--light-shadow-dark), inset -5px -5px 10px var(--light-shadow-light);
             color: var(--light-accent); transform: scale(0.98);
         }
-        .neumorphic-btn:disabled { color: #999; cursor: not-allowed; }
+        .neumorphic-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: inset 2px 2px 5px var(--light-shadow-dark), inset -2px -2px 5px var(--light-shadow-light);
+        }
         .neumorphic-btn img { width: 20px; filter: var(--icon-filter); }
 
         .action-buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        #startBtn, #doneBtn, #uploadBtn { font-size: 1.6rem; padding: 12px 25px; border-radius: 30px; }
-        #doneBtn { display: none; }
+        /* --- UPDATE: Added Reset Button to this group in HTML --- */
+        #startBtn, #doneBtn, #uploadBtn, #resetBtn { font-size: 1.6rem; padding: 12px 25px; border-radius: 30px; }
+        #doneBtn, #resetBtn { display: none; }
         #mirrorBtn { width: 50px; height: 50px; border-radius: 50%; }
         
         /* --- Controls & Options --- */
@@ -169,18 +213,12 @@
         .options-label { font-size: 1.5rem; font-weight: 500; margin-bottom: -10px; }
         .filter-container { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
         .filterBtn { width: 45px; height: 45px; border-radius: 50%; }
-
+        /* Filter icon paths */
         #normalFilterId, #sepiaFilterId, #bnwFilterId, #vintageFilterId, #grayFilterId, #smoothFilterId { background-size: cover; }
         #normalFilterId { background-image: url(assets/normal-icon.jpg); } #sepiaFilterId { background-image: url(assets/sepiaBg.jpg); }
         #bnwFilterId { background-image: url(assets/bnw-icon.jpg); } #vintageFilterId { background-image: url(assets/vintage-icon.jpg); }
         #grayFilterId { background-image: url(assets/grayscale-icon.jpg); } #smoothFilterId { background-image: url(assets/smooth-icon.jpg); }
         
-        .sepia { filter: sepia(1); }
-        .grayscale { filter: grayscale(1) contrast(1.2); }
-        .vintage { filter: sepia(0.6) contrast(1.1) brightness(0.9); }
-        .gray { filter: grayscale(1); }
-        .smooth { filter: contrast(0.95) brightness(1.05); }
-
         .custom-select {
             padding: 8px 15px; border-radius: 10px; border: none; background: var(--light-bg);
             box-shadow: inset 3px 3px 7px var(--light-shadow-dark), inset -3px -3px 7px var(--light-shadow-light);
@@ -213,15 +251,16 @@
             text-align: center; box-shadow: 10px 10px 20px rgba(0,0,0,0.2); animation: fadeInUp 0.4s ease;
         }
         .modal-content h3 { font-size: 2rem; margin-bottom: 20px; }
-        #modal-photo-selection { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap;}
+        #modal-photo-selection { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; }
         .modal-photo {
             width: 120px; height: 90px; object-fit: cover; border-radius: 10px; cursor: pointer;
             border: 4px solid transparent; transition: border-color 0.2s ease, transform 0.2s ease;
         }
         .modal-photo:hover { transform: scale(1.05); } .modal-photo.selected { border-color: var(--light-accent); }
-        .modal-buttons { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
-        #confirmRetakeCameraBtn, #confirmRetakeUploadBtn, #cancelRetakeBtn { padding: 10px 20px; font-size: 1.4rem; border-radius: 20px; }
+        .modal-buttons { display: flex; gap: 15px; justify-content: center; }
+        #confirmRetakeBtn, #cancelRetakeBtn { padding: 10px 25px; font-size: 1.5rem; border-radius: 20px; }
         
+        /* --- Responsive Design --- */
         @media only screen and (max-width: 1024px) {
             .camera-container { flex-direction: column; align-items: center; }
             #photoContainer { flex-direction: row; margin-top: 20px; width: 100%; justify-content: center; flex-wrap: wrap; }
@@ -281,12 +320,13 @@
                 </div>
                 
                 <div class="action-buttons">
-                    <input type="file" id="uploadInput" accept="image/*" style="display:none;">
+                    <input type="file" id="uploadInput" accept="image/*" multiple style="display:none;">
                     <button id="uploadBtn" class="neumorphic-btn">
                         <img src="assets/icons/upload-icon.png" alt="Upload Icon">
                         Upload
                     </button>
                     <button id="startBtn" class="neumorphic-btn">START</button>
+                    <button id="resetBtn" class="neumorphic-btn">Reset</button>
                     <button id="doneBtn" class="neumorphic-btn">DONE</button>
                 </div>
             </div>
@@ -298,10 +338,8 @@
             <h3>Which photo would you like to retake?</h3>
             <div id="modal-photo-selection"></div>
             <div class="modal-buttons">
-                <input type="file" id="retakeUploadInput" accept="image/*" style="display:none;">
                 <button id="cancelRetakeBtn" class="neumorphic-btn">Cancel</button>
-                <button id="confirmRetakeUploadBtn" class="neumorphic-btn" disabled>Retake with Upload</button>
-                <button id="confirmRetakeCameraBtn" class="neumorphic-btn" disabled>Retake with Camera</button>
+                <button id="confirmRetakeBtn" class="neumorphic-btn" disabled>Retake Selected</button>
             </div>
         </div>
     </div>
@@ -318,6 +356,7 @@
             const doneBtn = document.getElementById('doneBtn');
             const uploadBtn = document.getElementById('uploadBtn');
             const uploadInput = document.getElementById('uploadInput');
+            const resetBtn = document.getElementById('resetBtn'); // <-- FIX: Reset button element
             const flash = document.getElementById('flash');
             const photoContainer = document.getElementById('photoContainer');
             const filterButtons = document.querySelectorAll('.filterBtn');
@@ -326,9 +365,7 @@
             // Retake Modal Elements
             const retakeModal = document.getElementById('retakeModal');
             const modalPhotoSelection = document.getElementById('modal-photo-selection');
-            const confirmRetakeCameraBtn = document.getElementById('confirmRetakeCameraBtn');
-            const confirmRetakeUploadBtn = document.getElementById('confirmRetakeUploadBtn');
-            const retakeUploadInput = document.getElementById('retakeUploadInput');
+            const confirmRetakeBtn = document.getElementById('confirmRetakeBtn');
             const cancelRetakeBtn = document.getElementById('cancelRetakeBtn');
 
             // --- State Variables ---
@@ -353,17 +390,8 @@
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
                     video.srcObject = stream;
-                    video.onloadedmetadata = () => { 
-                        video.play(); 
-                        setTimeout(() => { 
-                            blackScreen.style.opacity = 0; 
-                            setTimeout(() => blackScreen.style.display = 'none', 1000); 
-                        }, 500); 
-                    };
-                } catch (err) { 
-                    console.error("Camera Access Denied", err); 
-                    blackScreen.textContent = "Please enable camera permissions."; 
-                }
+                    video.onloadedmetadata = () => { video.play(); setTimeout(() => { blackScreen.style.opacity = 0; setTimeout(() => blackScreen.style.display = 'none', 1000); }, 500); };
+                } catch (err) { console.error("Camera Access Denied", err); blackScreen.textContent = "Please enable camera permissions."; }
             };
             
             const showCountdown = async () => {
@@ -371,165 +399,168 @@
                 countdownText.style.display = "block";
                 for (let count = selectedValue; count > 0; count--) {
                     countdownText.textContent = count;
-                    countdownText.style.animation = 'none';
-                    void countdownText.offsetWidth; // Trigger reflow
-                    countdownText.style.animation = 'zoomIn 0.3s ease-in-out';
+                    countdownText.style.animation = 'none'; void countdownText.offsetWidth; countdownText.style.animation = 'zoomIn 0.3s ease-in-out';
                     await new Promise(res => setTimeout(res, 1000));
                 }
                 countdownText.style.display = "none";
             };
 
             const capturePhoto = async () => {
-                flash.style.opacity = 1; 
-                setTimeout(() => flash.style.opacity = 0, 200);
-                if (video.videoWidth === 0) { 
-                    console.error("Video not ready."); 
-                    return null; 
-                }
+                flash.style.opacity = 1; setTimeout(() => flash.style.opacity = 0, 200);
+                if (video.videoWidth === 0) { console.error("Video not ready."); return null; }
 
                 const ctx = canvas.getContext('2d');
-                canvas.width = video.videoWidth; 
-                canvas.height = video.videoHeight;
-                ctx.save();
-                if (isVideoMirrored) {
-                    ctx.translate(canvas.width, 0);
-                    ctx.scale(-1, 1);
-                }
-                const videoComputedStyle = window.getComputedStyle(video);
-                if (videoComputedStyle.filter !== 'none') {
-                    ctx.filter = videoComputedStyle.filter;
-                }
+                canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+                
+                ctx.translate(canvas.width, 0); ctx.scale(-1, 1); // Always draw mirrored to match preview
+                
+                const videoFilters = window.getComputedStyle(video).filter;
+                if (videoFilters !== 'none') ctx.filter = videoFilters;
+                
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                ctx.restore();
+                
+                if(!isVideoMirrored) { // If the video display is NOT mirrored, un-mirror the canvas for the final image
+                    ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+                    ctx.filter = videoFilters;
+                    ctx.drawImage(canvas, 0, 0);
+                }
+
                 await new Promise(res => setTimeout(res, 100));
-                return canvas.toDataURL('image/png');
+                return canvas.toDataURL('image/jpeg', 0.9); // Use jpeg for smaller size
             };
 
+            // FIX: More robust UI update function
             const updatePhotoDisplay = () => {
                 photoContainer.innerHTML = '';
                 images.forEach(imageData => {
                     const imgElement = document.createElement('img');
-                    imgElement.src = imageData; 
-                    imgElement.classList.add('photo');
+                    imgElement.src = imageData; imgElement.classList.add('photo');
                     photoContainer.appendChild(imgElement);
                 });
                 progressCounter.textContent = `${images.length}/3`;
-                startBtn.innerHTML = (images.length === 3) ? 'Retake' : 'START';
-                doneBtn.style.display = (images.length === 3) ? 'flex' : 'none';
-                uploadBtn.style.display = (images.length === 3) ? 'none' : 'flex';
+                
+                const hasPhotos = images.length > 0;
+                const isFull = images.length === 3;
+
+                startBtn.innerHTML = isFull ? 'Retake' : 'START';
+                startBtn.style.display = isFull ? 'flex' : 'flex';
+                doneBtn.style.display = isFull ? 'flex' : 'none';
+                uploadBtn.style.display = isFull ? 'none' : 'flex';
+                resetBtn.style.display = hasPhotos && !isFull ? 'flex' : 'none';
+
+                if (isCapturing) {
+                    startBtn.disabled = true;
+                    uploadBtn.disabled = true;
+                    resetBtn.disabled = true;
+                } else {
+                    startBtn.disabled = false;
+                    uploadBtn.disabled = false;
+                    resetBtn.disabled = false;
+                }
             };
             
+            // FIX: REWRITTEN photobooth session logic to be non-destructive
             const startPhotoboothSession = async () => {
                 if (isCapturing) return;
-                if (images.length === 3) { 
-                    openRetakeModal(); 
-                    return; 
-                }
-                isCapturing = true; 
-                startBtn.disabled = true; 
-                images = [];
-                updatePhotoDisplay(); 
+                if (images.length === 3) { openRetakeModal(); return; }
+
+                isCapturing = true;
+                updatePhotoDisplay(); // Disable buttons
                 startBtn.innerHTML = 'Capturing...';
-                for (let i = 0; i < 3; i++) {
+
+                const photosToTake = 3 - images.length;
+                for (let i = 0; i < photosToTake; i++) {
                     await showCountdown();
                     const imageData = await capturePhoto();
-                    if (imageData) { 
-                        images.push(imageData); 
-                        updatePhotoDisplay(); 
-                    }
-                    if (i < 2) await new Promise(res => setTimeout(res, 500));
+                    if (imageData) { images.push(imageData); }
+                    updatePhotoDisplay();
+                    if (images.length < 3) await new Promise(res => setTimeout(res, 500));
                 }
-                isCapturing = false; 
-                startBtn.disabled = false;
-                updatePhotoDisplay();
+                isCapturing = false;
+                updatePhotoDisplay(); // Re-enable buttons
             };
-
+            
             const handleImageUpload = (event) => {
-                const file = event.target.files[0];
-                if (!file || !file.type.startsWith("image/") || images.length >= 3) {
-                    uploadInput.value = null; return;
+                const files = event.target.files;
+                if (!files.length) return;
+                
+                const remainingSlots = 3 - images.length;
+                if (files.length > remainingSlots) {
+                    alert(`You can only upload ${remainingSlots} more photos.`);
                 }
-                const reader = new FileReader();
-                reader.onload = (e) => { 
-                    images.push(e.target.result); 
-                    updatePhotoDisplay(); 
-                };
-                reader.readAsDataURL(file);
-                uploadInput.value = null;
+
+                for (let i = 0; i < Math.min(files.length, remainingSlots); i++) {
+                    const file = files[i];
+                    if (file.type.startsWith("image/")) {
+                         const reader = new FileReader();
+                        reader.onload = (e) => {
+                            images.push(e.target.result);
+                            updatePhotoDisplay();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+                uploadInput.value = null; // Reset input
             };
 
+            // FIX: Simplified the retake modal logic. It was mostly correct before.
             const openRetakeModal = () => {
                 modalPhotoSelection.innerHTML = '';
                 images.forEach((imgData, index) => {
                     const img = document.createElement('img');
-                    img.src = imgData; 
-                    img.classList.add('modal-photo'); 
-                    img.dataset.index = index;
+                    img.src = imgData; img.classList.add('modal-photo'); img.dataset.index = index;
                     img.addEventListener('click', () => {
                         document.querySelectorAll('.modal-photo').forEach(p => p.classList.remove('selected'));
-                        img.classList.add('selected'); 
-                        selectedRetakeIndex = index; 
-                        confirmRetakeCameraBtn.disabled = false;
-                        confirmRetakeUploadBtn.disabled = false;
+                        img.classList.add('selected'); selectedRetakeIndex = index; confirmRetakeBtn.disabled = false;
                     });
                     modalPhotoSelection.appendChild(img);
                 });
                 retakeModal.style.display = 'flex';
             };
-
-            const closeRetakeModal = () => { 
-                retakeModal.style.display = 'none'; 
-                selectedRetakeIndex = -1; 
-                confirmRetakeCameraBtn.disabled = true; 
-                confirmRetakeUploadBtn.disabled = true;
-            };
+            const closeRetakeModal = () => { retakeModal.style.display = 'none'; selectedRetakeIndex = -1; confirmRetakeBtn.disabled = true; };
             
-            const executeRetakeCamera = async () => {
+            const executeRetake = async () => {
                 if (selectedRetakeIndex === -1 || isCapturing) return;
                 isCapturing = true;
-                closeRetakeModal(); 
+                closeRetakeModal();
+                updatePhotoDisplay(); // Show disabled state on buttons
+                
                 await showCountdown();
                 const newImageData = await capturePhoto();
-                if (newImageData) { 
-                    images[selectedRetakeIndex] = newImageData; 
-                    updatePhotoDisplay(); 
-                }
+                if (newImageData) { images[selectedRetakeIndex] = newImageData; }
+                
                 isCapturing = false;
-            };
-            
-            const handleRetakeUpload = (event) => {
-                const file = event.target.files[0];
-                if (!file || !file.type.startsWith("image/") || selectedRetakeIndex === -1) {
-                    retakeUploadInput.value = null; return;
-                }
-                const reader = new FileReader();
-                reader.onload = (e) => { 
-                    images[selectedRetakeIndex] = e.target.result; 
-                    updatePhotoDisplay();
-                    closeRetakeModal();
-                };
-                reader.readAsDataURL(file);
-                retakeUploadInput.value = null;
+                updatePhotoDisplay(); // Update UI and re-enable buttons
             };
 
             // --- Event Listeners ---
             startBtn.addEventListener('click', startPhotoboothSession);
+            resetBtn.addEventListener('click', () => {
+                if (confirm("Are you sure you want to start over? All photos will be deleted.")) {
+                    images = [];
+                    updatePhotoDisplay();
+                }
+            });
             uploadBtn.addEventListener('click', () => uploadInput.click());
             uploadInput.addEventListener('change', handleImageUpload);
-            
             mirrorBtn.addEventListener('click', () => {
                 isVideoMirrored = !isVideoMirrored;
                 video.classList.toggle('mirrored', isVideoMirrored);
                 mirrorBtn.classList.toggle('active', isVideoMirrored);
             });
             
+            // FIX: Correctly apply filter classes to video element
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     filterButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    if (currentFilter !== 'none') video.classList.remove(currentFilter);
                     currentFilter = button.dataset.filter;
-                    if (currentFilter !== 'none') video.classList.add(currentFilter);
+                    
+                    // Reset all filter classes before applying the new one
+                    video.classList.remove('sepia', 'grayscale', 'vintage', 'gray', 'smooth');
+                    if (currentFilter !== "none") {
+                       video.classList.add(currentFilter);
+                    }
                 });
             });
             
@@ -541,19 +572,13 @@
                     alert("Please take or upload 3 photos first.");
                 }
             });
-
-            confirmRetakeCameraBtn.addEventListener('click', executeRetakeCamera);
-            confirmRetakeUploadBtn.addEventListener('click', () => retakeUploadInput.click());
-            retakeUploadInput.addEventListener('change', handleRetakeUpload);
+            confirmRetakeBtn.addEventListener('click', executeRetake);
             cancelRetakeBtn.addEventListener('click', closeRetakeModal);
-            
-            window.addEventListener("beforeunload", () => { 
-                if (video.srcObject) video.srcObject.getTracks().forEach(track => track.stop()); 
-            });
+            window.addEventListener("beforeunload", () => { if (video.srcObject) { video.srcObject.getTracks().forEach(track => track.stop()); } });
 
             // --- Initialization ---
             startCamera();
-            updatePhotoDisplay();
+            updatePhotoDisplay(); // Initial UI setup
         });
     </script>
 </body>
