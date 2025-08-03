@@ -10,11 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" type="image/png" href="IMG_1551.png" />
     
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css">
@@ -538,10 +533,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script>
+    <script type="module">
     // =================================================================
     // KONFIGURASI FIREBASE & SUPABASE
     // =================================================================
+    
+    // Impor fungsi yang dibutuhkan dari setiap modul Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    import { getDatabase, ref, set, update, get, child } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
     // --- Konfigurasi Firebase (Untuk Login dan Database) ---
     const firebaseConfig = {
@@ -553,10 +554,12 @@
         messagingSenderId: "523290705179",
         appId: "1:523290705179:web:b06ae4d8e6b08cf07b27be"
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const database = firebase.database();
-    const storage = firebase.storage(); // Untuk QR Code
+    
+    // Inisialisasi aplikasi dan dapatkan instance layanan
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+    const storage = getStorage(app);
 
     // --- Konfigurasi Supabase (Untuk Unggah Musik) ---
     const SUPABASE_URL = 'https://qwixfwotqmknzzbdvynk.supabase.co'; 
@@ -686,18 +689,150 @@
     function setButtonLoading(isLoading, text = '') { mainActionBtn.disabled = isLoading; document.getElementById('google-signin-btn').disabled = isLoading; if (isLoading) { mainActionBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text || 'Memproses...'}`; } else { if (sliderTabsContainer.classList.contains('register-active')) { showRegisterView(); } else { showLoginView(); } } }
     function handleMainAction() { if (sliderTabsContainer.classList.contains('register-active')) { createAccount(); } else { loginWithEmail(); } }
     
-    function createAccount() { const email = document.getElementById('registerEmail').value.trim(); const password = document.getElementById('registerPass').value; if (!email || !password) { Swal.fire('Input Tidak Lengkap', 'Email dan password wajib diisi.', 'warning'); return; } if (password.length < 6) { Swal.fire('Password Terlalu Pendek', 'Password minimal harus 6 karakter.', 'warning'); return; } setButtonLoading(true, 'Membuat Akun...'); auth.createUserWithEmailAndPassword(email, password).then(userCredential => { const user = userCredential.user; return createDefaultUserData(user).then(() => { return user.sendEmailVerification().then(() => { Swal.fire({ icon: 'success', title: 'Registrasi Berhasil!', html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`, allowOutsideClick: false, showConfirmButton: false, willOpen: () => { Swal.showLoading(); const verificationCheckInterval = setInterval(() => { auth.currentUser.reload().then(() => { if (auth.currentUser.emailVerified) { clearInterval(verificationCheckInterval); Swal.close(); showAdminPanel(auth.currentUser); } }); }, 2500); } }); }); }); }).catch(error => { const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message; Swal.fire('Registrasi Gagal', message, 'error'); }).finally(() => setButtonLoading(false)); }
-    function loginWithEmail() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPass').value; if (!email || !password) { Swal.fire('Input Diperlukan', 'Email dan password harus diisi.', 'warning'); return; } setButtonLoading(true, 'Memverifikasi...'); auth.signInWithEmailAndPassword(email, password).then(userCredential => { if (!userCredential.user.emailVerified) { auth.signOut(); Swal.fire({ icon: 'warning', title: 'Email Belum Diverifikasi', html: `Silakan periksa email <b>${email}</b> dan klik link verifikasi.`, confirmButtonText: 'Kirim Ulang Email', showCancelButton: true, cancelButtonText: 'Tutup' }).then(result => { if (result.isConfirmed) { userCredential.user.sendEmailVerification().then(() => { Swal.fire('Terkirim!', 'Email verifikasi baru telah dikirim.', 'success'); }); } }); } }).catch(error => { Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error'); }).finally(() => setButtonLoading(false)); }
-    function signInWithGoogle() { const provider = new firebase.auth.GoogleAuthProvider(); setButtonLoading(true, 'Membuka Google...'); auth.signInWithPopup(provider).then(result => { if (result.additionalUserInfo.isNewUser) { return createDefaultUserData(result.user); } }).catch(error => { if (error.code !== 'auth/popup-closed-by-user') { Swal.fire('Login Google Gagal', error.message, 'error'); } }).finally(() => setButtonLoading(false)); }
-    function createDefaultUserData(user) { const nameFromEmail = user.email.split('@')[0]; const defaultDisplayName = user.displayName || nameFromEmail; const defaultData = { birthdayName: defaultDisplayName, birthDate: "2005-09-28", guestUser: "tamu", guestPass: "12345", qrImageUrl: "", bestWishes: "", stayStrongQuote: "", qrMessage: "", targetWhatsappNumber: "", puzzleWord1: 'ULTAH', puzzleWord2: 'KADO', puzzleWord3: 'DOA', musicUrl: musicTracks[0].path, giftIconUrl: giftIcons[0].path }; return database.ref('birthday_pages/' + user.uid).set(defaultData); }
-    function copyShareableLink() { const linkInput = document.getElementById('shareableLink'); if (linkInput.value) { navigator.clipboard.writeText(linkInput.value).then(() => { Swal.fire({ icon: 'success', title: 'Link Berhasil Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }); }); } }
-    function logout() { Swal.fire({ title: 'Konfirmasi Log Out', text: 'Anda yakin ingin keluar?', icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Log Out', cancelButtonText: 'Batal', reverseButtons: true }).then((result) => { if (result.isConfirmed) { musicPreviewPlayer.pause(); auth.signOut(); } }); }
+    function createAccount() { 
+        const email = document.getElementById('registerEmail').value.trim(); 
+        const password = document.getElementById('registerPass').value; 
+        if (!email || !password) { Swal.fire('Input Tidak Lengkap', 'Email dan password wajib diisi.', 'warning'); return; } 
+        if (password.length < 6) { Swal.fire('Password Terlalu Pendek', 'Password minimal harus 6 karakter.', 'warning'); return; } 
+        setButtonLoading(true, 'Membuat Akun...'); 
+        
+        createUserWithEmailAndPassword(auth, email, password).then(userCredential => { 
+            const user = userCredential.user; 
+            return createDefaultUserData(user).then(() => { 
+                return sendEmailVerification(user).then(() => { 
+                    Swal.fire({ 
+                        icon: 'success', 
+                        title: 'Registrasi Berhasil!', 
+                        html: `Satu langkah lagi! Kami telah mengirimkan email verifikasi ke <b>${email}</b>. Silakan periksa kotak masuk Anda.<br><br>Halaman ini akan masuk secara otomatis setelah verifikasi selesai.`, 
+                        allowOutsideClick: false, 
+                        showConfirmButton: false, 
+                        willOpen: () => { 
+                            Swal.showLoading(); 
+                            const verificationCheckInterval = setInterval(() => { 
+                                user.reload().then(() => { 
+                                    if (user.emailVerified) { 
+                                        clearInterval(verificationCheckInterval); 
+                                        Swal.close(); 
+                                        showAdminPanel(user); 
+                                    } 
+                                }); 
+                            }, 2500); 
+                        } 
+                    }); 
+                }); 
+            }); 
+        }).catch(error => { 
+            const message = error.code === 'auth/email-already-in-use' ? 'Email ini sudah terdaftar. Silakan login.' : 'Terjadi error: ' + error.message; 
+            Swal.fire('Registrasi Gagal', message, 'error'); 
+        }).finally(() => setButtonLoading(false)); 
+    }
+
+    function loginWithEmail() { 
+        const email = document.getElementById('loginEmail').value.trim(); 
+        const password = document.getElementById('loginPass').value; 
+        if (!email || !password) { Swal.fire('Input Diperlukan', 'Email dan password harus diisi.', 'warning'); return; } 
+        setButtonLoading(true, 'Memverifikasi...'); 
+        signInWithEmailAndPassword(auth, email, password).then(userCredential => { 
+            if (!userCredential.user.emailVerified) { 
+                signOut(auth); 
+                Swal.fire({ 
+                    icon: 'warning', 
+                    title: 'Email Belum Diverifikasi', 
+                    html: `Silakan periksa email <b>${email}</b> dan klik link verifikasi.`, 
+                    confirmButtonText: 'Kirim Ulang Email', 
+                    showCancelButton: true, 
+                    cancelButtonText: 'Tutup' 
+                }).then(result => { 
+                    if (result.isConfirmed) { 
+                        sendEmailVerification(userCredential.user).then(() => { 
+                            Swal.fire('Terkirim!', 'Email verifikasi baru telah dikirim.', 'success'); 
+                        }); 
+                    } 
+                }); 
+            } 
+        }).catch(error => { 
+            Swal.fire('Login Gagal', 'Email atau password yang Anda masukkan salah.', 'error'); 
+        }).finally(() => setButtonLoading(false)); 
+    }
+
+    function signInWithGoogle() { 
+        const provider = new GoogleAuthProvider(); 
+        setButtonLoading(true, 'Membuka Google...'); 
+        signInWithPopup(auth, provider).then(result => { 
+            if (result.additionalUserInfo.isNewUser) { 
+                return createDefaultUserData(result.user); 
+            } 
+        }).catch(error => { 
+            if (error.code !== 'auth/popup-closed-by-user') { 
+                Swal.fire('Login Google Gagal', error.message, 'error'); 
+            } 
+        }).finally(() => setButtonLoading(false)); 
+    }
+
+    function createDefaultUserData(user) { 
+        const nameFromEmail = user.email.split('@')[0]; 
+        const defaultDisplayName = user.displayName || nameFromEmail; 
+        const defaultData = { 
+            birthdayName: defaultDisplayName, 
+            birthDate: "2005-09-28", 
+            guestUser: "tamu", 
+            guestPass: "12345", 
+            qrImageUrl: "", 
+            bestWishes: "", 
+            stayStrongQuote: "", 
+            qrMessage: "", 
+            targetWhatsappNumber: "", 
+            puzzleWord1: 'ULTAH', 
+            puzzleWord2: 'KADO', 
+            puzzleWord3: 'DOA', 
+            musicUrl: musicTracks[0].path, 
+            giftIconUrl: giftIcons[0].path 
+        }; 
+        const userRef = ref(database, 'birthday_pages/' + user.uid);
+        return set(userRef, defaultData); 
+    }
+
+    function copyShareableLink() { 
+        const linkInput = document.getElementById('shareableLink'); 
+        if (linkInput.value) { 
+            navigator.clipboard.writeText(linkInput.value).then(() => { 
+                Swal.fire({ icon: 'success', title: 'Link Berhasil Disalin!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 }); 
+            }); 
+        } 
+    }
+
+    function logout() { 
+        Swal.fire({ 
+            title: 'Konfirmasi Log Out', 
+            text: 'Anda yakin ingin keluar?', 
+            icon: 'question', 
+            showCancelButton: true, 
+            confirmButtonText: 'Ya, Log Out', 
+            cancelButtonText: 'Batal', 
+            reverseButtons: true 
+        }).then((result) => { 
+            if (result.isConfirmed) { 
+                musicPreviewPlayer.pause(); 
+                signOut(auth); 
+            } 
+        }); 
+    }
     
     function loadDataToForm(user) {
         if (!user) return;
-        Swal.fire({ icon: 'success', title: `Selamat Datang, ${user.displayName || user.email.split('@')[0]}!`, toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true, didOpen: () => confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } }) });
+        Swal.fire({ 
+            icon: 'success', 
+            title: `Selamat Datang, ${user.displayName || user.email.split('@')[0]}!`, 
+            toast: true, 
+            position: 'top-end', 
+            showConfirmButton: false, 
+            timer: 3000, 
+            timerProgressBar: true, 
+            didOpen: () => confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } }) 
+        });
 
-        database.ref('birthday_pages/' + user.uid).once('value').then(snapshot => {
+        const dbRef = ref(database);
+        get(child(dbRef, 'birthday_pages/' + user.uid)).then(snapshot => {
             const data = snapshot.val() || {};
             document.getElementById('birthdayNameInput').value = data.birthdayName || '';
             document.getElementById('bestWishesInput').value = data.bestWishes || '';
@@ -749,7 +884,8 @@
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
         
-        database.ref('birthday_pages/' + user.uid).once('value').then(snapshot => {
+        const dbRef = ref(database);
+        get(child(dbRef, 'birthday_pages/' + user.uid)).then(snapshot => {
             const existingData = snapshot.val() || {};
             let musicUrlToSave = existingData.musicUrl; 
 
@@ -778,7 +914,8 @@
                 giftIconUrl: giftIcons[currentGiftIndex].path
             };
 
-            return database.ref('birthday_pages/' + user.uid).update(settings);
+            const userRef = ref(database, 'birthday_pages/' + user.uid);
+            return update(userRef, settings);
 
         }).then(() => {
             newQrImageUrl = null;
@@ -823,7 +960,7 @@
         initTheme();
         renderCarousels();
         
-        auth.onAuthStateChanged(user => {
+        onAuthStateChanged(auth, user => {
             if (user && user.emailVerified) {
                 showAdminPanel(user);
             }
@@ -844,7 +981,7 @@
         document.getElementById('copyLinkBtn').addEventListener('click', copyShareableLink);
         document.getElementById('birthDateInput').addEventListener('change', () => { document.getElementById('dateDisplayText').textContent = formatDateForDisplay(document.getElementById('birthDateInput').value); });
         document.getElementById('contact-link').addEventListener('click', (event) => { event.preventDefault(); showContactForm(); });
-        document.getElementById('prevMusicBtn').addEventListener('click', () => { if (currentMusicIndex > 0) { currentMusicIndex--; } else { currentMusicIndex = musicTracks.findIndex(t => t.type !== 'upload'); } updateMusicSelection(); });
+        document.getElementById('prevMusicBtn').addEventListener('click', () => { if (currentMusicIndex > 0) { currentMusicIndex--; } else { currentMusicIndex = musicTracks.findIndex(t => t.type === 'upload') - 1; } updateMusicSelection(); });
         document.getElementById('nextMusicBtn').addEventListener('click', () => { const lastPresetIndex = musicTracks.findIndex(t => t.type === 'upload') - 1; if (currentMusicIndex < lastPresetIndex && currentMusicIndex !== -1) { currentMusicIndex++; } else { currentMusicIndex = 0; } updateMusicSelection(); });
         document.getElementById('music-preview-btn').addEventListener('click', () => { const icon = document.getElementById('music-preview-btn').querySelector('i'); if (musicPreviewPlayer.paused) { musicPreviewPlayer.play().catch(e => console.error("Audio play failed", e)); icon.classList.replace('fa-play', 'fa-pause'); } else { musicPreviewPlayer.pause(); icon.classList.replace('fa-pause', 'fa-play'); } });
         musicPreviewPlayer.onended = () => { document.getElementById('music-preview-btn').querySelector('i').classList.replace('fa-pause', 'fa-play'); };
@@ -901,14 +1038,28 @@
             const file = event.target.files[0];
             if (!file) { return; }
             const reader = new FileReader();
-            reader.onload = (e) => { document.getElementById('qrPreviewImage').src = e.target.result; document.getElementById('qrPreviewImage').style.display = 'block'; document.getElementById('uploadBoxText').innerHTML = `<i class="fas fa-check-circle"></i> Gambar dipilih!`; };
+            reader.onload = (e) => { 
+                document.getElementById('qrPreviewImage').src = e.target.result; 
+                document.getElementById('qrPreviewImage').style.display = 'block'; 
+                document.getElementById('uploadBoxText').innerHTML = `<i class="fas fa-check-circle"></i> Gambar dipilih!`; 
+            };
             reader.readAsDataURL(file);
+            
             const user = auth.currentUser;
             if (!user) { Swal.fire('Error', 'Anda harus login.', 'error'); return; }
             newQrImageUrl = null;
+
             const filePath = `qr_codes/${user.uid}/${Date.now()}-${file.name}`;
-            const uploadTask = storage.ref(filePath).put(file);
-            uploadTask.on('state_changed', null, (error) => { Swal.fire('Upload Gagal', 'Terjadi kesalahan.', 'error'); }, () => { uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { newQrImageUrl = downloadURL; document.getElementById('uploadBoxText').innerHTML = `<i class="fas fa-check-circle"></i> Berhasil diunggah!`; }); });
+            const fileRef = storageRef(storage, filePath);
+
+            uploadBytes(fileRef, file).then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+                    newQrImageUrl = downloadURL; 
+                    document.getElementById('uploadBoxText').innerHTML = `<i class="fas fa-check-circle"></i> Berhasil diunggah!`;
+                });
+            }).catch((error) => {
+                Swal.fire('Upload Gagal', 'Terjadi kesalahan.', 'error');
+            });
         });
     });
     </script>
