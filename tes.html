@@ -228,19 +228,9 @@
         [data-theme="light"] .theme-toggle-btn i.fa-sun { display: block; }
         .theme-toggle-btn-mobile-wrapper { display: none; }
 
-        @media (max-width: 1024px) {
-            .navbar-menu { position: absolute; top: calc(100% + 1rem); left: 0; right: 0; width: 90%; margin: auto; flex-direction: column; align-items: stretch; padding: 1.5rem; background: var(--navbar-mobile-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius-main); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border: 1px solid var(--shadow-light); transform: translateY(-20px) scale(0.95); opacity: 0; pointer-events: none; transform-origin: top center; transition: transform 0.3s ease, opacity 0.3s ease; }
-            .navbar-menu a { text-align: center; }
-            .nav-highlight { display: none; }
-            .navbar-menu a.current-nav { background-color: var(--primary); }
-            .navbar-menu.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
-            /* [PERBAIKAN CSS]: Baris '.navbar-cta { display: none; }' dihapus dari sini agar tombol muncul di menu mobile */
-            .hamburger-menu { display: flex; }
-            .navbar-right { gap: 0.5rem; }
-            .navbar-right .theme-toggle-btn { display: none; }
-            .theme-toggle-btn-mobile-wrapper { display: block; margin-top: 1rem; text-align: center; }
-        }
+        /* [PERBAIKAN CSS]: Breakpoint diubah ke 768px dan aturan digabungkan */
         @media (max-width: 768px) {
+            /* Aturan umum untuk mobile */
             html { font-size: 58%; }
             .hero-header { font-size: 4.8rem; }
             .section-title { font-size: 3.6rem; }
@@ -248,6 +238,47 @@
             .actions-grid { grid-template-columns: 1fr; } 
             .main-header { width: 90%; }
             .navbar { padding: 0.8rem 1rem; }
+
+            /* Aturan untuk mengubah navbar ke mode hamburger */
+            .navbar-menu { 
+                position: absolute; 
+                top: calc(100% + 1rem); 
+                left: 0; right: 0;
+                width: 90%; 
+                margin: auto; 
+                flex-direction: column; 
+                align-items: stretch;
+                padding: 1.5rem; 
+                background: var(--navbar-mobile-bg); 
+                backdrop-filter: blur(10px); 
+                -webkit-backdrop-filter: blur(10px); 
+                border-radius: var(--border-radius-main);
+                box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+                border: 1px solid var(--shadow-light);
+                transform: translateY(-20px) scale(0.95); 
+                opacity: 0; 
+                pointer-events: none;
+                transform-origin: top center; 
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+            .navbar-menu a { text-align: center; }
+            .nav-highlight { display: none; }
+            .navbar-menu a.current-nav { background-color: var(--primary); }
+            .navbar-menu.active { 
+                transform: translateY(0) scale(1); 
+                opacity: 1; 
+                pointer-events: auto; 
+            }
+            /* [PERBAIKAN CSS]: Tombol CTA disembunyikan di mobile sesuai permintaan */
+            .navbar-cta { display: none; }
+            .hamburger-menu { display: flex; }
+            .navbar-right { gap: 0.5rem; }
+            .navbar-right .theme-toggle-btn { display: none; }
+            .theme-toggle-btn-mobile-wrapper { 
+                display: block; 
+                margin-top: 1rem; 
+                text-align: center; 
+            }
         }
     </style>
 </head>
@@ -277,7 +308,7 @@
         </ul>
 
         <div class="navbar-right">
-             <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ubah Tema">
                 <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
             </button>
             <button class="hamburger-menu" id="hamburger-menu" aria-label="Buka Menu">
@@ -286,6 +317,7 @@
         </div>
     </nav>
 </header>
+
 <div class="main-content">
     <main>
         <section id="hero">
@@ -533,7 +565,8 @@ document.addEventListener('DOMContentLoaded', () => {
         hamburger.addEventListener('click', toggleMenu);
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                if (window.innerWidth <= 1024 && navbarMenu.classList.contains('active')) {
+                // [Perbaikan]: Cek lebar window diubah ke 768px
+                if (window.innerWidth <= 768 && navbarMenu.classList.contains('active')) {
                     toggleMenu();
                 }
             });
@@ -563,7 +596,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const activeLink = document.querySelector(`.navbar-menu a[href="#${id}"]`);
                 if (activeLink) {
                     activeLink.classList.add('current-nav');
-                    if (window.innerWidth > 1024) {
+                    // [Perbaikan]: Cek lebar window diubah ke 768px
+                    if (window.innerWidth > 768) {
                        moveHighlight(activeLink.parentElement);
                     }
                 }
